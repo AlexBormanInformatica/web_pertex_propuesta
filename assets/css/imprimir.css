@@ -1,0 +1,42 @@
+/* Styles go here */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@200;400;500;600&family=Poppins:ital,wght@0,200;0,500;0,600;1,500&display=swap");
+h5 {
+  color: green;
+  font-size: 30;
+  text-align: center;
+  margin: 40px 0px;
+  font-family: "Inter", sans-serif;
+}
+table {
+  font-family: "Poppins", sans-serif;
+  width: 100%;
+  border: 1px solid #999;
+  text-align: left;
+  border-collapse: collapse;
+  margin: 0 0 1em 0;
+  caption-side: top;
+}
+
+td,
+th {
+  padding: 0.3em;
+}
+th {
+  border-bottom: 1px solid #999;
+  width: 25%;
+  font-size: 20px;
+  font-weight: 600;
+  background-color: #aaaa;
+}
+td {
+  border-bottom: 1px solid #999;
+  width: 25%;
+  font-size: 18px;
+  font-weight: 200;
+}
+.links {
+  display: none;
+}
+button {
+  display: none;
+}

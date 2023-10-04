@@ -1,0 +1,119 @@
+# Documentación apache acerca mod_rewrite: https://httpd.apache.org/docs/current/en/mod/mod_rewrite.html#rewritecond
+Options +FollowSymLinks -MultiViews
+
+# A rewrite engine is a component of web server software that allows you to rewrite or redirect uniform resource locators (URLs)
+RewriteEngine on
+
+#extension .php
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php [L]
+
+#URLs amigables
+#RewriteRule ^personaliza-tu-producto/([0-9]+)$ personaliza-tu-producto.php?tecnicaExterna=$1 [L,QSA]
+#RewriteRule ^personnalisez-votre-produit/([0-9]+)$ personaliza-tu-producto.php?tecnicaExterna=$1 [L,QSA]
+#RewriteRule ^personalizza-il-tuo-prodotto/([0-9]+)$ personaliza-tu-producto.php?tecnicaExterna=$1 [L,QSA]
+#RewriteRule ^personalize-seu-produto/([0-9]+)$ personaliza-tu-producto.php?tecnicaExterna=$1 [L,QSA]
+
+RewriteRule ^error?(.*)$ error.php?$1 [L,QSA]
+RewriteRule ^erreur?(.*)$ error.php?$1 [L,QSA]
+RewriteRule ^erre?(.*)$ error.php?$1 [L,QSA]
+RewriteRule ^errore?(.*)$ error.php?$1 [L,QSA]
+
+RewriteRule ^gracias-por-comprar?(.*)$ gracias-por-comprar.php?$1 [L,QSA]
+RewriteRule ^merci-pour-lachat?(.*)$ gracias-por-comprar.php?$1 [L,QSA]
+RewriteRule ^grazie-per-lacquisto?(.*)$ gracias-por-comprar.php?$1 [L,QSA]
+RewriteRule ^obrigado-por-comprar?(.*)$ gracias-por-comprar.php?$1 [L,QSA]
+
+##Redirecciones
+ErrorDocument 404 /404.php
+
+redirectMatch 301 /personaliza-tu-producto/index /Proyecto-personalizar/index.php
+redirectMatch 301 /personnalisez-votre-produit/index /Proyecto-personalizar/index.php
+redirectMatch 301 /personalizza-il-tuo-prodotto/index /Proyecto-personalizar/index.php
+redirectMatch 301 /personalize-seu-produto/index /Proyecto-personalizar/index.php
+
+redirectMatch 301 /personaliza-tu-producto/login /login.php
+redirectMatch 301 /personnalisez-votre-produit/login /login.php
+redirectMatch 301 /personalizza-il-tuo-prodotto/login /login.php
+redirectMatch 301 /personalize-seu-produto/login /login.php
+
+##################################################################################################################
+############################################ PAGINAS IDIOMAS #####################################################
+##################################################################################################################
+
+#FRANCES
+RewriteRule ^avis-juridique$ /aviso-legal.php?idioma=FR [L,QSA]
+RewriteRule ^bases-fermeture-tissu$ /bases-tela-y-cierre.php?idioma=FR [L,QSA]
+RewriteRule ^contact$ /contacto.php?idioma=FR [L,QSA]
+RewriteRule ^retour$ /devoluciones.php?idioma=FR [L,QSA]
+RewriteRule ^frais-de-livraison-et-dexpedition$ /entrega-y-gastos-de-envio.php?idioma=FR [L,QSA]
+RewriteRule ^erreur$ /error.php?idioma=FR [L,QSA]
+RewriteRule ^etiquettes$ /etiquetas.php?idioma=FR [L,QSA]
+RewriteRule ^modes-de-paiment$ /formas-de-pago.php?idioma=FR [L,QSA]
+RewriteRule ^merci-pour-lachat$ /gracias-por-comprar.php?idioma=FR [L,QSA]
+RewriteRule ^historique-commandes$ /historial-pedidos.php?idioma=FR [L,QSA]
+RewriteRule ^infographie$ /infografia.php?idioma=FR [L,QSA]
+RewriteRule ^marquages$ /marcajes.php?idioma=FR [L,QSA]
+RewriteRule ^mon-compte$ /mi-cuenta.php?idioma=FR [L,QSA]
+RewriteRule ^modules$ /modulos.php?idioma=FR [L,QSA]
+RewriteRule ^echantillonneur$ /muestrario.php?idioma=FR [L,QSA]
+RewriteRule ^nous$ /nosotros.php?idioma=FR [L,QSA]
+RewriteRule ^commande-interne$ /pedido-interno.php?idioma=FR [L,QSA]
+RewriteRule ^personnalisez-votre-produit$ /personaliza-tu-producto.php?idioma=FR [L,QSA]
+RewriteRule ^politique-cookies$ /politica-cookies.php?idioma=FR [L,QSA]
+RewriteRule ^politique-confidentialite$ /politica-privacidad.php?idioma=FR [L,QSA]
+RewriteRule ^bracelets$ /pulseras.php?idioma=FR [L,QSA]
+RewriteRule ^tirettes$ /tiradores.php?idioma=FR [L,QSA]
+RewriteRule ^transfert$ /transferencia.php?idioma=FR [L,QSA]
+
+#ITALIANO
+RewriteRule ^avviso-legale$ /aviso-legal.php?idioma=IT [L,QSA]
+RewriteRule ^basi-chiusura-tessuto$ /bases-tela-y-cierre.php?idioma=IT [L,QSA]
+RewriteRule ^contatto$ /contacto.php?idioma=IT [L,QSA]
+RewriteRule ^restituzioni$ /devoluciones.php?idioma=IT [L,QSA]
+RewriteRule ^consegna-e-spese-di-spedizione$ /entrega-y-gastos-de-envio.php?idioma=IT [L,QSA]
+RewriteRule ^errore$ /error.php?idioma=IT [L,QSA]
+RewriteRule ^etichette$ /etiquetas.php?idioma=IT [L,QSA]
+RewriteRule ^modalita-di-pagamento$ /formas-de-pago.php?idioma=IT [L,QSA]
+RewriteRule ^grazie-per-lacquisto$ /gracias-por-comprar.php?idioma=IT [L,QSA]
+RewriteRule ^cronologia-degli-ordini$ /historial-pedidos.php?idioma=IT [L,QSA]
+RewriteRule ^infografica$ /infografia.php?idioma=IT [L,QSA]
+RewriteRule ^patch$ /marcajes.php?idioma=IT [L,QSA]
+RewriteRule ^il-mio-account$ /mi-cuenta.php?idioma=IT [L,QSA]
+RewriteRule ^moduli$ /modulos.php?idioma=IT [L,QSA]
+RewriteRule ^campionario$ /muestrario.php?idioma=IT [L,QSA]
+RewriteRule ^noi$ /nosotros.php?idioma=IT [L,QSA]
+RewriteRule ^ordine-interno$ /pedido-interno.php?idioma=IT [L,QSA]
+RewriteRule ^personalizza-il-tuo-prodotto$ /personaliza-tu-producto.php?idioma=IT [L,QSA]
+RewriteRule ^politica-cookie$ /politica-cookies.php?idioma=IT [L,QSA]
+RewriteRule ^politica-riservatezza$ /politica-privacidad.php?idioma=IT [L,QSA]
+RewriteRule ^bracciali$ /pulseras.php?idioma=IT [L,QSA]
+RewriteRule ^tiretti$ /tiradores.php?idioma=IT [L,QSA]
+RewriteRule ^trasferimento$ /transferencia?idioma=IT [L,QSA]
+
+# #PORTUGUES
+
+RewriteRule ^aviso-legal$ /aviso-legal.php?idioma=PT [L,QSA]
+RewriteRule ^bases-e-fechamento-em-tecido$ /bases-tela-y-cierre.php?idioma=PT [L,QSA]
+RewriteRule ^contato$ /contacto.php?idioma=PT [L,QSA]
+RewriteRule ^retorna$ /devoluciones.php?idioma=PT [L,QSA]
+RewriteRule ^custos-de-entrega-e-envio$ /entrega-y-gastos-de-envio.php?idioma=PT [L,QSA]
+RewriteRule ^erre$ /error.php?idioma=PT [L,QSA]
+RewriteRule ^etiquetas$ /etiquetas.php?idioma=PT [L,QSA]
+RewriteRule ^formas-de-pagamento$ /formas-de-pago.php?idioma=PT [L,QSA]
+RewriteRule ^obrigado-por-comprar$ /gracias-por-comprar.php?idioma=PT [L,QSA]
+RewriteRule ^historico-pedidos$ /historial-pedidos.php?idioma=PT [L,QSA]
+RewriteRule ^infografico$ /infografia.php?idioma=PT [L,QSA]
+RewriteRule ^marcacoes$ /marcajes.php?idioma=PT [L,QSA]
+RewriteRule ^minha-conta$ /mi-cuenta.php?idioma=PT [L,QSA]
+RewriteRule ^modulos$ /modulos.php?idioma=PT [L,QSA]
+RewriteRule ^amostrador$ /muestrario.php?idioma=PT [L,QSA]
+RewriteRule ^nos$ /nosotros.php?idioma=PT [L,QSA]
+RewriteRule ^ordem-interna$ /pedido-interno.php?idioma=PT [L,QSA]
+RewriteRule ^personalize-seu-produto$ /personaliza-tu-producto.php?idioma=PT [L,QSA]
+RewriteRule ^politica-cookies$ /politica-cookies.php?idioma=PT [L,QSA]
+RewriteRule ^politica-privacidade$ /politica-privacidad.php?idioma=PT [L,QSA]
+RewriteRule ^pulseiras$ /pulseras.php?idioma=PT [L,QSA]
+RewriteRule ^puxadores$ /tiradores.php?idioma=PT [L,QSA]
+RewriteRule ^transferencia$ /transferencia.php?idioma=PT [L,QSA]

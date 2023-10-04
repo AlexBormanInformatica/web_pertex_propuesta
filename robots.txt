@@ -1,0 +1,89 @@
+User-agent: *
+Disallow: /formularios/
+Disallow: /plantillas-email/
+Disallow: /politica-cookies
+Disallow: /aviso-legal
+Disallow: /politica-privacidad
+Disallow: /cambioidioma
+Disallow: /checkout
+Disallow: /error-pago
+Disallow: /error
+Disallow: /errores
+Disallow: /gracias-por-comprar
+Disallow: /historial-pedidos
+Disallow: /historicoPago
+Disallow: /login
+Disallow: /logout
+Disallow: /mi-cuenta
+Disallow: /pedidos
+Disallow: /subir-boceto
+Disallow: /transferencia
+Disallow: /politique-cookies
+Disallow: /avis-juridique
+Disallow: /politique-confidentialite
+Disallow: /erreur
+Disallow: /merci-pour-lachat
+Disallow: /historique-commandes
+Disallow: /mon-compte
+Disallow: /transfert
+Disallow: /politica-cookie
+Disallow: /avviso-legale
+Disallow: /politica-riservatezza
+Disallow: /errore
+Disallow: /grazie-per-lacquisto
+Disallow: /cronologia-degli-ordini
+Disallow: /il-mio-account
+Disallow: /trasferimento
+Disallow: /politica-cookies
+Disallow: /aviso-legal
+Disallow: /politica-privacidade
+Disallow: /erre
+Disallow: /obrigado-por-comprar
+Disallow: /historico-pedidos
+Disallow: /minha-conta
+Disallow: /transferencia
+Disallow: /*/feed/
+
+# No rastrear copias de seguridad
+Disallow: /*.git$
+Disallow: /*.sql$
+Disallow: /*.tgz$
+Disallow: /*.gz$
+Disallow: /*.tar$
+Disallow: /*.svn$
+Disallow: /*.bz2$
+Disallow: /*.log$
+
+# Reglas para bots conocidos
+
+User-agent: ia_archiver
+Disallow: /
+
+User-agent: duggmirror
+Disallow: /
+
+User-agent: noxtrumbot
+Crawl-delay: 50
+
+User-agent: msnbot
+Crawl-delay: 30
+
+User-agent: Slurp
+Crawl-delay: 10
+
+User-agent: MSIECrawler
+Disallow: /
+
+User-agent: WebCopier
+Disallow: /
+
+User-agent: HTTrack
+Disallow: /
+
+User-agent: Microsoft.URL.Control
+Disallow: /
+
+User-agent: libwww
+Disallow: / 
+
+Sitemap: https://personalizacionestextiles.com/sitemap.xml

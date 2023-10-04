@@ -1,0 +1,223 @@
+@font-face {
+  font-family: Poppins-Regular;
+  src: url("../fonts/Poppins/Poppins-Regular.ttf");
+}
+
+@font-face {
+  font-family: Poppins-Light;
+  src: url("../fonts/Poppins/Poppins-Light.ttf");
+}
+
+@font-face {
+  font-family: Poppins-ExtraLight;
+  src: url("../fonts/Poppins/Poppins-ExtraLight.ttf");
+}
+
+@font-face {
+  font-family: Poppins-Medium;
+  src: url("../fonts/Poppins/Poppins-Medium.ttf");
+}
+
+@font-face {
+  font-family: Poppins-Italic;
+  src: url("../fonts/Poppins/Poppins-Italic.ttf");
+}
+
+@font-face {
+  font-family: Poppins-Bold;
+  src: url("../fonts/Poppins/Poppins-Bold.ttf");
+}
+
+@font-face {
+  font-family: Poppins-SemiBold;
+  src: url("../fonts/Poppins/Poppins-SemiBold.ttf");
+}
+
+/*---------------------------------------------*/
+@font-face {
+  font-family: PlayfairDisplay-Regular;
+  src: url("../fonts/PlayfairDisplay/PlayfairDisplay-Regular.ttf");
+}
+
+@font-face {
+  font-family: PlayfairDisplay-Bold;
+  src: url("../fonts/PlayfairDisplay/PlayfairDisplay-Bold.ttf");
+}
+
+/*---------------------------------------------*/
+@font-face {
+  font-family: Montserrat-Regular;
+  src: url("../fonts/Montserrat/Montserrat-Regular.ttf");
+}
+
+@font-face {
+  font-family: Montserrat-Bold;
+  src: url("../fonts/Montserrat/Montserrat-Bold.ttf");
+}
+
+/*------------------------------------------------------------------
+[ Bootstrap ]*/
+.container {
+  max-width: 1380px;
+}
+
+@media (max-width: 1600px) {
+  .container {
+    max-width: 1200px;
+  }
+}
+
+/*------------------------------------------------------------------
+[ Menu ]*/
+.main-menu {
+  list-style-type: none;
+  margin: 0;
+
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+}
+
+.main-menu > li {
+  display: block;
+  position: relative;
+  padding: 20px 10px 20px 0px;
+  margin: 0px 4px 0px 14px;
+}
+
+.main-menu > li > a {
+  font-family: Poppins-Medium;
+  font-size: 14px;
+  color: #333;
+  padding: 5px 0px;
+  transition: all 0.4s;
+  -webkit-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  -moz-transition: all 0.4s;
+}
+
+.main-menu > li > a {
+  color: #fff;
+}
+
+.main-menu > li > .sub-menu {
+  top: 100%;
+  left: 0;
+}
+
+/*---------------------------------------------*/
+.main-menu > li:hover > a {
+  text-decoration: none;
+  color: #6c7ae0;
+}
+
+.main-menu > li:hover > .sub-menu {
+  visibility: visible;
+  opacity: 1;
+}
+
+.modal {
+  z-index: 9999;
+}
+
+.container p {
+  margin-bottom: 20px;
+}
+
+.container ol li {
+  list-style: image-set;
+}
+
+.carousel-indicators li {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 1px;
+  text-indent: -999px;
+  cursor: pointer;
+
+  background-color: rgba(0, 0, 0, 0);
+  border: 1px solid #b5b8c3;
+  border-radius: 50%;
+}
+
+.carousel-indicators {
+  bottom: -50px;
+}
+
+.carousel-indicators .active {
+  width: 12px;
+  height: 12px;
+  margin: 0;
+  background-color: #b5b8c3;
+}
+
+@media (max-width: 1300px) {
+  .main-menu > .respon-sub-menu .sub-menu {
+    right: 100%;
+    left: auto;
+  }
+
+  .main-menu > .respon-sub-menu > .sub-menu {
+    right: 0px;
+    left: auto;
+  }
+}
+
+.main-menu > li.active-menu > a {
+  color: #17ce88;
+}
+
+.nav-link {
+  font-size: 15px;
+  color: #888;
+  line-height: 1.2;
+
+  padding: 0;
+  border-radius: 0px;
+  border: none;
+  border-bottom: 1px solid transparent;
+
+  -webkit-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  -moz-transition: all 0.4s;
+  transition: all 0.4s;
+}
+
+.nav-link.active {
+  color: #333;
+  border-color: #797979;
+}
+
+.nav-link:hover {
+  color: #333;
+  border-color: #797979;
+}
+
+.bg0 {
+  background-color: #fff;
+}
+
+.bg-img1 {
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.img-proces {
+  width: 80%;
+}
+.logo {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin-right: 55px;
+  margin-top: 10px;
+}

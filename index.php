@@ -7,11 +7,10 @@
  */
 require_once('includes/config.php');
 
-include("functions.php");
-include("includes/idioma.php");
-if (!isset($_SESSION['resultadoTraduccionPertex'])) {
-    $_SESSION['resultadoTraduccionPertex'] = llamadoInicial($_SESSION['idioma']);
-}
+include("funciones/functions.php");
+
+require_once "assets/_partials/idioma.php";
+
 ?>
 
 <!doctype html>

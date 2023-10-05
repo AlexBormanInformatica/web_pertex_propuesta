@@ -1,6 +1,6 @@
 <?php
 require_once "includes/config.php";
-include("functions.php");
+include("funciones/functions.php");
 /* Importar el fichero principal de la librería, tal y como se muestra a
 continuación: */
 include_once 'api/apiRedsys.php';

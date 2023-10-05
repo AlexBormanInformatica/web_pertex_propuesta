@@ -1,10 +1,9 @@
 <?php
 require_once('includes/config.php');
-include("functions.php");
-include("includes/idioma.php");
-if (!isset($_SESSION['resultadoTraduccionPertex'])) {
-    $_SESSION['resultadoTraduccionPertex'] = llamadoInicial($_SESSION['idioma']);
-} ?>
+include("funciones/functions.php");
+
+require_once "assets/_partials/idioma.php";
+ ?>
 <!doctype html>
 <html class="no-js" lang="zxx">
 
@@ -29,7 +28,7 @@ if (!isset($_SESSION['resultadoTraduccionPertex'])) {
     <main class="p-tb-50 ">
 
         <?php
-        include("errores.php");
+        include("funciones/errores.php");
         ?>
 
         <div>
@@ -68,7 +67,7 @@ if (!isset($_SESSION['resultadoTraduccionPertex'])) {
                     </div>
                 </div>
 
-                <form class="form-group" id="formMuestrario" method="post" action="historial-pedidosDAO.php?pag=<?= buscarTexto("WEB", "paginas", "historial-pedidos", "", $_SESSION['idioma']); ?>"">
+                <form class="form-group" id="formMuestrario" method="post" action="DAOs/historial-pedidosDAO.php?pag=<?= buscarTexto("WEB", "paginas", "historial-pedidos", "", $_SESSION['idioma']); ?>"">
                     <input id="idPedidoME" name="idPedidoME" value="" type="hidden">
                     <!--Modal a que pedido agregar MUESTRARIO-->
                     <?php
@@ -142,7 +141,7 @@ if (!isset($_SESSION['resultadoTraduccionPertex'])) {
                             <img id="img2" src="imagenes/muestras-individuales.jpg" alt="">
                         </div>
 
-                        <form class="form-group" id="formMuestraIndividual" method="post" action="historial-pedidosDAO.php?pag=<?= buscarTexto("WEB", "paginas", "historial-pedidos", "", $_SESSION['idioma']); ?>">
+                        <form class="form-group" id="formMuestraIndividual" method="post" action="DAOs/historial-pedidosDAO.php?pag=<?= buscarTexto("WEB", "paginas", "historial-pedidos", "", $_SESSION['idioma']); ?>">
                             <div class="text-center">
                                 <h2 class="title-product mayus"><?= buscarTexto("WEB", "muestrario", "muestrario-producto-2", "", $_SESSION['idioma']); ?></h2>
 

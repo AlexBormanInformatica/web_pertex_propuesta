@@ -2,11 +2,10 @@
 //header('Content-Type: application/json');
 require_once "includes/config.php";
 
-include("functions.php");
-include("includes/idioma.php");
-if (!isset($_SESSION['resultadoTraduccionPertex'])) {
-  $_SESSION['resultadoTraduccionPertex'] = llamadoInicial($_SESSION['idioma']);
-}
+include("funciones/functions.php");
+
+require_once "assets/_partials/idioma.php";
+
 ?>
 
 <!doctype html>
@@ -28,7 +27,7 @@ if (!isset($_SESSION['resultadoTraduccionPertex'])) {
   <meta property="og:image" content="https://personalizacionestextiles.com/images/logo.png" />
 
   <?php include("assets/_partials/header-personalizar.php");
-  include("errores.php");
+  include("funciones/errores.php");
   ?>
 
 <body>
@@ -159,49 +158,8 @@ if (!isset($_SESSION['resultadoTraduccionPertex'])) {
 
 
       <div class="col-lg-7 este pad-mv" id="inicioScroll">
-        <!--Pedidos abiertos del usuario------------>
-        <div hidden>
-          <?php
-          if ($user->is_logged_in()) {
-            try {
-              //Para saber los pedidos abiertos
-              $sql = "SELECT * FROM pedidos WHERE estado = 'Pendiente' AND usuarios_id = " . $_SESSION['ID'] . " 
-              ORDER BY fechaPedido desc";
-              $query = $conn->query($sql);
-              $results = $query->fetchAll(PDO::FETCH_OBJ);
-            } catch (Exception $e) {
-              header("location: error?msg=" . $e->getCode());
-              // header("location: error?msg=" . $e->getMessage());
-            }
-          ?>
-            <?php foreach ($results as $result) { ?>
-              <div class="numeroPedidos" id="<?= $result->idpedidos ?>">
-                <?= $result->idpedidos . " - " . $result->nombrepedido ?>
-              </div>
-            <?php }
-            try {
-              //Para saber los nombres de los pedidos
-              $sql = "SELECT * FROM pedidos WHERE estado <> 'Anulado' AND usuarios_id = " . $_SESSION['ID'] . " 
-              ORDER BY fechaPedido desc";
-              $query = $conn->query($sql);
-              $results = $query->fetchAll(PDO::FETCH_OBJ);
-            } catch (Exception $e) {
-              header("location: error?msg=" . $e->getCode());
-              // header("location: error?msg=" . $e->getMessage());
-            }
-            foreach ($results as $result) {
-            ?>
-              <div class="nombrePedidos" id="<?= $result->idpedidos ?>">
-                <?= $result->nombrepedido ?>
-              </div>
-            <?php  }
-          } else { ?>
-            <div id="noestalog" hidden></div>
-          <?php } ?>
-        </div>
-
         <!--Formulario-->
-        <form id="formularioPersonalizar" action="historial-pedidosDAO.php?pag=<?= buscarTextoConReturn("WEB", "paginas", "historial-pedidos", "", $_SESSION['idioma']); ?>" method="POST" enctype="multipart/form-data">
+        <form id="formularioPersonalizar" action="DAOs/historial-pedidosDAO.php?pag=<?= buscarTextoConReturn("WEB", "paginas", "historial-pedidos", "", $_SESSION['idioma']); ?>" method="POST" enctype="multipart/form-data">
           <div class="tab-content p-0">
             <!--Paso 1: Tecnica------------------------------------------------>
             <div id="tecnicas" class="container tab-pane active "><br>
@@ -211,16 +169,16 @@ if (!isset($_SESSION['resultadoTraduccionPertex'])) {
                   <?php
                   try {
                     $sql = "SELECT c.idCategorias, p.idproductos, p.nombre, p.molde, p.max_colores, p.cmyk, p.colores, p.tope, p.imagen, p.idtexto_archivos, 
-                    p.alto_min, p.ancho_min, fp.formas_id_formas, fp.ancho_max, fp.alto_max
+                    p.alto_min, p.ancho_min, fp.formas_id_formas, p.ancho_max, p.alto_max
                     FROM categorias c 
                     INNER JOIN productos p ON c.idCategorias = p.categorias_idCategorias
-                    INNER JOIN formas_has_productos fp ON fp.productos_idproductos = p.idproductos
-                    WHERE p.idproductos != 43 AND p.idproductos != 44 AND p.idproductos != 50 AND p.idproductos != 49
+                    LEFT JOIN formas_has_productos fp ON fp.productos_idproductos = p.idproductos
+                    WHERE personalizable = 1
                     GROUP BY nombre";
                     $query = $conn->query($sql);
                     $results = $query->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC);
                   } catch (Exception $e) {
-                    header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
+                    // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
                   }
                   ?>
 
@@ -273,53 +231,6 @@ if (!isset($_SESSION['resultadoTraduccionPertex'])) {
                       </div> <!-- fin col6 -->
 
                       <div class="col-md-8">
-                        <!--Base-->
-                        <div style="display:none" class="p-b-20" id="divBase">
-                          <div style="display:none" id="addBase">
-                            <p style="display:none;" id="pBase" class="fs-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_añadir-base", "", $_SESSION['idioma']); ?></p>
-                            <p style="display:none;" id="pBaseTela" class="fs-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_añadir-base-tela", "", $_SESSION['idioma']); ?></p>
-                            <p style="display:none;" id="pBaseVelcro" class="fs-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_añadir-base-velcro", "", $_SESSION['idioma']); ?></p>
-
-                            <!--Boton modal info sobre bases-->
-                            <div type="button" class="btn-modal zoom" data-toggle="modal" data-target="#infoBases">
-                              <span class="mr-2"><i class="ti-info-alt"></i></span>
-                            </div>
-
-                            <div id="divBases" class="cc-selector">
-                              <input id="sibase" type="radio" name="base" value="Con base" />
-                              <?= buscarTexto("WEB", "generico", "si", "", $_SESSION['idioma']); ?><label id="lblSi" class="drinkcard-cc visa" for="sibase"></label>
-                              <input id="nobase" type="radio" name="base" value="Sin base" checked="checked" />
-                              <?= buscarTexto("WEB", "generico", "no", "", $_SESSION['idioma']); ?><label id="lblNo" class="drinkcard-cc mastercard" for="nobase"></label>
-                            </div>
-
-                            <p style="display:none;" id="elegirBase"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_elige-base", "", $_SESSION['idioma']); ?></p>
-                            <select id="selectBase" class="nice-select m-t-20" style="display:none" name="selectBase">
-                              <option id=""><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_elige-sinbase", "", $_SESSION['idioma']); ?></option>
-                              <option value="1" id="tela"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_elige-base_opt1", "", $_SESSION['idioma']); ?></option>
-                              <option value="2" id="velcro"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_elige-base_opt2", "", $_SESSION['idioma']); ?></option>
-                            </select>
-                          </div>
-                        </div>
-
-                        <!--Base de velcro: con o sin pelo-->
-                        <div style="display: none;" id="divPelo" class="p-b-20">
-                          <div style="display: none;" id="addPelo">
-                            <p class="fs-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_añadir-cierre", "", $_SESSION['idioma']); ?></p>
-
-                            <!--Boton modal info sobre pelo-->
-                            <div type="button" class="btn-modal zoom" data-toggle="modal" data-target="#infoPelo">
-                              <span class="mr-2"><i class="ti-info-alt"></i></span>
-                            </div>
-
-                            <div class="cc-selector">
-                              <input id="sipelo" type="radio" name="pelo" value="Con pelo" />
-                              <?= buscarTexto("WEB", "generico", "si", "", $_SESSION['idioma']); ?> <label class="drinkcard-cc conpelo" for="sipelo"></label>
-                              <input id="nopelo" type="radio" name="pelo" value="Sin pelo" checked="checked" />
-                              <?= buscarTexto("WEB", "generico", "no", "", $_SESSION['idioma']); ?> <label class="drinkcard-cc sinpelo" for="nopelo"></label>
-                            </div>
-                          </div>
-                        </div>
-
                         <!--Tope de pulsera-->
                         <div class="p-tb-20">
                           <div style="display: none;" id="topePulsera">
@@ -346,68 +257,6 @@ if (!isset($_SESSION['resultadoTraduccionPertex'])) {
                           <button class="btn p-t-50" id="añadirTopes"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_cant-topes_btn", "", $_SESSION['idioma']); ?></button>
                         </div>
 
-                        <!--Colores de la base-->
-                        <?php
-                        try {
-                          $sql = "SELECT bc.productos_idproductos, bc.idBase, bc.idColor, c.nombre, c.pantone, c.francia, c.portugal, c.italia, c.hexadecimal FROM base 
-                          INNER JOIN base_has_colores as bc ON bc.idBase = base.idBase
-                          INNER JOIN productos as p ON p.idproductos = bc.productos_idproductos
-                          INNER JOIN colores as c ON c.idColor = bc.idColor WHERE c.idColor<>1584 ORDER BY c.pantone";
-                          $query = $conn->prepare($sql);
-                          $query->execute();
-                          $results = $query->fetchAll(PDO::FETCH_OBJ);
-                        } catch (Exception $e) {
-                          header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
-                        }
-                        ?>
-
-                        <label style='display:none' for="" class="fs-configurator p-b-20" id="lblcolorBase"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_color-base", "", $_SESSION['idioma']); ?></label>
-                        <div style='display:none' class="row" id="colorBase">
-
-                          <?php foreach ($results as $result) { ?>
-                            <div style="display: none;" class="bases base_<?= $result->productos_idproductos ?> idbase_<?= $result->idBase ?> col-lg-color col-md-4 col-sm-6 " id="<?= $result->idColor ?>">
-                              <label class="cuadrado" data-title="<?php if ($_SESSION['idioma'] == 'ES') {
-                                                                    echo $result->nombre . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                  } else if ($_SESSION['idioma'] == 'FR' && $result->francia != null) {
-                                                                    echo $result->francia . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                  } else if ($_SESSION['idioma'] == 'PT' && $result->portugal != null) {
-                                                                    echo $result->portugal . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                  } else if ($_SESSION['idioma'] == 'IT' && $result->italia != null) {
-                                                                    echo $result->italia . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                  } else {
-                                                                    echo $result->nombre . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                  } ?>">
-                                <input name="colores" id="checkColoresBase" value="<?= $result->nombre ?>" type="checkbox">
-                                <span class="checkmark" style="background-color:#<?= $result->hexadecimal ?>"></span>
-                              </label>
-                            </div>
-                          <?php
-                          } ?>
-                        </div>
-
-                        <?php
-                        try {
-                          $sql_productos = "SELECT bc.productos_idproductos, bc.idBase FROM base 
-                          INNER JOIN base_has_colores as bc ON bc.idBase = base.idBase
-                          INNER JOIN productos as p ON p.idproductos = bc.productos_idproductos 
-                          WHERE Tipo_base <> 'sin base' 
-                          GROUP BY bc.idBase, bc.productos_idproductos";
-                          $query_productos = $conn->query($sql_productos);
-                          $results_productos = $query_productos->fetchAll(PDO::FETCH_OBJ);
-                        } catch (Exception $e) {
-                          header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
-                        }
-                        ?>
-                        <div id="productoBase">
-                          <?php foreach ($results_productos as $result) : ?>
-                            <div style="display: none;" class="<?= 20 //$result->moldeBase 
-                                                                ?> " id="<?= $result->productos_idproductos; ?>">
-                              <?= $result->idBase; //base 1 es tela, base 2 es velcro
-                              ?>
-                            </div>
-                          <?php endforeach ?>
-                        </div>
-
                         <!--Modulos x producto-->
                         <?php
                         try {
@@ -418,7 +267,7 @@ if (!isset($_SESSION['resultadoTraduccionPertex'])) {
                           $query = $conn->query($sql);
                           $results = $query->fetchAll(PDO::FETCH_OBJ);
                         } catch (Exception $e) {
-                          header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
+                          // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
                         }
                         ?>
                         <div id="productoModulo">
@@ -449,12 +298,11 @@ if (!isset($_SESSION['resultadoTraduccionPertex'])) {
                       try {
                         $sql1 = "SELECT f.id_formas, f.formas, f.imagen, p.idproductos FROM formas f 
                         INNER JOIN formas_has_productos fp ON f.id_formas = fp.formas_id_formas
-                        INNER JOIN productos p ON fp.productos_idproductos = p.idproductos
-                        WHERE f.fijo = 1 OR idproductos = 39";
+                        INNER JOIN productos p ON fp.productos_idproductos = p.idproductos";
                         $query = $conn->query($sql1);
                         $results = $query->fetchAll(PDO::FETCH_OBJ);
                       } catch (Exception $e) {
-                        header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
+                        // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
                       }
                       ?>
 
@@ -526,7 +374,7 @@ if (!isset($_SESSION['resultadoTraduccionPertex'])) {
                         $query_formas = $conn->query($sql_formas);
                         $results_formas = $query_formas->fetchAll(PDO::FETCH_ASSOC);
                       } catch (Exception $e) {
-                        header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
+                        // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
                       }
                       ?>
                       <div style="display: none;" class="form-group">
@@ -572,7 +420,7 @@ if (!isset($_SESSION['resultadoTraduccionPertex'])) {
                       $query->execute();
                       $results = $query->fetchAll(PDO::FETCH_OBJ);
                     } catch (Exception $e) {
-                      header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
+                      // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
                     }
                     ?>
 
@@ -622,7 +470,7 @@ if (!isset($_SESSION['resultadoTraduccionPertex'])) {
                       $query->execute();
                       $results = $query->fetchAll(PDO::FETCH_OBJ);
                     } catch (Exception $e) {
-                      header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
+                      // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
                     }
                     ?>
                     <div style="display: none;" class="p-all-10" id="colorMetal">
@@ -661,7 +509,7 @@ if (!isset($_SESSION['resultadoTraduccionPertex'])) {
                       $query->execute();
                       $results = $query->fetchAll(PDO::FETCH_OBJ);
                     } catch (Exception $e) {
-                      header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
+                      // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
                     }
                     ?>
                     <div style="display: none;" class="p-all-10" id="colorPiel">
@@ -701,7 +549,7 @@ if (!isset($_SESSION['resultadoTraduccionPertex'])) {
               $query_texto->execute();
               $results_texto = $query_texto->fetchAll(PDO::FETCH_OBJ);
             } catch (Exception $e) {
-              header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
+              // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
             }
             ?>
             <div id="imagen" class="container tab-pane "><br>
@@ -764,7 +612,7 @@ if (!isset($_SESSION['resultadoTraduccionPertex'])) {
             $query->execute();
             $results = $query->fetchAll(PDO::FETCH_OBJ);
           } catch (Exception $e) {
-            header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
+            // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
           }
           ?>
 
@@ -1014,7 +862,7 @@ if (!isset($_SESSION['resultadoTraduccionPertex'])) {
         $query = $conn->query($sql);
         $results = $query->fetchAll(PDO::FETCH_OBJ);
       } catch (Exception $e) {
-        header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
+        // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
       }
       ?>
       <div class="modal fade" id="infoTopes" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -1069,7 +917,7 @@ if (!isset($_SESSION['resultadoTraduccionPertex'])) {
                 $query = $conn->query($sql);
                 $results = $query->fetchAll(PDO::FETCH_OBJ);
               } catch (Exception $e) {
-                header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
+                // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
               }
               ?>
               <div>

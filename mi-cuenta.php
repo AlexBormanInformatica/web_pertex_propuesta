@@ -1,7 +1,7 @@
 <?php
 //Declaramos la conexion con el servidor de base de datos
 require_once('includes/config.php');
-include("functions.php");
+include("funciones/functions.php");
 
 if (!$user->is_logged_in()) {
     // echo "e " . $_SESSION['loggedin'];

@@ -1,8 +1,8 @@
 <?php
 require_once('includes/config.php');
-include("functions.php");
-include("includes/idioma.php");
-$_SESSION['resultadoTraduccionPertex'] = llamadoInicial($_SESSION['idioma']);
+include("funciones/functions.php");
+
+require_once "assets/_partials/idioma.php";
 
 ?>
 <!doctype html>

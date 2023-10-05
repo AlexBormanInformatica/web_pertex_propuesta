@@ -1,7 +1,7 @@
 <?php
 require_once "includes/config.php";
 include("pedidos.php");
-include("functions.php");
+include("funciones/functions.php");
 
 $metodo = $_POST['metodo'];
 $total = $_POST['total'];

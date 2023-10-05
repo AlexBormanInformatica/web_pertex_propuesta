@@ -1,11 +1,10 @@
 <?php
 require_once('includes/config.php');
 include("pedidos.php");
-include("functions.php");
-include("includes/idioma.php");
-if (!isset($_SESSION['resultadoTraduccionPertex'])) {
-    $_SESSION['resultadoTraduccionPertex'] = llamadoInicial($_SESSION['idioma']);
-}
+include("funciones/functions.php");
+
+require_once "assets/_partials/idioma.php";
+
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
 ?>
@@ -39,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
     <body>
         <?php
-        include("errores.php");
+        include("funciones/errores.php");
         ?>
         <div id="preloader-active">
             <div class="preloader d-flex align-items-center justify-content-center">
@@ -76,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
         <div class="container mt-30 p-all-30">
             <h2 class="text-center mb-5">Sube las imagenes del PEDIDO #<?= $_GET['nped'] ?></h2><br>
-            <form id="formSubirBoceto" action="subir-bocetoDAO.php" method="post" enctype="multipart/form-data">
+            <form id="formSubirBoceto" action="DAOs/subir-bocetoDAO.php" method="post" enctype="multipart/form-data">
                 <div class="row ">
                     <input name="numPed" id="numPed" type="text" value="<?= $_GET['nped'] ?>" hidden>
 

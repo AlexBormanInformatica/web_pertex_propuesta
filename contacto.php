@@ -1,11 +1,8 @@
 <?php
 require_once "includes/config.php";
-include("functions.php");
-include("includes/idioma.php");
-if (!isset($_SESSION['resultadoTraduccionPertex']) || !isset($_SESSION['resultadoTraduccionFormularios'])) {
-  $_SESSION['resultadoTraduccionPertex'] = llamadoInicial($_SESSION['idioma']);
-  $_SESSION['resultadoTraduccionFormularios'] = llamadoInicialFormularios($_SESSION['idioma']);
-}
+include("funciones/functions.php");
+require_once "assets/_partials/idioma.php";
+
 ?>
 
 <!doctype html>
@@ -30,7 +27,7 @@ if (!isset($_SESSION['resultadoTraduccionPertex']) || !isset($_SESSION['resultad
   <main>
 
     <?php
-    include("errores.php");
+    include("funciones/errores.php");
     ?>
 
     <section>
@@ -49,7 +46,7 @@ if (!isset($_SESSION['resultadoTraduccionPertex']) || !isset($_SESSION['resultad
     </section>
 
     <div class="container">
-      <form class="row m-0 border-form  container white-bg p-all-30 " id="formulariocontacto" action="contactoDAO.php" method="post">
+      <form class="row m-0 border-form  container white-bg p-all-30 " id="formulariocontacto" action="DAOs/contactoDAO.php" method="post">
         <input id="ko" name="ko" value="" hidden>
         <?php if (!$user->is_logged_in()) { ?>
           <div class="col-lg-6 col-md-6 ">
@@ -298,7 +295,7 @@ if (!isset($_SESSION['resultadoTraduccionPertex']) || !isset($_SESSION['resultad
             grecaptcha.execute("6Le8UoMkAAAAALmqYyAs8L4dBYMQL6N4lhSqvCld", {}).then(function(token) {
               $.ajax({ //Peticion de ajax
                 method: "POST",
-                url: "contactoDAO.php",
+                url: "DAOs/contactoDAO.php",
                 data: {
                   nombrecomercial: $('#nombrecomercial').val(),
                   email: $('#email').val(),

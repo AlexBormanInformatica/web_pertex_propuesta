@@ -24,14 +24,14 @@ if (session_status() == 1) {
 //set timezone
 date_default_timezone_set('Europe/Madrid');
 
-$servername = "192.168.10.20";
-// $servername = "localhost";
+// $servername = "192.168.10.20";
+$servername = "localhost";
 $username = "usuario";
 $password = "Passw0rd$01";
 
 try {
   //CONEXION PERSONALIZACIONES TEXTILES (ECOMMERCE)
-  $conn = new PDO("mysql:host=$servername;dbname=ecommerce", $username, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
+  $conn = new PDO("mysql:host=localhost;dbname=pertex", $username, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
   $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // set the PDO error mode to exception
 
   //CONEXION PRG_BORMAN

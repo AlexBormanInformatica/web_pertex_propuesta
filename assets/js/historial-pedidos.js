@@ -382,7 +382,7 @@
         var anticipo = $('#sianticipo').is(':checked') ? 1 : 0;
         var porcentajeanticipo = $('#porcentajeAnticipo').val();
         var comentario = $('#comentario').val();
-        window.location.replace("./historial-pedidosDAO.php?pag=" + document.location.href.match(/[^\/]+$/)[0] + "&scnf=" + id
+        window.location.replace("./DAOs//historial-pedidosDAO.php?pag=" + document.location.href.match(/[^\/]+$/)[0] + "&scnf=" + id
             + "&numPedido=" + id + "&comentario=" + comentario + "&cliente=" + cliente + "&comercial=" + comercial + "&nombredecomercial=" + nombredecomercial
             + "&anticipo=" + anticipo + "&porcentajeanticipo=" + porcentajeanticipo);
     });
@@ -400,7 +400,7 @@
         var anticipo = $('#sianticiporep').is(':checked') ? 1 : 0;
         var porcentajeanticipo = $('#porcentajeAnticipoRep').val();
         var comentario = $('#comentariorep').val();
-        window.location.replace("./historial-pedidosDAO.php?pag=" + document.location.href.match(/[^\/]+$/)[0] + "&scnf2=" + id
+        window.location.replace("./DAOs/historial-pedidosDAO.php?pag=" + document.location.href.match(/[^\/]+$/)[0] + "&scnf2=" + id
             + "&numPedido=" + id + "&comentario=" + comentario + "&cliente=" + cliente + "&comercial=" + comercial + "&nombredecomercial=" + nombredecomercial
             + "&anticipo=" + anticipo + "&porcentajeanticipo=" + porcentajeanticipo);
     });
@@ -408,15 +408,15 @@
     $(document).on('click', '#btnSiElimina', function () {
         $('#btnSiElimina').addClass("button--loading");
         $('#btnSiElimina').prop("disabled", true);
-        window.location.replace("./historial-pedidosDAO.php?pag=" + document.location.href.match(/[^\/]+$/)[0] + "&slm=" + id);
+        window.location.replace("./DAOs/historial-pedidosDAO.php?pag=" + document.location.href.match(/[^\/]+$/)[0] + "&slm=" + id);
     });
 
     $(document).on('click', '.btnEliminarLineaPedido', function () {
-        window.location.replace("./historial-pedidosDAO.php?pag=" + document.location.href.match(/[^\/]+$/)[0] + "&slmlp=" + $(this).attr("id") + "&slm2=" + id);
+        window.location.replace("./DAOs/historial-pedidosDAO.php?pag=" + document.location.href.match(/[^\/]+$/)[0] + "&slmlp=" + $(this).attr("id") + "&slm2=" + id);
     });
 
     $(document).on('click', '.btnEliminarLineaMuestra', function () {
-        window.location.replace("./historial-pedidosDAO.php?pag=" + document.location.href.match(/[^\/]+$/)[0] + "&slmlm=" + $(this).attr("id") + "&slm3=" + id);
+        window.location.replace("./DAOs/historial-pedidosDAO.php?pag=" + document.location.href.match(/[^\/]+$/)[0] + "&slmlm=" + $(this).attr("id") + "&slm3=" + id);
     });
 
 

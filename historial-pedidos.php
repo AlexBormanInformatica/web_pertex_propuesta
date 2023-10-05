@@ -5,7 +5,7 @@ use LDAP\Result;
 require_once('includes/config.php');
 include("pedidos.php");
 
-include("functions.php");
+include("funciones/functions.php");
 if (!$user->is_logged_in()) {
     header('Location: login');
     exit();
@@ -29,7 +29,7 @@ if (!$user->is_logged_in()) {
     ?>
     <main>
         <?php
-        include("errores.php");
+        include("funciones/errores.php");
         $rep = false;
         ?>
         <!-- slider Area Start-->
@@ -815,7 +815,7 @@ if (!$user->is_logged_in()) {
                         }
                     } ?>
                     <div class="mt-5" id="divFormRechazoBoceto" style="display: none;">
-                        <form id="formrechazoBoceto" action="historial-pedidosDAO.php?pag=<?= basename($_SERVER['REQUEST_URI']) ?>" method="post">
+                        <form id="formrechazoBoceto" action="DAOs/historial-pedidosDAO.php?pag=<?= basename($_SERVER['REQUEST_URI']) ?>" method="post">
                             <label><?= buscarTexto("WEB", "historial-pedidos", "hp_v-modal_bcto-?modificar", "", $_SESSION['idioma']); ?></label>
                             <input type="text" name="idPedido" id="idPedido" value="" hidden>
                             <input type="text" name="anotaciones" class="single-textarea" value="" required>
@@ -1074,7 +1074,7 @@ if (!$user->is_logged_in()) {
 
                 </div>
                 <div class="modal-body  container">
-                    <form id="formEliminar" action="historial-pedidosDAO.php?pag=<?= buscarTexto("WEB", "paginas", "historial-pedidos", "", $_SESSION['idioma']); ?>" method="POST">
+                    <form id="formEliminar" action="DAOs/historial-pedidosDAO.php?pag=<?= buscarTexto("WEB", "paginas", "historial-pedidos", "", $_SESSION['idioma']); ?>" method="POST">
                         <div class="">
                             <p class="mb-3"><?= buscarTexto("WEB", "historial-pedidos", "hp_modal_p1", "", $_SESSION['idioma']); ?></p>
                             <p class="mb-3 help-block"><?= buscarTexto("WEB", "errores", "txt-info-eliminartodo", "", $_SESSION['idioma']); ?></p>
@@ -1138,7 +1138,7 @@ if (!$user->is_logged_in()) {
                         <p class="mb-3">
                             <?= buscarTexto("WEB", "historial-pedidos", "hp_v-modal_anular-p", "", $_SESSION['idioma']); ?>
                         </p>
-                        <form id="formanular" action="historial-pedidosDAO.php?pag=<?= basename($_SERVER['REQUEST_URI']) ?>" method="post">
+                        <form id="formanular" action="DAOs/historial-pedidosDAO.php?pag=<?= basename($_SERVER['REQUEST_URI']) ?>" method="post">
                             <label><?= buscarTexto("WEB", "historial-pedidos", "hp_v-modal_bcto-?anular", "", $_SESSION['idioma']); ?></label>
                             <input type="text" name="idPedidoA" id="idPedidoA" value="" hidden>
                             <input type="text" name="anotacionesA" class="single-textarea" value="" required><br>
@@ -1197,7 +1197,7 @@ if (!$user->is_logged_in()) {
                         <label class="p-b-5">Busca por nombre o número de diseño</label>
                         <input type="text" id="repetir" placeholder="<?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_placeholder-buscador", "", $_SESSION['idioma']); ?>" class="nice-select m-b-30">
                     </div>
-                    <form id="formrepetir" action="historial-pedidosDAO.php?pag=<?= basename($_SERVER['REQUEST_URI']) ?>" method="post">
+                    <form id="formrepetir" action="DAOs/historial-pedidosDAO.php?pag=<?= basename($_SERVER['REQUEST_URI']) ?>" method="post">
                         <div class="row">
                             <div id="masDeUnaLinea" class="col-lg-6 col-md-6 este" style="height:auto">
                                 <p class="fs-configurator"><?= buscarTexto("WEB", "historial-pedidos", "hp_v-modal_repetir-p1", "", $_SESSION['idioma']); ?></p>

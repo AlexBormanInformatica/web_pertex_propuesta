@@ -1,6 +1,6 @@
 <?php
 require_once('includes/config.php');
-include("functions.php");
+include("funciones/functions.php");
 include("pedidos.php");
 
 if (!$user->is_logged_in()) {
@@ -53,7 +53,7 @@ $recargo = ""; //recargo de equivalencia
     <main>
 
         <?php
-        include("errores.php");
+        include("funciones/errores.php");
 
         $email = $nombrecomercial = $nombrefiscal = $intracomunitario = $vatno = $direccion =
             $postal = $pais = $provincia = $poblacion = $telefono = $movil = $actividades = $recargo = $conocido = "";

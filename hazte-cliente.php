@@ -2,24 +2,10 @@
 // Include config file
 require_once "includes/config.php";
 
-include("functions.php");
+include("funciones/functions.php");
 
-//Verificar si existe un idioma
-//Sino, se hace un llamado inicial con el español
-if (isset($_GET['idioma']) && !isset($_SESSION['idioma'])) {
-    $_SESSION['idioma'] = $_GET['idioma'];
-} else if (isset($_SESSION['idioma'])) {
-} else {
-    $_SESSION['idioma'] = 'ES';
-}
+require_once "assets/_partials/idioma.php";
 
-if (!isset($_SESSION['resultadoTraduccionPertex']) || !isset($_SESSION['resultadoTraduccionFormularios'])) {
-    $_SESSION['resultadoTraduccionPertex'] = llamadoInicial($_SESSION['idioma']);
-    $_SESSION['resultadoTraduccionFormularios'] = llamadoInicialFormularios($_SESSION["idioma"]);
-} else if ($_SESSION['idioma'] != "ES") {
-    $_SESSION['resultadoTraduccionPertex'] = llamadoInicial($_SESSION['idioma']);
-    $_SESSION['resultadoTraduccionFormularios'] = llamadoInicialFormularios($_SESSION["idioma"]);
-}
 ?>
 
 <!doctype html>
@@ -43,7 +29,7 @@ if (!isset($_SESSION['resultadoTraduccionPertex']) || !isset($_SESSION['resultad
 
     <main>
         <?php
-        include("errores.php");
+        include("funciones/errores.php");
         ?>
 
         <section class="overflow">
@@ -64,7 +50,7 @@ if (!isset($_SESSION['resultadoTraduccionPertex']) || !isset($_SESSION['resultad
                             </div>
 
 
-                            <form class="container" id="formulario-haztecliente" action="hazte-clienteDAO.php" method="post" enctype='multipart/form-data'>
+                            <form class="container" id="formulario-haztecliente" action="DAOs/hazte-clienteDAO.php" method="post" enctype='multipart/form-data'>
                                 <input id="ko" name="ko" value="" hidden>
                                 <input id="gracias-donde" name="gracias-donde" value="hazte-cliente" hidden>
                                 <input id="actividadesSeleccionadas" name="actividadesSeleccionadas[]" value="" hidden>

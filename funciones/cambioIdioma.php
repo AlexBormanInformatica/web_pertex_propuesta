@@ -1,7 +1,6 @@
 <?php
 require_once('includes/config.php');
-include("functions.php");
-require('includes/idioma.php');
+include("funciones/functions.php");
 
 if (isset($_GET['idioma'])) {
     $_SESSION['resultadoTraduccionPertex'] = llamadoInicial($_SESSION['idioma']);

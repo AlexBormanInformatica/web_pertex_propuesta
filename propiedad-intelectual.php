@@ -1,6 +1,6 @@
 <?php
 require_once('includes/config.php');
-include("functions.php");
+include("funciones/functions.php");
 include("pedidos.php");
 if (!$user->is_logged_in()) {
     header('Location: login');
@@ -73,7 +73,7 @@ if (!$user->is_logged_in()) {
     <main>
 
         <?php
-        include("errores.php");
+        include("funciones/errores.php");
 
 
         $idpedido = $_POST['idPedidos'];
@@ -179,7 +179,7 @@ if (!$user->is_logged_in()) {
                         </label>
                     </div>
                     <div class="form-group">
-                        <form action="historial-pedidosDAO.php?pag=<?= buscarTexto("WEB", "paginas", "historial-pedidos", "", $_SESSION['idioma']); ?>" method="POST">
+                        <form action="DAOs/historial-pedidosDAO.php?pag=<?= buscarTexto("WEB", "paginas", "historial-pedidos", "", $_SESSION['idioma']); ?>" method="POST">
                             <input name="prop-int" value="1" hidden>
                             <input name="idPedidos" value="<?= $idpedido ?>" hidden>
                             <button class="btn" id="btnPropiedad" type="submit" disabled>

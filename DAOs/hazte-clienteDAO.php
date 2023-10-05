@@ -1,7 +1,7 @@
 <?php
 // Include config file
 require_once "includes/config.php";
-include("functions.php");
+include("funciones/functions.php");
 
 include('includes/AES.php');
 

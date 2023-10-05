@@ -286,7 +286,7 @@
     sibase.on('click', function () {
         $('#rowMoldeBase').show();
         $('#rowPxuBase').show();
-        var base = $('#productoBase').find('div#' + tecnica.val());
+        var base = 20;
 
         if (sibase.is(':checked')) {
             $('#rowColoresBase').show();

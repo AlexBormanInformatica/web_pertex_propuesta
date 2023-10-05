@@ -1,6 +1,6 @@
 <?php
 require_once "includes/config.php";
-include("functions.php");
+include("funciones/functions.php");
 ?>
 <!doctype html>
 <html class="no-js" lang="zxx">

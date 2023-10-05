@@ -1,7 +1,7 @@
   <?php
   include_once 'api/apiRedsys.php';
   require_once "includes/config.php";
-  include("functions.php");
+  include("funciones/functions.php");
   include("pedidos.php");
   include("assets/_partials/header.php");
   ?>

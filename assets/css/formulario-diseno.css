@@ -1,0 +1,9 @@
+.paso-incompleto {
+  color: #D86E6E;
+  font-size: 10px;
+}
+
+.paso-completo {
+  color: green;
+  font-size: 10px;
+}

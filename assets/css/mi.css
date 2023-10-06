@@ -2954,7 +2954,7 @@ input:focus {
 
 .flex-column.nav-pills {
   background-color: #00953e;
-  height: 800px;
+  /* height: 800px; */
   width: 150px;
 }
 

@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="assets/css/main.css">
 <link rel="stylesheet" href="assets/css/mi.css">
 <link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/formulario-diseno.css">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-SECVFXMNWB"></script>
 <script>
@@ -53,6 +54,12 @@
                                     <a href="."><img src="assets/img/logo/logo.png" alt=""></a>
                                 </div>
                             </div>
+                            <?php if ($user->is_logged_in()) { ?>
+                                  <?php } else { ?>
+                                    <div>
+                                        <p style="color:red;font-size: 20px;">PARA ENCARGAR UN DISEÑO REGISTRATE O INICIA SESIÓN <a href="login" class="btn btn-lg">Registrate / inicia sesión</a></p>
+                                    </div>
+                                        <?php } ?>
 
                             <div class="col-2">
                                 <div class="mobile_menu d-block d-lg-none"></div>

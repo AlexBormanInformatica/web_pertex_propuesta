@@ -5,7 +5,7 @@
  */
 function  llamadoInicial($idiomaselect)
 {
-    require "includes/config.php";
+    require "../includes/config.php";
     //  $_SESSION['idioma'] = $idiomaselect;
     try {
         global $conn;
@@ -67,7 +67,7 @@ function buscarTextoConReturn($tipo, $identificador, $subidentificador1, $subide
  */
 function  llamadoInicialFormularios($idiomaselect)
 {
-    require "includes/config.php";
+    require "../includes/config.php";
     try {
         global $conn_formularios;
         $query2 = $conn_formularios->prepare("SELECT * FROM traducciones WHERE (idioma= '" .  $idiomaselect . "' AND correcto=1 ) or idioma='ES' ORDER BY tipo, subidentificador1, subidentificador2, FIELD(idioma, '" .  $idiomaselect . "') DESC;");
@@ -124,7 +124,7 @@ function existe($tipo, $identificador, $subidentificador1, $subidentificador2, $
  * Busca la existencia del nombre de personalización/diseño por usuario, devuelve true si existe.
  */
 if (isset($_POST['nombreDisenoExiste'])) {
-    require "includes/config.php";
+    require "../includes/config.php";
     $nombre = $_POST["nombreDisenoExiste"];
 
     try {
@@ -147,7 +147,7 @@ if (isset($_POST['nombreDisenoExiste'])) {
  * Busca la existencia del nombre de pedido por usuario, devuelve true si existe.
  */
 if (isset($_POST['nombrePedidoExiste'])) {
-    require "includes/config.php";
+    require "../includes/config.php";
     $nombre = $_POST["nombrePedidoExiste"];
 
     try {
@@ -171,7 +171,7 @@ if (isset($_POST['nombrePedidoExiste'])) {
  */
 function datosCompletos()
 {
-    require "includes/config.php";
+    require "../includes/config.php";
     try {
         $sql = "SELECT sepuedemodificar
         FROM fichaempresametas
@@ -192,7 +192,7 @@ function datosCompletos()
  * Busca el precio del producto indicado segun la cantidad y superficie
  */
 if (isset($_POST['precio'])) {
-    require "includes/config.php";
+    require "../includes/config.php";
     try {
         $sql_precios = "SELECT `" . $_POST['cantidad'] . "` FROM precios INNER JOIN productos ON productos.idproductos = precios.productos_idproductos 
         WHERE productos_idproductos=? AND superficie=?";
@@ -210,7 +210,7 @@ if (isset($_POST['precio'])) {
  * Busca el precio del producto indicado segun la cantidad y superficie
  */
 if (isset($_POST['cantidadMinima'])) {
-    echo PHP_URL_HOST;
+    require "../includes/config.php";
     try {
         $sql = "SELECT  CASE    WHEN `1` IS NOT NULL THEN '1'  WHEN `4` IS NOT NULL THEN '2' 
         WHEN `9` IS NOT NULL THEN '5'  WHEN `19` IS NOT NULL THEN '10' 
@@ -237,7 +237,7 @@ if (isset($_POST['cantidadMinima'])) {
  * Si existe el email
  */
 if (isset($_POST['buscarMail'])) {
-    require "includes/config.php";
+    require "../includes/config.php";
     $email = $_POST['buscarMail'];
 
     $sql = "SELECT idfichaempresa FROM fichaempresametas WHERE email =?";
@@ -253,7 +253,24 @@ if (isset($_POST['buscarMail'])) {
     $count2 = $query2->rowCount();
     if (($count2 + $count1) > 0) {
         echo "1";
-    } else{
+    } else {
         echo "0";
     }
+}
+
+
+if (isset($_POST['buscarBases'])) {
+    require "../includes/config.php";
+    $id = $_POST['idproducto'];
+
+    $sql = "SELECT c.id_complementos FROM pertex.complementos c
+    INNER JOIN productos_has_complementos pc ON pc.id_complementos = c.id_complementos
+    INNER JOIN productos p ON p.idproductos = pc.id_productos
+    WHERE idproductos=?";
+    $query = $conn->prepare($sql);
+    $query->bindParam(1, $id, PDO::PARAM_INT);
+    $query->execute();
+    $jsonData = json_encode($query->fetchAll(PDO::FETCH_OBJ));
+    // Envía la respuesta JSON
+    echo $jsonData;
 }

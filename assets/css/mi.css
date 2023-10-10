@@ -1014,7 +1014,6 @@ p {
 
 .pb-80 {
   padding-bottom: 80px;
- 
 }
 
 .pb-85 {
@@ -2108,23 +2107,20 @@ input:focus {
   .v-escr {
     padding: 100px;
   }
-
 }
 @media (max-width: 1500px) {
   .v-escr {
     padding: 50px;
   }
-  .txt-p-title{
+  .txt-p-title {
     color: #333333;
     font-family: "Poppins", Sans-serif;
     font-size: 20px;
     font-weight: 500;
     line-height: 1.2em;
     letter-spacing: -0.4px;
-    
   }
 }
-
 
 .footer-area .footer-logo {
   margin-bottom: 40px;
@@ -2149,7 +2145,6 @@ input:focus {
   text-transform: capitalize;
   font-family: "Poppins", sans-serif;
 }
-
 
 .footer-area .footer-tittle ul li {
   color: #012f5f;
@@ -2965,7 +2960,6 @@ input:focus {
   width: 150px;
 }
 
-
 .col-lg-color {
   -ms-flex: 0 0 15%;
   flex: 0 0 15%;
@@ -3005,7 +2999,7 @@ input:focus {
 }
 
 @media (max-width: 576px) {
- .checkmark {
+  .checkmark {
     position: absolute;
     top: 0;
     left: 0;
@@ -3086,25 +3080,11 @@ input:focus {
   appearance: none;
 }
 
-.cc-selector input:active + .drinkcard-cc {
-  opacity: 0.9;
+.cc-selector {
+  cursor: pointer;
 }
 
-.cc-selector input:checked + .drinkcard-cc {
-  -webkit-filter: none;
-  -moz-filter: none;
-  filter: none;
-  border: solid 3px #00953e;
-  padding: 30px;
-  border-radius: 25%;
-}
-
-.cc-selector input:active + .drinkcard-cc {
-  opacity: 0.9;
-}
-
-
-.cc-selector input:checked + .drinkcard-cc {
+.cc-selector input:checked + label {
   -webkit-filter: none;
   -moz-filter: none;
   filter: none;
@@ -3113,14 +3093,14 @@ input:focus {
   border-radius: 25%;
 }
 
-.visa {
+.base-tela {
   background-image: url(../../iconos/base-si.png);
 }
 
 .mastercard {
   background-image: url(../../iconos/base-no.png);
 }
-.congancho {
+.base-gancho {
   background-image: url(../../iconos/gancho-si.png);
 }
 
@@ -3128,7 +3108,7 @@ input:focus {
   background-image: url(../../iconos/gancho-no.png);
 }
 
-.conpelo {
+.base-pelo {
   background-image: url(../../iconos/pelo-si.png);
 }
 
@@ -3223,7 +3203,6 @@ Papertick
   -moz-transition: all 100ms ease-in;
   transition: all 100ms ease-in;
   background-position: center;
-
 }
 
 .drinkcard-cc:hover {
@@ -3308,7 +3287,8 @@ Papertick
   height: 60%;
   width: 40%;
 }
-html, body {
+html,
+body {
   overflow-x: hidden !important;
   max-width: 100%;
 }
@@ -3423,7 +3403,6 @@ h3.tit-form {
   animation: fade-right 1s ease-in;
 }
 
-
 @keyframes fade-right {
   0% {
     transform: translateX(100px);
@@ -3490,7 +3469,6 @@ h3.tit-form {
 #radio5:checked ~ label {
   color: orange;
 }
-
 
 .btn-link-reg {
   font-weight: 800;
@@ -3872,23 +3850,23 @@ input[type="number"] {
 }
 
 @media (max-width: 570px) {
-#q {
-  width: 250px;
-  border-radius: 20px;
-  height: 50px;
-  border: 1px solid #aaa;
-}
+  #q {
+    width: 250px;
+    border-radius: 20px;
+    height: 50px;
+    border: 1px solid #aaa;
+  }
 }
 .border-cuenta {
-  -webkit-box-shadow: 3px 3px 5px 0px rgba(185,191,191,1);
-  -moz-box-shadow: 3px 3px 5px 0px rgba(185,191,191,1);
-  box-shadow: 3px 3px 5px 0px rgba(185,191,191,1);
+  -webkit-box-shadow: 3px 3px 5px 0px rgba(185, 191, 191, 1);
+  -moz-box-shadow: 3px 3px 5px 0px rgba(185, 191, 191, 1);
+  box-shadow: 3px 3px 5px 0px rgba(185, 191, 191, 1);
 }
 
 .accordion-container {
   width: 100%;
   margin: 0 0 20px;
-  clear:both;
+  clear: both;
 }
 
 .accordion-titulo {
@@ -3910,11 +3888,11 @@ input[type="number"] {
 }
 
 .accordion-titulo span.toggle-icon:before {
-  content:"+";
+  content: "+";
 }
 
 .accordion-titulo.open span.toggle-icon:before {
-  content:"-";
+  content: "-";
 }
 
 .accordion-titulo span.toggle-icon {
@@ -3922,7 +3900,7 @@ input[type="number"] {
   top: 10px;
   right: 20px;
   font-size: 38px;
-  font-weight:bold;
+  font-weight: bold;
 }
 
 .accordion-content {
@@ -3931,8 +3909,8 @@ input[type="number"] {
   overflow: auto;
 }
 
-.accordion-content p{
-  margin:0;
+.accordion-content p {
+  margin: 0;
 }
 
 .accordion-content img {
@@ -3945,66 +3923,122 @@ input[type="number"] {
 
 @media (max-width: 767px) {
   .accordion-content {
-      padding: 10px 0;
+    padding: 10px 0;
   }
 }
 .evenly {
   justify-content: space-evenly;
 }
 .wrapper {
-	max-width: 1000px;
-	margin: 0 auto;
-	padding: 32px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px;
 }
 
 /* a partir de aqui el CSS de las animaciones */
 
-@keyframes anim-fade-in { from { opacity: 0; } to { opacity: 1 } }
-
-@keyframes anim-up { 
-	from { opacity: 0; transform: translateY(100px); } 
-	to { opacity: 1; transform: translateY(0px); }  
-}		
-
-@keyframes anim-down { 
-	from { opacity: 0; transform: translateY(-100px); } 
-	to { opacity: 1; transform: translateY(0px); }  
-}		
-
-@keyframes anim-left { 
-	from { opacity: 0; transform: translateX(100px); } 
-	to { opacity: 1; transform: translateX(0px); }  
-}		
-
-@keyframes anim-right { 
-	from { opacity: 0; transform: translateX(-100px); } 
-	to { opacity: 1; transform: translateX(0px); }  
-}		
-
-.anim-up, .anim-down, .anim-left, .anim-right, .anim-fade-in {
-	animation-duration: 1s; /* la animacion dura X segundos */
-	animation-delay: 0.5s; /* esperamos X segundos antes de hacer la animacion */			
-	animation-fill-mode: both; /* aplica estilos de la animacion antes y despues de reproducirla */
+@keyframes anim-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-.anim-up { animation-name: anim-up; }
-.anim-down { animation-name: anim-down; }
-.anim-left { animation-name: anim-left; }
-.anim-right { animation-name: anim-right; }
-.anim-fade-in { animation-name: anim-fade-in; }
+@keyframes anim-up {
+  from {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
 
-.anim-pause-2 { animation-delay: 2s; } /* la animacion empieza en 2 seg. */		
-.anim-pause-3 { animation-delay: 3s; } /* la animacion empieza en 3 seg. */
-.anim-pause-4 { animation-delay: 4s; } /* la animacion empieza en 4 seg. */
-.anim-pause-5 { animation-delay: 5s; } /* la animacion empieza en 5 seg. */
+@keyframes anim-down {
+  from {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+@keyframes anim-left {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
+@keyframes anim-right {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
+.anim-up,
+.anim-down,
+.anim-left,
+.anim-right,
+.anim-fade-in {
+  animation-duration: 1s; /* la animacion dura X segundos */
+  animation-delay: 0.5s; /* esperamos X segundos antes de hacer la animacion */
+  animation-fill-mode: both; /* aplica estilos de la animacion antes y despues de reproducirla */
+}
+
+.anim-up {
+  animation-name: anim-up;
+}
+.anim-down {
+  animation-name: anim-down;
+}
+.anim-left {
+  animation-name: anim-left;
+}
+.anim-right {
+  animation-name: anim-right;
+}
+.anim-fade-in {
+  animation-name: anim-fade-in;
+}
+
+.anim-pause-2 {
+  animation-delay: 2s;
+} /* la animacion empieza en 2 seg. */
+.anim-pause-3 {
+  animation-delay: 3s;
+} /* la animacion empieza en 3 seg. */
+.anim-pause-4 {
+  animation-delay: 4s;
+} /* la animacion empieza en 4 seg. */
+.anim-pause-5 {
+  animation-delay: 5s;
+} /* la animacion empieza en 5 seg. */
 
 /* todas las animaciones pausadas */
-.paused * { 
-	animation-play-state: paused;
+.paused * {
+  animation-play-state: paused;
 }
-
 
 /**/
 .ancho-40 {
   width: 40%;
+}
+
+.col-md-8.mi-clase {
+  width: 100% !important;
 }

@@ -45,6 +45,6 @@ try {
   echo "Connection failed: " . $e->getMessage();
 }
 //include the user class, pass in the database connection
-require_once('classes/user.php');
+require_once(__DIR__ . '/../classes/user.php');
 $user = new User($conn_formularios);
 ?>

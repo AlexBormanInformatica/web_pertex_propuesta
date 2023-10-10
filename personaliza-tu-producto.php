@@ -30,80 +30,6 @@ require_once('assets/_partials/idioma.php');
   ?>
 
 <body>
-  <!-- Modal principal con breve explicacion de los pasos -->
-  <div class="modal fade " id="modalPrincipal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-      <div class="modal-content" style="background-color: #d8f3ea;">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-
-        <div class="text-center">
-          <h3 class="modal-title" id="exampleModalCenterTitle"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal1-tit", "", $_SESSION['idioma']); ?></h3>
-        </div>
-
-        <div class="modal-body">
-          <div class="row mb-20">
-            <div class="col-lg-12 col-md-12 text-center ">
-              <div class="caja-tarjeta p-3">
-                <?php if (!$user->is_logged_in()) { ?>
-                  <p class="fs-configurator-2"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_btn-login", "", $_SESSION['idioma']); ?></p>
-                  <a href="login" class="btn btn-lg mb-5"><?= buscarTexto("WEB", "header", "header_top-3", "", $_SESSION['idioma']); ?></a>
-                <?php }  ?>
-                <p class="fs-15"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal1-txt5", "", $_SESSION['idioma']); ?></p>
-              </div>
-            </div>
-          </div>
-
-          <div class="row mb-20">
-            <div class="col-lg-6 col-md-6 text-center mb-3">
-              <div class="caja-tarjeta p-3">
-                <img class="mb-3" width="25%" src="iconos/iconos/Tecnica 4.png" alt="<?= buscarTexto("WEB", "personaliza-tu-producto", "alt-pasos", "", $_SESSION['idioma']); ?>">
-                <h5><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal-paso1", "", $_SESSION['idioma']); ?></h5><br>
-                <p class="fs-15"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal-t1-p1", "", $_SESSION['idioma']); ?></p>
-                <p class="fs-15"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal-t1-p2", "", $_SESSION['idioma']); ?></p>
-              </div>
-            </div>
-
-            <div class="col-lg-6 col-md-6 text-center mb-3">
-              <div class="caja-tarjeta p-3"> <img class="mb-3" width="25%" src="iconos/iconos/Diseño 4.png" alt="<?= buscarTexto("WEB", "personaliza-tu-producto", "alt-pasos", "", $_SESSION['idioma']); ?>">
-                <h5><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal-paso2", "", $_SESSION['idioma']); ?></h5><br>
-                <p class="fs-15"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal-t2-p1", "", $_SESSION['idioma']); ?></p>
-                <p class="fs-15"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal-t2-p2", "", $_SESSION['idioma']); ?></p>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-lg-6 col-md-6 text-center  mb-3">
-              <div class="caja-tarjeta p-3"> <img class="mb-3" width="25%" src="iconos/iconos/Colores 4.png" alt="<?= buscarTexto("WEB", "personaliza-tu-producto", "alt-siguiente", "", $_SESSION['idioma']); ?>">
-                <h5><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal-paso3", "", $_SESSION['idioma']); ?></h5><br>
-                <p class="fs-15"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal-t3-p1", "", $_SESSION['idioma']); ?></p>
-                <p class="fs-15"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal-t3-p2", "", $_SESSION['idioma']); ?></p>
-              </div>
-            </div>
-
-            <div class="col-lg-6 col-md-6 text-center  mb-3">
-              <div class="caja-tarjeta p-3"> <img class="mb-3" width="35%" src="iconos/iconos/Subir foto 4.png" alt="<?= buscarTexto("WEB", "personaliza-tu-producto", "alt-siguiente", "", $_SESSION['idioma']); ?>">
-                <h5><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal-paso4", "", $_SESSION['idioma']); ?></h5><br>
-                <p class="fs-15"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal-t4-p1", "", $_SESSION['idioma']); ?></p>
-                <p class="fs-15"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal1-txt3", "", $_SESSION['idioma']); ?></p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= buscarTexto("WEB", "contacto", "cont_form_modal_btn", "", $_SESSION['idioma']); ?></button>
-
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-
   <!-- ----------------------------MENU MOVIL-------------------------------------- -->
 
   <!-- <div class="color-nav m-b-30 ">
@@ -177,10 +103,9 @@ require_once('assets/_partials/idioma.php');
                   <?php
                   try {
                     $sql = "SELECT c.idCategorias, p.idproductos, p.nombre, p.molde, p.max_colores, p.cmyk, p.colores, p.tope, p.imagen, p.idtexto_archivos, 
-                    p.alto_min, p.ancho_min, fp.formas_id_formas, p.ancho_max, p.alto_max
+                    p.alto_min, p.ancho_min, p.ancho_max, p.alto_max
                     FROM categorias c 
                     INNER JOIN productos p ON c.idCategorias = p.categorias_idCategorias
-                    LEFT JOIN formas_has_productos fp ON fp.productos_idproductos = p.idproductos
                     WHERE personalizable = 1
                     GROUP BY nombre";
                     $query = $conn->query($sql);
@@ -212,20 +137,18 @@ require_once('assets/_partials/idioma.php');
                                 <?php foreach ($productos as $producto) :
                                   if ($producto['idproductos'] != '47') {
                                 ?>
-                                    <option class="<?= $producto['max_colores']  ?> <?= $producto['molde']  ?> <?= $producto['idtexto_archivos']  ?> <?= $producto['formas_id_formas']  ?> <?= $producto['cmyk']  ?> <?= $producto['colores']  ?> <?= $producto['tope']  ?> <?= $producto['ancho_min']  ?> <?= $producto['alto_min']  ?> <?= $producto['alto_max']  ?> <?= $producto['alto_max']  ?>" value="<?= $producto['idproductos']  ?>">
+                                    <option class="<?= $producto['max_colores']  ?> <?= $producto['molde']  ?> <?= $producto['idtexto_archivos']  ?> <?= $producto['cmyk']  ?> <?= $producto['colores']  ?> <?= $producto['tope']  ?> <?= $producto['ancho_min']  ?> <?= $producto['alto_min']  ?> <?= $producto['alto_max']  ?> <?= $producto['alto_max']  ?>" value="<?= $producto['idproductos']  ?>">
                                       <!--
                                     class:[0] maximo de colores
                                           [1] molde
-                                          [2] €
-                                          [3] id texto archivos
-                                          [4] id formas
-                                          [5] cmyk
-                                          [6] colores
-                                          [7] tope
-                                          [8] ancho minimo
-                                          [9] alto minimo
-                                          [10] ancho maximo
-                                          [11] alto maximo
+                                          [2] id texto archivos
+                                          [3] cmyk
+                                          [4] colores
+                                          [5] tope
+                                          [6] ancho minimo
+                                          [7] alto minimo
+                                          [8] ancho maximo
+                                          [9] alto maximo
                                     -->
                                       <?= buscarTexto("PRG", "productos", $producto['idproductos'], "nombre", $_SESSION['idioma']);
                                       ?>
@@ -260,57 +183,67 @@ require_once('assets/_partials/idioma.php');
                   <label for="tecnica" class="title-paso-configurator mayus fs-18 p-b-20">PASO 2: AÑADIR COMPLEMENTOS</label>
                   <p>Los complementos son opcionales y puedes elegirlos según tus preferencias.
                     Si no deseas agregar complementos, puedes continuar al siguiente paso.</p>
-                  <div class="col-md-8">
-                    <!--Tope de pulsera-->
+
+                  <div class="mi-clase">
                     <div class="p-tb-20">
+                      <!--COMPLEMENTO 1: Tope de pulsera-->
                       <div style="display: none;" id="topePulsera">
                         <p class="fs-configurator "><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_añadir-tope", "", $_SESSION['idioma']); ?></p>
 
-                        <!--Boton modal info sobre topes-->
-                        <div type="button" class="btn-modal zoom" data-toggle="modal" data-target="#infoTopes">
-                          <span class="mr-2"><i class="ti-info-alt"></i></span>
-                        </div>
-
+                        <!--Quiere topes sí/no-->
                         <div class="cc-selector">
                           <input id="siTopePulsera" type="radio" name="tope" value="1" />
                           <?= buscarTexto("WEB", "generico", "si", "", $_SESSION['idioma']); ?><label class="drinkcard-cc contope" for="siTopePulsera"></label>
                           <input id="noTopePulsera" type="radio" name="tope" value="0" checked="checked" />
                           <?= buscarTexto("WEB", "generico", "no", "", $_SESSION['idioma']); ?><label class="drinkcard-cc sintope" for="noTopePulsera"></label>
                         </div>
+                        <!--Cantidad de topes-->
+                        <div style="display: none;" id="divCantidadTopes" class="form-group">
+                          <label for="cantidad" class="m-t-20"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_cant-topes", "", $_SESSION['idioma']); ?></label>
+                          <input type="number" id="cantidadTopes" class="nice-select m-b-30 ancho-40" name="cantidadTopes">
+                        </div>
+                      </div>
+
+                      <!--COMPLEMENTO 2: Bases-->
+                      <div id="selectBase">
+                        <p class="fs-configurator ">¿Quieres añadir base?</p>
+                        <div class="row" style="font-size:12px; color:#0075BE;">
+
+                          <!--Base de tela-->
+                          <div id="divTela" class="cc-selector col-3 text-center">
+                            <input id="sitela" type="radio" name="base" value="tela" />
+                            <label class="drinkcard-cc base-tela" for="sitela"></label>
+                            <p>BASE DE TELA</p>
+                          </div>
+
+                          <!--Base de cierre gancho-->
+                          <div id="divGancho" class="cc-selector col-3 text-center">
+                            <input id="sigancho" type="radio" name="base" value="gancho" />
+                            <label class="drinkcard-cc base-gancho" for="sigancho"></label>
+                            <p>BASE DE CIERRE GANCHO</p>
+                          </div>
+
+                          <!--Base de cierre gancho + pelo-->
+                          <div id="divGanchoPelo" class="cc-selector col-3 text-center">
+                            <input id="siganchopelo" type="radio" name="base" value="gancho_pelo" />
+                            <label class="drinkcard-cc base-pelo" for="siganchopelo"></label>
+                            <p>BASE DE CIERRE GANCHO + PELO</p>
+                          </div>
+
+                          <!--Sin base-->
+                          <div id="divSinBase" class="cc-selector col-3 text-center">
+                            <input id="sinbase" type="radio" name="base" value="sinbase" checked="checked" />
+                            <label class="drinkcard-cc singancho" for="sinbase"></label>SIN BASE
+                          </div>
+                        </div>
                       </div>
                     </div>
-
-                    <!--Cantidad de topes de pulsera-->
-                    <div style="display: none;" id="divCantidadTopes" class="form-group">
-                      <label for="cantidad" class="m-t-20"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_cant-topes", "", $_SESSION['idioma']); ?></label>
-                      <input type="number" id="cantidadTopes" class="nice-select m-b-30 ancho-40" name="cantidadTopes">
-                    </div>
-
-                    <!--Modulos x producto-->
-                    <?php
-                    try {
-                      $sql = "SELECT m.idmodulo, pm.productos_idproductos, m.descripcion FROM modulo as m
-                          INNER JOIN productos_has_modulo as pm on pm.modulo_idmodulo = m.idmodulo
-                          INNER JOIN colores as c ON c.idColor = pm.colores_idColor
-                         WHERE c.idColor=1584 AND m.idmodulo <> 3";
-                      $query = $conn->query($sql);
-                      $results = $query->fetchAll(PDO::FETCH_OBJ);
-                    } catch (Exception $e) {
-                      // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
-                    }
-                    ?>
-                    <div id="productoModulo">
-                      <?php foreach ($results as $result) : ?>
-                        <div style="display: none;" class="<?= $result->idmodulo ?>" id="<?= $result->productos_idproductos; ?>">
-                          <?= $result->descripcion; //1 = metal, 2 = piel, 3 sin modulo
-                          ?>
-                        </div>
-                      <?php endforeach ?>
-                    </div>
+                  </div>
                 </fieldset>
               </div>
             </div>
-            <!--Paso 2: Diseño----------------------------------->
+
+            <!--Paso 3: Diseño----------------------------------->
             <div id="diseno" class="container tab-pane "><br>
               <div class="pad-mv">
                 <fieldset>
@@ -1224,6 +1157,7 @@ require_once('assets/_partials/idioma.php');
       document.getElementById("contador2").innerHTML = obj.value.length + ' / 45';
     }
   </script>
+
   <script src="./assets/js/vendor/modernizr-3.5.0.min.js"></script>
   <script src="./assets/js/vendor/jquery-1.12.4.min.js"></script>
   <script src="./assets/js/popper.min.js"></script>

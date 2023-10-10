@@ -21,35 +21,26 @@ const inputCantidad = document.getElementById('cantidad');
     // El molde de la técnica elegida
     document.getElementById('resumenMoldeProducto').innerText = $('select[name="tecnica"] :selected').attr('class').split(' ')[1] + " €";
 
+    //Verifico la cantidad(si existe) según la técnica
     //Verifico si los campos de la parte 1 están completos
-    verificarPaso1();
+    verificarCantidad();
 
-    cargarCamposProducto();
+    //Cargo los campos de la técnica para cada paso
+    cargarCamposSegunTecnica();
+
+    //Sumo los precios para el subtotal
+    sumaSubtotal();
   });
 
   // Detecta cuando escriban en el <input> cantidad
   inputCantidad.addEventListener('input', function () {
-    // Realiza una solicitud AJAX al servidor para enviar el ID del producto y obtener la cantidad minima del producto
-    $.ajax({
-      method: "POST",
-      url: "funciones/functions.php",
-      data: {
-        cantidadMinima: "", idproducto: $('select[name="tecnica"] :selected').val()
-      }
-    }).done(function (response) {
-      //Verifico que la cantidad introducida sea mayor que el mínimo de la técncia
-      console.log(response);
-      if (inputCantidad.value > 0 && inputCantidad.value >= response) {
-        // Relleno los campos de la tabla resumen
-        // La cantidad introducida 
-        document.getElementById('resumenCantidad').innerText = inputCantidad.value;
+    //Verifico la cantidad(si existe) según la técnica
+    //Verifico si los campos de la parte 1 están completos
+    verificarCantidad();
 
-        verificarPaso1();
-      } else {
-        $('#errorCantidad').show();
-        $('#errorCantidad').text("La cantidad mínima debe ser de " + response);
-      }
-    });
+    //Como de la cantidad depende el precio del producto (y bases, si desea el usuario), recalculo
+    //los precios con la nueva cantidad
+    calcularPrecios();
   });
 
 
@@ -58,11 +49,77 @@ const inputCantidad = document.getElementById('cantidad');
 
 })(jQuery);
 
+
+function cargarCamposSegunTecnica() {
+  // Para el paso 2 complementos
+
+  //¿Puede tener topes?
+  if ($('select[name="tecnica"] :selected').attr('class').split(' ')[5] == 1) {
+    $('#topePulsera').show();
+  } else {
+    //¿El producto admite base? Si es así ¿qué tipo de base admite?
+    $.ajax({
+      method: "POST",
+      url: "funciones/functions.php",
+      dataType: 'json',
+      data: {
+        buscarBases: "", idproducto: $('select[name="tecnica"] :selected').val()
+      }
+    }).done(function (response) {
+      //Verifico que la cantidad introducida sea mayor que el mínimo de la técncia
+      for (var i = 0; i < response.length; i++) {
+        console.log(response[i]);
+      }
+      
+      });
+  }
+
+
+
+}
+
+/**
+ * Por medio de una solicitud AJAX busco en la BBDD la cantidad mínima para la técnica elegida y la comparo con la 
+ * que introduce el usuario. 
+ */
+function verificarCantidad() {
+  // Realiza una solicitud AJAX al servidor para enviar el ID del producto y obtener la cantidad minima del producto
+  $.ajax({
+    method: "POST",
+    url: "funciones/functions.php",
+    data: {
+      cantidadMinima: "", idproducto: $('select[name="tecnica"] :selected').val()
+    }
+  }).done(function (response) {
+    //Verifico que la cantidad introducida sea mayor que el mínimo de la técncia
+    response = response.trim();
+    if (parseInt(inputCantidad.value) > 0 && parseInt(inputCantidad.value) >= parseInt(response)) {
+      //Oculto el texto de error
+      $('#errorCantidad').hide();
+      // Relleno los campos de la tabla resumen
+      // La cantidad introducida 
+      document.getElementById('resumenCantidad').innerText = inputCantidad.value;
+    } else {
+      //Limpio el campo de la tabla resumen
+      document.getElementById('resumenCantidad').innerText = "";
+      //Asigno texto de error y lo muestro
+      $('#errorCantidad').text("La cantidad mínima debe ser de " + response);
+      $('#errorCantidad').show();
+    }
+
+    //Por último verifico todo el paso 1
+    verificarPaso1();
+  });
+}
+
+/**
+ * Si hay una técnica elegida, y cantidad correctamente asignada, el paso 1 pasa a COMPLETO
+ */
 function verificarPaso1() {
   // Encuentra el elemento por su clase
   const elemento = document.querySelector('.paso1');
 
-  if (selectProducto.value != "" && inputCantidad.value > 0) {
+  if (selectProducto.value != "" && document.getElementById('resumenCantidad').innerText != "") {
     // Cambia la clase
     elemento.classList.remove('paso-incompleto');
     elemento.classList.add('paso-completo');
@@ -79,11 +136,41 @@ function verificarPaso1() {
   }
 }
 
-function cargarCamposProducto() {
-  // Muestro el icono de informacion de la técnica
-  // $('#informacionDeLaTecnica').show();
 
+function sumaSubtotal() {
+  // Filas de la tabla resumen/presupuesto
+  var filas = document.querySelectorAll('table tr');
+  // Variable para almacenar la suma
+  var suma = 0;
 
+  // Recorre las filas de la tabla
+  for (var i = 0; i < filas.length; i++) {
+    // Obtén la tercera celda de la fila actual
+    var terceraCelda = filas[i].cells[1];
+    // Verifica si la tercera celda existe
+    if (terceraCelda) {
+      // Busca el elemento span dentro de la tercera celda
+      var spanPrecio = terceraCelda.querySelector('span');
+      // Verifica si el elemento span existe y tiene contenido
+      if (spanPrecio) {
+        var precioTexto = spanPrecio.textContent.trim();
+        // Verifica si el precio no está vacío y contiene el símbolo €
+        if (precioTexto !== '') {
+          // Extrae el número del texto y lo convierte a un número flotante
+          var precio = parseFloat(precioTexto.replace('€', '').trim());
+
+          // Verifica que el resultado sea un número válido
+          if (!isNaN(precio)) {
+            // Suma el precio al subtotal
+            suma += precio;
+          }
+        }
+      }
+    }
+  }
+
+  // Relleno el campo del subtotal de la tabla
+  document.getElementById('resumenSubtotal').innerText = suma + " €";
 }
 
 // Función para actualizar la tabla (resumen/presupuesto) según las selecciones del usuario

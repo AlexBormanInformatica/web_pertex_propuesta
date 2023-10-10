@@ -3084,12 +3084,11 @@ input:focus {
   cursor: pointer;
 }
 
-.cc-selector input:checked + label {
+.seleccionado {
   -webkit-filter: none;
   -moz-filter: none;
   filter: none;
   border: solid 3px #00953e;
-
   border-radius: 25%;
 }
 
@@ -4039,6 +4038,17 @@ input[type="number"] {
   width: 40%;
 }
 
-.col-md-8.mi-clase {
-  width: 100% !important;
+.pregunta-formulario {
+  cursor: pointer;
+  color: #0000ff;
+  outline: medium none;
+  font-size: 14px;
+}
+.pregunta-formulario:hover {
+  color: #3e3eff;
+  outline: medium none;
+}
+
+.input-error {
+  box-shadow: 0 0 10px red;
 }

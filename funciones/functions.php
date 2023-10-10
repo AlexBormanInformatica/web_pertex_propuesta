@@ -5,7 +5,7 @@
  */
 function  llamadoInicial($idiomaselect)
 {
-    require "../includes/config.php";
+    require "includes/config.php";
     //  $_SESSION['idioma'] = $idiomaselect;
     try {
         global $conn;
@@ -266,6 +266,23 @@ if (isset($_POST['buscarBases'])) {
     $sql = "SELECT c.id_complementos FROM pertex.complementos c
     INNER JOIN productos_has_complementos pc ON pc.id_complementos = c.id_complementos
     INNER JOIN productos p ON p.idproductos = pc.id_productos
+    WHERE idproductos=?";
+    $query = $conn->prepare($sql);
+    $query->bindParam(1, $id, PDO::PARAM_INT);
+    $query->execute();
+    $jsonData = json_encode($query->fetchAll(PDO::FETCH_OBJ));
+    // Envía la respuesta JSON
+    echo $jsonData;
+}
+
+
+if (isset($_POST['buscarFormas'])) {
+    require "../includes/config.php";
+    $id = $_POST['idproducto'];
+
+    $sql = "SELECT f.id_formas FROM pertex.formas f
+    INNER JOIN formas_has_productos fp ON fp.formas_id_formas = f.id_formas
+    INNER JOIN productos p ON p.idproductos = fp.productos_idproductos
     WHERE idproductos=?";
     $query = $conn->prepare($sql);
     $query->bindParam(1, $id, PDO::PARAM_INT);

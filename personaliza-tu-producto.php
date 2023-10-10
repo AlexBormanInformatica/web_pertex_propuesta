@@ -64,16 +64,16 @@ require_once('assets/_partials/idioma.php');
               <p class="configurator-nav text-center">1. <?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_nav-items-1", "", $_SESSION['idioma']); ?></p>
             </div>
 
-            <!--PASO 2 COMPLEMENTOS-->
-            <div class="segundoBoton nav-link a-color text-center" id="v-pills-profile" data-toggle="pill" href="#complementos" role="tab" aria-controls="v-pills-profile" aria-selected="false">
-              <a id="a2"><img id="imgcomplementos" src="iconos/Diseno6.png" alt=""></a>
-              <p class="configurator-nav text-center">2. Complementos</p>
+            <!--PASO 2 DISEÑO-->
+            <div class="tercerBoton nav-link a-color text-center" id="v-pills-profile" data-toggle="pill" href="#diseno" role="tab" aria-controls="v-pills-profile" aria-selected="false">
+              <a id="a2"><img id="imgdiseno" src="iconos/Diseno6.png" alt="<?= buscarTexto("WEB", "personaliza-tu-producto", "alt-diseno", "", $_SESSION['idioma']); ?>"></a>
+              <p class="configurator-nav text-center">2. <?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_nav-items-2", "", $_SESSION['idioma']); ?></p>
             </div>
 
-            <!--PASO 3 DISEÑO-->
-            <div class="tercerBoton nav-link a-color text-center" id="v-pills-profile" data-toggle="pill" href="#diseno" role="tab" aria-controls="v-pills-profile" aria-selected="false">
-              <a id="a3"><img id="imgdiseno" src="iconos/Diseno6.png" alt="<?= buscarTexto("WEB", "personaliza-tu-producto", "alt-diseno", "", $_SESSION['idioma']); ?>"></a>
-              <p class="configurator-nav text-center">3. <?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_nav-items-2", "", $_SESSION['idioma']); ?></p>
+            <!--PASO 3 COMPLEMENTOS-->
+            <div class="segundoBoton nav-link a-color text-center" id="v-pills-profile" data-toggle="pill" href="#complementos" role="tab" aria-controls="v-pills-profile" aria-selected="false">
+              <a id="a3"><img id="imgcomplementos" src="iconos/Diseno6.png" alt=""></a>
+              <p class="configurator-nav text-center">3. Complementos</p>
             </div>
 
             <!--PASO 4 COLORES-->
@@ -106,7 +106,6 @@ require_once('assets/_partials/idioma.php');
                     p.alto_min, p.ancho_min, p.ancho_max, p.alto_max
                     FROM categorias c 
                     INNER JOIN productos p ON c.idCategorias = p.categorias_idCategorias
-                    WHERE personalizable = 1
                     GROUP BY nombre";
                     $query = $conn->query($sql);
                     $results = $query->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC);
@@ -122,14 +121,14 @@ require_once('assets/_partials/idioma.php');
                       los siguientes pasos se cargarán automáticamente con las opciones disponibles para su personalización.</p>
 
                     <div class="row">
-                      <div class="col-md-4">
+                      <div class="col-6">
                         <div>
                           <div id="informacionDeLaTecnica" style="display:none" type="button" class="btn-modal mb-2 zoom" data-toggle="modal" data-target="#informacion">
                             <span class=""><i class="ti-info-alt"></i></span>
                           </div>
 
-                          <label for="cantidad" class="resultado fs-configurator">Técnica:</label>
-                          <select name="tecnica" id="tecnica" class="nice-select mb-5 ">
+                          <label for="cantidad" class="fs-configurator">Técnica:</label>
+                          <select name="tecnica" id="tecnica" class="nice-select">
                             <option class="" value=""><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_label_paso_1", "", $_SESSION['idioma']); ?>...</option>
                             <?php foreach ($results as $result => $productos) :
                             ?>
@@ -137,7 +136,7 @@ require_once('assets/_partials/idioma.php');
                                 <?php foreach ($productos as $producto) :
                                   if ($producto['idproductos'] != '47') {
                                 ?>
-                                    <option class="<?= $producto['max_colores']  ?> <?= $producto['molde']  ?> <?= $producto['idtexto_archivos']  ?> <?= $producto['cmyk']  ?> <?= $producto['colores']  ?> <?= $producto['tope']  ?> <?= $producto['ancho_min']  ?> <?= $producto['alto_min']  ?> <?= $producto['alto_max']  ?> <?= $producto['alto_max']  ?>" value="<?= $producto['idproductos']  ?>">
+                                    <option class="<?= $producto['max_colores']  ?> <?= $producto['molde']  ?> <?= $producto['idtexto_archivos']  ?> <?= $producto['cmyk']  ?> <?= $producto['colores']  ?> <?= $producto['tope']  ?> <?= $producto['ancho_min']  ?> <?= $producto['alto_min']  ?> <?= $producto['ancho_max']  ?> <?= $producto['alto_max']  ?>" value="<?= $producto['idproductos']  ?>">
                                       <!--
                                     class:[0] maximo de colores
                                           [1] molde
@@ -159,15 +158,21 @@ require_once('assets/_partials/idioma.php');
                             <?php
                             endforeach ?>
                           </select>
+                          <p>
+                            <a id="hrefTecnica" href="" target="_blank" class="pregunta-formulario" style="display: none;">
+                              <span>➔Obtén más información sobre </span>
+                              <span id="nombreTecnica"></span>
+                            </a>
+                          </p>
                         </div>
                       </div> <!-- fin col6 -->
 
                       <!--Cantidad-->
-                      <div class="col-md-8">
+                      <div class="col-6">
                         <div class="">
-                          <label for="cantidad" class="resultado fs-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_2_cantidad", "", $_SESSION['idioma']); ?></label>
+                          <label for="cantidad" class="fs-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_2_cantidad", "", $_SESSION['idioma']); ?></label>
                           <input type="number" id="cantidad" class="nice-select-p ancho-40" name="cantidad">
-                          <p style="display:none" class="resultado p-tb-20 fs-configurator-2" id="errorCantidad"></p>
+                          <p style="display:none" class="p-tb-20 fs-configurator-2" id="errorCantidad"></p>
                         </div>
                       </div>
                     </div> <!-- fin col-6 -->
@@ -176,81 +181,48 @@ require_once('assets/_partials/idioma.php');
               </div>
             </div>
 
-            <!--Paso 2: Complementos----------------------------------->
-            <div id="complementos" class="container tab-pane "><br>
-              <div class="pad-mv">
-                <fieldset>
-                  <label for="tecnica" class="title-paso-configurator mayus fs-18 p-b-20">PASO 2: AÑADIR COMPLEMENTOS</label>
-                  <p>Los complementos son opcionales y puedes elegirlos según tus preferencias.
-                    Si no deseas agregar complementos, puedes continuar al siguiente paso.</p>
-
-                  <div class="mi-clase">
-                    <div class="p-tb-20">
-                      <!--COMPLEMENTO 1: Tope de pulsera-->
-                      <div style="display: none;" id="topePulsera">
-                        <p class="fs-configurator "><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_añadir-tope", "", $_SESSION['idioma']); ?></p>
-
-                        <!--Quiere topes sí/no-->
-                        <div class="cc-selector">
-                          <input id="siTopePulsera" type="radio" name="tope" value="1" />
-                          <?= buscarTexto("WEB", "generico", "si", "", $_SESSION['idioma']); ?><label class="drinkcard-cc contope" for="siTopePulsera"></label>
-                          <input id="noTopePulsera" type="radio" name="tope" value="0" checked="checked" />
-                          <?= buscarTexto("WEB", "generico", "no", "", $_SESSION['idioma']); ?><label class="drinkcard-cc sintope" for="noTopePulsera"></label>
-                        </div>
-                        <!--Cantidad de topes-->
-                        <div style="display: none;" id="divCantidadTopes" class="form-group">
-                          <label for="cantidad" class="m-t-20"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_cant-topes", "", $_SESSION['idioma']); ?></label>
-                          <input type="number" id="cantidadTopes" class="nice-select m-b-30 ancho-40" name="cantidadTopes">
-                        </div>
-                      </div>
-
-                      <!--COMPLEMENTO 2: Bases-->
-                      <div id="selectBase">
-                        <p class="fs-configurator ">¿Quieres añadir base?</p>
-                        <div class="row" style="font-size:12px; color:#0075BE;">
-
-                          <!--Base de tela-->
-                          <div id="divTela" class="cc-selector col-3 text-center">
-                            <input id="sitela" type="radio" name="base" value="tela" />
-                            <label class="drinkcard-cc base-tela" for="sitela"></label>
-                            <p>BASE DE TELA</p>
-                          </div>
-
-                          <!--Base de cierre gancho-->
-                          <div id="divGancho" class="cc-selector col-3 text-center">
-                            <input id="sigancho" type="radio" name="base" value="gancho" />
-                            <label class="drinkcard-cc base-gancho" for="sigancho"></label>
-                            <p>BASE DE CIERRE GANCHO</p>
-                          </div>
-
-                          <!--Base de cierre gancho + pelo-->
-                          <div id="divGanchoPelo" class="cc-selector col-3 text-center">
-                            <input id="siganchopelo" type="radio" name="base" value="gancho_pelo" />
-                            <label class="drinkcard-cc base-pelo" for="siganchopelo"></label>
-                            <p>BASE DE CIERRE GANCHO + PELO</p>
-                          </div>
-
-                          <!--Sin base-->
-                          <div id="divSinBase" class="cc-selector col-3 text-center">
-                            <input id="sinbase" type="radio" name="base" value="sinbase" checked="checked" />
-                            <label class="drinkcard-cc singancho" for="sinbase"></label>SIN BASE
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </fieldset>
-              </div>
-            </div>
-
-            <!--Paso 3: Diseño----------------------------------->
+            <!--Paso 2: Diseño----------------------------------->
             <div id="diseno" class="container tab-pane "><br>
               <div class="pad-mv">
                 <fieldset>
                   <p class="p-tb-10 fs-18 mayus title-paso-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_2_tit", "", $_SESSION['idioma']); ?></p>
-                  <p><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_2_p", "", $_SESSION['idioma']); ?></p>
 
-                  <div class="mb-5 row">
+                  <div class="mb-5">
+                    <!--Ancho x Alto-->
+                    <div id="anchoPorAlto" style="display: none;">
+                      <div class="form-group">
+                        <p>Configura las medidas de tu diseño ingresando el ancho y alto en milímetros:</p>
+                        <!--Input ancho-->
+                        <div id="divInputAncho" style="display: none;">
+                          <label for="anchoProductoInput" class="m-t-20 fs-configurator">Ancho (en milímetros)</label>
+                          <input name="anchoProductoInput" type="number" id="anchoProductoInput" class="nice-select-p ancho-40">
+                          <p style="display:none" class="p-tb-20 fs-configurator-2" id="errorAnchoProducto"></p>
+                        </div>
+
+                        <!--Select ancho-->
+                        <div id="divSelectAncho" style="display: none;">
+                          <label for="anchoProductoInput" class="m-t-20 fs-configurator">Elige el ancho (en milímetros)</label>
+                          <select name="anchoProductoSelect" id="anchoProductoSelect" class="nice-select-p">
+                            <option value=""><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_2_ancho-select", "", $_SESSION['idioma']); ?>...</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="25">25</option>
+                            <option value="30">30</option>
+                            <option value="35">35</option>
+                            <option value="40">40</option>
+                            <option value="45">45</option>
+                            <option value="50">50</option>
+                          </select>
+                        </div>
+
+                        <!--Input alto-->
+                        <label for="altoProducto" class="m-t-20 fs-configurator">Alto (en milímetros)</label>
+                        <input name="altoProducto" type="number" id="altoProducto" class="nice-select-p ancho-40">
+                        <p style="display:none" class="p-tb-20 fs-configurator-2" id="errorAltoProducto"></p>
+                      </div>
+                    </div>
+
+
                     <p class="col-12 text-result fs-configurator" id="mensajeDisenoFijo"></p>
                     <div class="col-md-7" id="divMedidas" style="display: none;">
                       <?php //Formas fijas = tiene para escoger la forma y tienen unas medidas fijas
@@ -272,44 +244,13 @@ require_once('assets/_partials/idioma.php');
                           <input id="formas_fijas_<?= $result->idproductos ?>_<?= $result->id_formas ?>" class="<?= $result->id_formas ?> <?= buscarTexto("PRG", "formas", $result->id_formas, "formas", $_SESSION['idioma']); ?>" type="radio" name="formas_fijas" value="formas_fijas" />
                           <label class="radios rdbtn_<?= $result->idproductos ?> drinkcard-cc forma_<?= $result->id_formas ?>" for="formas_fijas_<?= $result->idproductos ?>_<?= $result->id_formas ?>" data-title="<?= buscarTexto("PRG", "formas", $result->id_formas, "formas", $_SESSION['idioma']); ?>"></label>
                         <?php endforeach ?>
-                        <p class="resultado fs-configurator-2"><br>
+                        <p class="fs-configurator-2"><br>
                           <span class="m-t-10" id="errorForma"></span>
                         </p>
                       </div>
 
-                      <!--Diseño NO fijo-->
-                      <div id="disenoNoFijo" style="display: none;">
-                        <!--Superficie-->
-                        <div class="form-group">
-                          <p class="fs-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_2-calcula-super", "", $_SESSION['idioma']); ?></p>
-                          <label for="num1" class="m-t-20"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_2_ancho", "", $_SESSION['idioma']); ?></label>
 
-                          <div id="ancho_superficie">
-                            <input name="ancho" type="number" id="num1" class="nice-select-p ancho-40">
-                          </div>
-
-                          <div style="display: none;" id="ancho_select">
-                            <select name="ancho_fijo" id="ancho_fijo" class="nice-select-p">
-                              <option value=""><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_2_ancho-select", "", $_SESSION['idioma']); ?>...</option>
-                              <option value="15">15</option>
-                              <option value="20">20</option>
-                              <option value="25">25</option>
-                              <option value="30">30</option>
-                              <option value="35">35</option>
-                              <option value="40">40</option>
-                              <option value="45">45</option>
-                              <option value="50">50</option>
-                            </select>
-                          </div>
-
-                          <label for="num2" class="m-t-20"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_2_largo", "", $_SESSION['idioma']); ?></label>
-                          <input name="alto" type="number" id="num2" class="nice-select-p ancho-40">
-                          <p class="resultado fs-configurator-2"><br>
-                            <span class="m-t-10" id="superficie"></span>
-                          </p>
-                        </div>
-                      </div>
-                    </div> <!-- fin col-6 -->
+                    </div>
 
                     <div class="col-md-5">
                       <!--Medidas de la base de tela-->
@@ -319,7 +260,7 @@ require_once('assets/_partials/idioma.php');
                         <input type="number" id="cant1" class="nice-select-p ancho-40">
                         <label for="num2" class="m-t-20"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_2_largo-base", "", $_SESSION['idioma']); ?></label>
                         <input type="number" id="cant2" class="nice-select-p ancho-40">
-                        <p class="resultado fs-configurator-2"><br>
+                        <p class="fs-configurator-2"><br>
                           <span class="m-t-10" id="superficieBaseTela"></span>
                         </p>
                       </div>
@@ -343,14 +284,86 @@ require_once('assets/_partials/idioma.php');
                           </div>
                         <?php endforeach ?>
                       </div>
-
                     </div>
                   </div>
                 </fieldset>
               </div>
             </div>
 
-            <!--Paso 3: Colores------------------------------------->
+            <!--Paso 3: Complementos----------------------------------->
+            <div id="complementos" class="container tab-pane "><br>
+              <div class="pad-mv">
+                <fieldset>
+                  <label for="tecnica" class="title-paso-configurator mayus fs-18 p-b-20">PASO 3: AÑADIR COMPLEMENTOS</label>
+                  <p>Los complementos son <b>opcionales</b> y puedes elegirlos según tus preferencias.
+                    Si no deseas agregar complementos, puedes continuar al siguiente paso.</p>
+
+                  <div class="p-tb-20">
+                    <!--COMPLEMENTO 1: Tope de pulsera-->
+                    <div style="display: none;" id="topePulsera">
+                      <p class="fs-configurator "><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_añadir-tope", "", $_SESSION['idioma']); ?></p>
+
+                      <!--Quiere topes sí/no-->
+                      <div class="cc-selector">
+                        <input id="siTopePulsera" type="radio" name="tope" value="1" />
+                        <?= buscarTexto("WEB", "generico", "si", "", $_SESSION['idioma']); ?><label class="drinkcard-cc contope" for="siTopePulsera"></label>
+                        <input id="noTopePulsera" type="radio" name="tope" value="0" checked="checked" />
+                        <?= buscarTexto("WEB", "generico", "no", "", $_SESSION['idioma']); ?><label class="drinkcard-cc sintope" for="noTopePulsera"></label>
+                      </div>
+                      <!--Cantidad de topes-->
+                      <div style="display: none;" id="divCantidadTopes" class="form-group">
+                        <label for="cantidad" class="m-t-20"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_cant-topes", "", $_SESSION['idioma']); ?></label>
+                        <input type="number" id="cantidadTopes" class="nice-select m-b-30 ancho-40" name="cantidadTopes">
+                      </div>
+                    </div>
+
+                    <!--COMPLEMENTO 2: Bases-->
+                    <div id="selectBase" style="display: none;">
+                      <p class="fs-configurator mb-0">¿Quieres añadir base?</p>
+                      <p>
+                        <a href="bases-tela-y-cierre" target="_blank" class="pregunta-formulario">
+                          <span>➔</span>
+                          <span>Obtén más información sobre nuestras bases.</span>
+                        </a>
+                      </p>
+                      <div class="row">
+                        <!--Base de tela-->
+                        <div id="divTela" class="cc-selector col-3 text-center" style="display: none;">
+                          <input id="sitela" type="radio" name="base" value="tela" />
+                          <label class="drinkcard-cc base-tela" for="sitela"></label>
+                          <p style="font-size:12px; color:#0075BE;">BASE DE TELA</p>
+                        </div>
+
+                        <!--Base de cierre gancho-->
+                        <div id="divGancho" class="cc-selector col-3 text-center" style="display: none;">
+                          <input id="sigancho" type="radio" name="base" value="gancho" />
+                          <label class="drinkcard-cc base-gancho" for="sigancho"></label>
+                          <p style="font-size:12px; color:#0075BE;">BASE DE CIERRE GANCHO</p>
+                        </div>
+
+                        <!--Base de cierre gancho + pelo-->
+                        <div id="divGanchoPelo" class="cc-selector col-3 text-center" style="display: none;">
+                          <input id="siganchopelo" type="radio" name="base" value="ganchopelo" />
+                          <label class="drinkcard-cc base-pelo" for="siganchopelo"></label>
+                          <p style="font-size:12px; color:#0075BE;">BASE DE CIERRE GANCHO + PELO</p>
+                        </div>
+
+                        <!--Sin base-->
+                        <div id="divSinBase" class="cc-selector col-3 text-center seleccionado" style="display: none;">
+                          <input id="sinbase" type="radio" name="base" value="sinbase" checked="checked" />
+                          <label class="drinkcard-cc singancho" for="sinbase"></label>
+                          <p style="font-size:12px; color:#0075BE;">SIN BASE</p>
+                        </div>
+                      </div>
+                    </div>
+                    <!--COMPLEMENTO 3: Sin complemento-->
+                    <p id="sincomplemento" class="fs-configurator" style="display: none;">No hay complementos disponibles para la técnica seleccionada. Puedes continuar con el siguiente paso.</p>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+
+            <!--Paso 4: Colores------------------------------------->
             <div id="colores" class="container tab-pane"><br>
               <div class="pad-mv">
                 <fieldset>
@@ -573,84 +586,83 @@ require_once('assets/_partials/idioma.php');
                   <th rowspan="3">Paso 1<br>
                     <div class="paso1 paso-incompleto">INCOMPLETO</div>
                   </th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
-                  <td>Técnica: <span id="resumenTecnica"></span></td>
+                  <td>Técnica: <span style="font-weight: bold;" id="resumenTecnica"></span></td>
                   <td></td>
                 </tr>
                 <tr>
                   <td>Molde del producto</td>
-                  <td><span id="resumenMoldeProducto"></span></td>
+                  <td><span style="font-weight: bold;" id="resumenMoldeProducto"></span></td>
                 </tr>
                 <tr>
-                  <td>Cantidad: <span id="resumenCantidad"></span></td>
+                  <td>Cantidad: <span style="font-weight: bold;" id="resumenCantidad"></span></td>
                   <td></td>
                 </tr>
 
-                <!-- PASO 2 COMPLEMENTOS-->
+                <!-- PASO 2 DIEÑO-->
                 <tr>
-                  <th rowspan="">Paso 2<div class="paso-incompleto">INCOMPLETO</div>
+                  <th id="paso2_rowspan" rowspan="1">Paso 2<div class="paso2 paso-incompleto">INCOMPLETO</div>
                   </th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
-                  <td id="tdTipoBase" style="display: none;">Tipo de base: <span id="resumenTipoBase"></span></td>
-                  <td></td>
+                  <td>Precio del producto (<span style="font-weight: bold;" id="resumenPPU">0</span>€/ud)</td>
+                  <td><span style="font-weight: bold;" id="resumenPrecioProducto"></span></td>
                 </tr>
-                <tr id="tdAnchoBase" style="display: none;">
-                  <td>Ancho de la base: <span id="resumenAnchoBase"></span></td>
-                  <td></td>
-                </tr>
-                <tr id="tdAltoBase" style="display: none;">
-                  <td>Alto de la base: <span id="resumenAltoBase"></span></td>
-                  <td></td>
-                </tr>
-                <tr id="tdSuperficieBase" style="display: none;">
-                  <td>Superficie de la base: <span id="resumenSuperficieBase"></span></td>
-                  <td></td>
-                </tr>
-                <tr id="tdColorBase" style="display: none;">
-                  <td>Color de la base: <span id="resumenColorBase"></span></td>
-                  <td></td>
-                </tr>
-                <tr id="tdCantidadTopes" style="display: none;">
-                  <td>Cantidad de topes: <span id="resumenCantidadTopes"></span></td>
-                  <td></td>
-                </tr>
-
-                <!-- PASO 3 DIEÑO-->
-                <tr>
-                  <th rowspan="">Paso 3<div class="paso-incompleto">INCOMPLETO</div>
-                  </th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
-                  <td id="tdAnchoProducto" style="display: none;">Ancho del producto: <span id="resumenAnchoProducto"></span></td>
+                <tr id="tdAnchoProducto" style="display: none;">
+                  <td>Ancho del producto: <span style="font-weight: bold;" id="resumenAnchoProducto"></span></td>
                   <td></td>
                 </tr>
                 <tr id="tdAltoProducto" style="display: none;">
-                  <td>Alto del producto: <span id="resumenAltoProducto"></span></td>
+                  <td>Alto del producto: <span style="font-weight: bold;" id="resumenAltoProducto"></span></td>
                   <td></td>
                 </tr>
                 <tr id="tdSuperficieProducto" style="display: none;">
-                  <td>Superficie: <span id="resumenSuperficieProducto"></span></td>
+                  <td>Superficie: <span style="font-weight: bold;" id="resumenSuperficieProducto"></span></td>
                   <td></td>
                 </tr>
                 <tr id="tdFormaProducto" style="display: none;">
-                  <td>Forma: <span id="resumenFormaProducto"></span></td>
+                  <td>Forma: <span style="font-weight: bold;" id="resumenFormaProducto"></span></td>
                   <td></td>
                 </tr>
-                <tr id="tdPrecioProducto" style="display: none;">
-                  <td>Precio del producto (<span id="resumenPPU"></span>€/ud)</td>
-                  <td><span id="resumenPrecioProducto"></span></td>
-                </tr>
 
+                <!-- PASO 3 COMPLEMENTOS-->
+                <tr>
+                  <th id="paso3_rowspan" rowspan="">Paso 3<div class="paso3 paso-completo">COMPLETO</div>
+                  </th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
+                  <td id="tdTipoBase" style="display: none;">Tipo de base: <span style="font-weight: bold;" id="resumenTipoBase"></span></td>
+                  <td></td>
+                </tr>
+                <tr id="tdAnchoBase" style="display: none;">
+                  <td>Ancho de la base: <span style="font-weight: bold;" id="resumenAnchoBase"></span></td>
+                  <td></td>
+                </tr>
+                <tr id="tdAltoBase" style="display: none;">
+                  <td>Alto de la base: <span style="font-weight: bold;" id="resumenAltoBase"></span></td>
+                  <td></td>
+                </tr>
+                <tr id="tdSuperficieBase" style="display: none;">
+                  <td>Superficie de la base: <span style="font-weight: bold;" id="resumenSuperficieBase"></span></td>
+                  <td></td>
+                </tr>
+                <tr id="tdColorBase" style="display: none;">
+                  <td>Color de la base: <span style="font-weight: bold;" id="resumenColorBase"></span></td>
+                  <td></td>
+                </tr>
+                <tr id="tdCantidadTopes" style="display: none;">
+                  <td>Cantidad de topes: <span style="font-weight: bold;" id="resumenCantidadTopes"></span></td>
+                  <td></td>
+                </tr>
 
                 <!-- PASO 4 COLORES-->
                 <tr>
                   <th rowspan="">Paso 4<div class="paso-incompleto">INCOMPLETO</div>
                   </th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
-                  <td id="tdColores" style="display: none;">Colores elegidos: <span id="resumenColoresElegidos"></span></td>
+                  <td id="tdColores" style="display: none;">Colores elegidos: <span style="font-weight: bold;" id="resumenColoresElegidos"></span></td>
                   <td></td>
                 </tr>
                 <tr id="tdColorPiel" style="display: none;">
-                  <td>Color piel: <span id="resumenColorPiel"></span></td>
+                  <td>Color piel: <span style="font-weight: bold;" id="resumenColorPiel"></span></td>
                   <td></td>
                 </tr>
                 <tr id="tdColorMetal" style="display: none;">
-                  <td>Color metal: <span id="resumenColorMetal"></span></td>
+                  <td>Color metal: <span style="font-weight: bold;" id="resumenColorMetal"></span></td>
                   <td></td>
                 </tr>
             </div>
@@ -659,14 +671,14 @@ require_once('assets/_partials/idioma.php');
             <tr>
               <th rowspan="">Paso 5<div class="paso-incompleto">INCOMPLETO</div>
               </th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
-              <td>Imagen: <span id="resumenImagen"></span></td>
+              <td>Imagen: <span style="font-weight: bold;" id="resumenImagen"></span></td>
               <td></td>
             </tr>
 
             <!-- SUBTOTAL -->
             <tr>
               <th colspan="2" style="text-align: right;">SUBTOTAL</th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
-              <th><span id="resumenSubtotal"></span></th>
+              <th><span style="font-weight: bold;" id="resumenSubtotal"></span></th>
             </tr>
             <!-- Otras filas se generan dinámicamente con JavaScript -->
             </table>
@@ -756,7 +768,7 @@ require_once('assets/_partials/idioma.php');
                   <p class="mb-3 text-modal"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_nomper", "", $_SESSION['idioma']); ?></p>
                   <p id="contador1">0 / 45</p>
                   <input class="nice-select-p mx-auto" id="pstNombrePer" name="pstNombrePer" value="" maxlength="45" onkeyup="countChars(this);"><br>
-                  <p style="display:none;" id="resultadoNombreDiseno" class="resultado fs-configurator-2">Nombre de diseño ya existe.</p>
+                  <p style="display:none;" id="ombreDiseno" class="fs-configurator-2">Nombre de diseño ya existe.</p>
                 </div>
                 <div class="mb-3 text-center p-all-10">
                   <p class="text-center">
@@ -979,6 +991,7 @@ require_once('assets/_partials/idioma.php');
   </div> <!-- row-principal -->
   </div><!-- fin-container -->
 
+
   <script>
     function subir() {
       $("html, body").animate({
@@ -1023,10 +1036,10 @@ require_once('assets/_partials/idioma.php');
           case "#tecnicas":
             i = 0;
             break;
-          case "#complementos":
+          case "#diseno":
             i = 1;
             break;
-          case "#diseno":
+          case "#complementos":
             i = 2;
             break;
           case "#colores":
@@ -1172,6 +1185,15 @@ require_once('assets/_partials/idioma.php');
   <script src="./assets/js/main.js"></script>
   <script src="./assets/js/historial-pedidos.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pselect.js@4.0.1/dist/pselect.min.js"></script>
+
+  <script>
+    $('input[name="base"]').change(function() {
+      // Quitar la clase 'seleccionado' de todos los elementos 'input' con 'name="base"'
+      $('input[name="base"]').parent().removeClass('seleccionado');
+      // Agregar la clase 'seleccionado' solo al elemento actual
+      $(this).parent().addClass('seleccionado');
+    });
+  </script>
 </body>
 
 </html>

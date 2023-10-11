@@ -2865,7 +2865,6 @@ input:focus {
 
 /* The container */
 .cuadrado {
-  display: block;
   position: relative;
   padding-left: 35px;
   margin-bottom: 50px;
@@ -2892,7 +2891,6 @@ input:focus {
   left: 0;
   height: 30px;
   width: 30px;
-  background-color: #f00;
   border-radius: 50%;
   box-shadow: 4px 4px 5px 0px rgba(143, 141, 143, 1);
 }
@@ -2902,10 +2900,6 @@ input:focus {
   outline: solid 2px #00953e;
 }
 
-/* Color por defecto si no tiene color en  */
-.cuadrado input:checked ~ .checkmark {
-  background-color: #2196f3;
-}
 
 /* Show the checkmark when checked */
 .cuadrado input:checked ~ .checkmark:after {
@@ -3005,7 +2999,6 @@ input:focus {
     left: 0;
     height: 20px;
     width: 20px;
-    background-color: #f00;
   }
 }
 
@@ -3016,7 +3009,6 @@ input:focus {
     left: 0;
     height: 30px;
     width: 30px;
-    background-color: #f00;
   }
 }
 
@@ -3027,7 +3019,6 @@ input:focus {
     left: 0;
     height: 30px;
     width: 30px;
-    background-color: #f00;
   }
 }
 
@@ -3038,7 +3029,6 @@ input:focus {
     left: 0;
     height: 30px;
     width: 30px;
-    background-color: #f00;
   }
 }
 
@@ -3049,7 +3039,6 @@ input:focus {
     left: 0;
     height: 30px;
     width: 30px;
-    background-color: #f00;
   }
 }
 .nav-pills .nav-link.active.nav-pills .nav-link.active:before {

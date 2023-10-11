@@ -65,27 +65,21 @@ require_once('assets/_partials/idioma.php');
             </div>
 
             <!--PASO 2 DISEÑO-->
-            <div class="tercerBoton nav-link a-color text-center" id="v-pills-profile" data-toggle="pill" href="#diseno" role="tab" aria-controls="v-pills-profile" aria-selected="false">
+            <div class="segundoBoton nav-link a-color text-center" id="v-pills-profile" data-toggle="pill" href="#diseno" role="tab" aria-controls="v-pills-profile" aria-selected="false">
               <a id="a2"><img id="imgdiseno" src="iconos/Diseno6.png" alt="<?= buscarTexto("WEB", "personaliza-tu-producto", "alt-diseno", "", $_SESSION['idioma']); ?>"></a>
               <p class="configurator-nav text-center">2. <?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_nav-items-2", "", $_SESSION['idioma']); ?></p>
             </div>
 
             <!--PASO 3 COMPLEMENTOS-->
-            <div class="segundoBoton nav-link a-color text-center" id="v-pills-profile" data-toggle="pill" href="#complementos" role="tab" aria-controls="v-pills-profile" aria-selected="false">
+            <div class="tercerBoton nav-link a-color text-center" id="v-pills-profile" data-toggle="pill" href="#complementos" role="tab" aria-controls="v-pills-profile" aria-selected="false">
               <a id="a3"><img id="imgcomplementos" src="iconos/Diseno6.png" alt=""></a>
               <p class="configurator-nav text-center">3. Complementos</p>
             </div>
 
-            <!--PASO 4 COLORES-->
-            <div class="cuartoBoton nav-link a-color text-center" id="v-pills-messages" data-toggle="pill" href="#colores" role="tab" aria-controls="v-pills-messages" aria-selected="false">
-              <a id="a4"><img id="imgcolores" src="iconos/Colores6.png" alt="<?= buscarTexto("WEB", "personaliza-tu-producto", "alt-colores", "", $_SESSION['idioma']); ?>"></a>
-              <p class="configurator-nav text-center">4. <?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_nav-items-3", "", $_SESSION['idioma']); ?></p>
-            </div>
-
-            <!--PASO 5 IMAGEN-->
-            <div class="quintoBoton nav-link a-color text-center" id="v-pills-settings" data-toggle="pill" href="#imagen" role="tab" aria-controls="v-pills-settings" aria-selected="false">
-              <a id="a5"><img id="imgsubirfoto" src="iconos/Subir-foto6.png" alt="<?= buscarTexto("WEB", "personaliza-tu-producto", "alt-foto", "", $_SESSION['idioma']); ?>"></a>
-              <p class="configurator-nav text-center">5. <?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_nav-items-4", "", $_SESSION['idioma']); ?></p>
+            <!--PASO 4 IMAGEN-->
+            <div class="cuartoBoton nav-link a-color text-center" id="v-pills-settings" data-toggle="pill" href="#imagen" role="tab" aria-controls="v-pills-settings" aria-selected="false">
+              <a id="a4"><img id="imgsubirfoto" src="iconos/Subir-foto6.png" alt="<?= buscarTexto("WEB", "personaliza-tu-producto", "alt-foto", "", $_SESSION['idioma']); ?>"></a>
+              <p class="configurator-nav text-center">4. <?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_nav-items-4", "", $_SESSION['idioma']); ?></p>
             </div>
           </div>
         </div>
@@ -117,55 +111,50 @@ require_once('assets/_partials/idioma.php');
                   <!--Tecnicas por categoria-->
                   <div class="form-group ">
                     <label for="tecnica" class="title-paso-configurator mayus fs-18 p-b-20"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_tit_paso_1", "", $_SESSION['idioma']); ?></label>
-                    <p>Elija la técnica y especifique la cantidad deseada para comenzar. Una vez seleccionada la técnica y la cantidad,
-                      los siguientes pasos se cargarán automáticamente con las opciones disponibles para su personalización.</p>
+                    <p>Seleccione la técnica y la cantidad deseada para comenzar.
+                      Los siguientes pasos se cargarán automáticamente con las opciones de personalización disponibles.</p>
 
                     <div class="row">
                       <div class="col-6">
-                        <div>
-                          <div id="informacionDeLaTecnica" style="display:none" type="button" class="btn-modal mb-2 zoom" data-toggle="modal" data-target="#informacion">
-                            <span class=""><i class="ti-info-alt"></i></span>
-                          </div>
-
-                          <label for="cantidad" class="fs-configurator">Técnica:</label>
-                          <select name="tecnica" id="tecnica" class="nice-select">
-                            <option class="" value=""><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_label_paso_1", "", $_SESSION['idioma']); ?>...</option>
-                            <?php foreach ($results as $result => $productos) :
-                            ?>
-                              <optgroup label="<?= buscarTexto("PRG", "categorias", $result, "categoriaNombre", $_SESSION['idioma']); ?>">
-                                <?php foreach ($productos as $producto) :
-                                  if ($producto['idproductos'] != '47') {
-                                ?>
-                                    <option class="<?= $producto['max_colores']  ?> <?= $producto['molde']  ?> <?= $producto['idtexto_archivos']  ?> <?= $producto['cmyk']  ?> <?= $producto['colores']  ?> <?= $producto['tope']  ?> <?= $producto['ancho_min']  ?> <?= $producto['alto_min']  ?> <?= $producto['ancho_max']  ?> <?= $producto['alto_max']  ?>" value="<?= $producto['idproductos']  ?>">
-                                      <!--
-                                    class:[0] maximo de colores
-                                          [1] molde
-                                          [2] id texto archivos
-                                          [3] cmyk
-                                          [4] colores
-                                          [5] tope
-                                          [6] ancho minimo
-                                          [7] alto minimo
-                                          [8] ancho maximo
-                                          [9] alto maximo
+                        <label for="tecnica" class="fs-configurator">Técnica:</label>
+                        <select name="tecnica" id="tecnica" class="nice-select">
+                          <option class="" value=""><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_label_paso_1", "", $_SESSION['idioma']); ?>...</option>
+                          <?php foreach ($results as $result => $productos) :
+                          ?>
+                            <optgroup label="<?= buscarTexto("PRG", "categorias", $result, "categoriaNombre", $_SESSION['idioma']); ?>">
+                              <?php foreach ($productos as $producto) :
+                                if ($producto['idproductos'] != '47') {
+                              ?>
+                                  <option class="<?= $producto['max_colores']  ?> <?= $producto['molde']  ?> <?= $producto['cmyk']  ?> <?= $producto['colores']  ?> <?= $producto['tope']  ?> <?= $producto['ancho_min']  ?> <?= $producto['alto_min']  ?> <?= $producto['ancho_max']  ?> <?= $producto['alto_max']  ?>" value="<?= $producto['idproductos']  ?>">
+                                    <!--
+                                    class:[0] maximo de colores -> máximo de colores a elegir 
+                                          [1] molde -> es el precio del molde del producto
+                                          [2] cmyk -> si el color va por cmyk (no selecciona colores) 
+                                          [3] colores -> si tiene colores limitados, debe elegir
+                                          //Si no es cmyk ni colores (ambos 0), el color lo subira por pdf con la imagen,
+                                          subira imagen y elegira de la paleta, o lo pondra en los comentarios
+                                          [4] tope -> si el producto admite tope
+                                          [5] ancho minimo
+                                          [6] alto minimo
+                                          [7] ancho maximo
+                                          [8] alto maximo
                                     -->
-                                      <?= buscarTexto("PRG", "productos", $producto['idproductos'], "nombre", $_SESSION['idioma']);
-                                      ?>
-                                    </option>
-                                <?php }
-                                endforeach ?>
-                              </optgroup>
-                            <?php
-                            endforeach ?>
-                          </select>
-                          <p>
-                            <a id="hrefTecnica" href="" target="_blank" class="pregunta-formulario" style="display: none;">
-                              <span>➔Obtén más información sobre </span>
-                              <span id="nombreTecnica"></span>
-                            </a>
-                          </p>
-                        </div>
-                      </div> <!-- fin col6 -->
+                                    <?= buscarTexto("PRG", "productos", $producto['idproductos'], "nombre", $_SESSION['idioma']);
+                                    ?>
+                                  </option>
+                              <?php }
+                              endforeach ?>
+                            </optgroup>
+                          <?php
+                          endforeach ?>
+                        </select>
+                        <p>
+                          <a id="hrefTecnica" href="" target="_blank" class="pregunta-formulario" style="display: none;">
+                            <span>➔Obtén más información sobre </span>
+                            <span id="nombreTecnica"></span>
+                          </a>
+                        </p>
+                      </div>
 
                       <!--Cantidad-->
                       <div class="col-6">
@@ -175,8 +164,29 @@ require_once('assets/_partials/idioma.php');
                           <p style="display:none" class="p-tb-20 fs-configurator-2" id="errorCantidad"></p>
                         </div>
                       </div>
-                    </div> <!-- fin col-6 -->
-                  </div> <!-- fin row -->
+                    </div>
+
+                    <!--Colores producto-->
+                    <div class="row col-12 p-all-10" id="divColores" style="display: none;">
+                      <p class="fs-configurator">Colores disponibles (selecciona hasta <span id="maximoColores"></span>):</p>
+                      <div id="coloresProducto" class="row">
+                      </div>
+                    </div>
+               
+                    <!--Colores piel-->
+                    <div class="" id="divColoresPiel" style="display: none;">
+                      <p class="fs-configurator">Colores disponibles del soporte de piel:</p>
+                      <div id="coloresPiel" class="row col-12 p-all-10">
+                      </div>
+                    </div>
+                  
+                    <!--Colores metal-->
+                    <div class="" id="divColoresMetal" style="display: none;">
+                      <p class="fs-configurator">Colores disponibles para el módulo de metal esmaltado:</p>
+                      <div id="coloresMetal" class="row col-12 p-all-10">
+                      </div>
+                    </div>
+                  </div>
                 </fieldset>
               </div>
             </div>
@@ -223,7 +233,6 @@ require_once('assets/_partials/idioma.php');
                     </div>
 
 
-                    <p class="col-12 text-result fs-configurator" id="mensajeDisenoFijo"></p>
                     <div class="col-md-7" id="divMedidas" style="display: none;">
                       <?php //Formas fijas = tiene para escoger la forma y tienen unas medidas fijas
                       try {
@@ -363,175 +372,14 @@ require_once('assets/_partials/idioma.php');
               </div>
             </div>
 
-            <!--Paso 4: Colores------------------------------------->
-            <div id="colores" class="container tab-pane"><br>
-              <div class="pad-mv">
-                <fieldset>
-                  <p class="p-tb-10 fs-18 mayus title-paso-configurator" id="tituloColores"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_3_tit", "", $_SESSION['idioma']); ?></p>
-                  <p id="p-txt-colores"></p>
-
-                  <!--Colores del diseño-->
-                  <div class="m-b-50">
-                    <?php
-                    try {
-                      $sql = "SELECT p.idproductos, cp.idColor, c.nombre, c.idTipoColor, c.pantone, c.francia, c.portugal, c.italia, c.hexadecimal FROM productos as p
-                      INNER JOIN colores_has_productos as cp on cp.productos_idproductos = p.idproductos
-                      INNER JOIN colores as c ON c.idColor = cp.idColor WHERE c.idColor<>1584 ORDER BY c.pantone";
-                      $query = $conn->prepare($sql);
-                      $query->execute();
-                      $results = $query->fetchAll(PDO::FETCH_OBJ);
-                    } catch (Exception $e) {
-                      // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
-                    }
-                    ?>
-
-                    <div style="display: none;" class="divColoresDiseno p-all-10" id="colorDiseno">
-                      <div class="row">
-                        <div class="col-4" id="texto_columna">
-                          <label for="" class="fs-configurator p-b-20"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_3_colores", "", $_SESSION['idioma']); ?></label>
-                          <label class="fs-configurator p-b-20" id="contadorColores"></label>
-                        </div>
-
-                        <div class="col-8" id="buscador_colores">
-                          <label class="fs-configurator p-b-5"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_buscador", "", $_SESSION['idioma']); ?></label>
-                          <input type="text" id="pantone" placeholder="<?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_placeholder-buscador", "", $_SESSION['idioma']); ?>" class="nice-select m-b-30">
-                        </div>
-                      </div>
-
-                      <div class="row" id="div_colores">
-                        <?php foreach ($results as $result) { ?>
-                          <div style="display: none;" class="colores color_<?= $result->idproductos ?> col-lg-color col-md-4 col-sm-6" id="<?= $result->idColor ?>">
-                            <label class="cuadrado" data-title="<?php if ($_SESSION['idioma'] == 'ES') {
-                                                                  echo $result->nombre . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                } else if ($_SESSION['idioma'] == 'FR' && $result->francia != null) {
-                                                                  echo $result->francia . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                } else if ($_SESSION['idioma'] == 'PT' && $result->portugal != null) {
-                                                                  echo $result->portugal . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                } else if ($_SESSION['idioma'] == 'IT' && $result->italia != null) {
-                                                                  echo $result->italia . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                } else {
-                                                                  echo $result->nombre . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                } ?>">
-                              <input name="colores" id="checkColoresDiseno" value="<?= $result->nombre ?>" type="checkbox">
-                              <span class="checkmark" style="background-color:#<?= $result->hexadecimal ?>"></span>
-                            </label>
-                          </div>
-                        <?php } ?>
-                      </div>
-                    </div>
-
-                    <!--Colores del módulo de metal-->
-                    <?php
-                    try {
-                      $sql = "SELECT pm.productos_idproductos, c.idColor, c.nombre, c.pantone, c.francia, c.portugal, c.italia, c.hexadecimal FROM modulo as m
-                      INNER JOIN productos_has_modulo as pm on pm.modulo_idmodulo = m.idmodulo
-                      INNER JOIN colores as c ON c.idColor = pm.colores_idColor 
-                      WHERE c.idColor<>1584 AND m.idmodulo = 1 ORDER BY c.pantone"; //1=metal
-                      $query = $conn->prepare($sql);
-                      $query->execute();
-                      $results = $query->fetchAll(PDO::FETCH_OBJ);
-                    } catch (Exception $e) {
-                      // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
-                    }
-                    ?>
-                    <div style="display: none;" class="p-all-10" id="colorMetal">
-                      <label for="" class="fs-configurator p-b-20"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_3_colores-metal", "", $_SESSION['idioma']); ?></label>
-                      <div class="row">
-
-                        <?php foreach ($results as $result) { ?>
-                          <div style="display: none;" class="metalicos metal_<?= $result->productos_idproductos ?> col-lg-color col-md-4 col-sm-6" id="<?= $result->idColor ?>">
-                            <label class="cuadrado" data-title="<?php if ($_SESSION['idioma'] == 'ES') {
-                                                                  echo $result->nombre . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                } else if ($_SESSION['idioma'] == 'FR' && $result->francia != null) {
-                                                                  echo $result->francia . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                } else if ($_SESSION['idioma'] == 'PT' && $result->portugal != null) {
-                                                                  echo $result->portugal . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                } else if ($_SESSION['idioma'] == 'IT' && $result->italia != null) {
-                                                                  echo $result->italia . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                } else {
-                                                                  echo $result->nombre . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                } ?>">
-                              <input id="checkColoresMetal" value="<?= $result->nombre ?>" type="checkbox">
-                              <span class="checkmark" style="background-color:#<?= $result->hexadecimal ?>"></span>
-                            </label>
-                          </div>
-                        <?php } ?>
-                      </div>
-                    </div>
-
-                    <!--Colores del módulo de piel-->
-                    <?php
-                    try {
-                      $sql = "SELECT pm.productos_idproductos, c.idColor, c.nombre, c.pantone, c.francia, c.portugal, c.italia, c.hexadecimal FROM modulo as m
-                      INNER JOIN productos_has_modulo as pm on pm.modulo_idmodulo = m.idmodulo
-                      INNER JOIN colores as c ON c.idColor = pm.colores_idColor 
-                      WHERE c.idColor<>1584 AND m.idmodulo = 2 ORDER BY c.pantone"; //2=piel
-                      $query = $conn->prepare($sql);
-                      $query->execute();
-                      $results = $query->fetchAll(PDO::FETCH_OBJ);
-                    } catch (Exception $e) {
-                      // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
-                    }
-                    ?>
-                    <div style="display: none;" class="p-all-10" id="colorPiel">
-                      <label for="" class="fs-configurator p-b-20"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_3_colores-piel", "", $_SESSION['idioma']); ?></label>
-                      <div class="row">
-
-                        <?php foreach ($results as $result) { ?>
-                          <div style="display: none;" class="pieles piel_<?= $result->productos_idproductos ?> col-lg-color col-md-4 col-sm-6" id="<?= $result->idColor ?>">
-                            <label class="cuadrado" data-title="<?php if ($_SESSION['idioma'] == 'ES') {
-                                                                  echo $result->nombre . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                } else if ($_SESSION['idioma'] == 'FR' && $result->francia != null) {
-                                                                  echo $result->francia . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                } else if ($_SESSION['idioma'] == 'PT' && $result->portugal != null) {
-                                                                  echo $result->portugal . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                } else if ($_SESSION['idioma'] == 'IT' && $result->italia != null) {
-                                                                  echo $result->italia . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                } else {
-                                                                  echo $result->nombre . PHP_EOL . "PANTONE " . $result->pantone;
-                                                                } ?>">
-                              <input id="checkColoresPiel" value="<?= $result->nombre ?>" type="checkbox">
-                              <span class="checkmark" style="background-color:#<?= $result->hexadecimal ?>"></span>
-                            </label>
-                          </div>
-                        <?php } ?>
-                      </div>
-                    </div>
-                  </div>
-                </fieldset>
-              </div>
-            </div>
-
             <!--Paso 4: Imagen------------------------------------->
-            <?php
-            try {
-              $sql_texto = "SELECT idtexto_archivos, descripcion FROM texto_archivos";
-              $query_texto = $conn->prepare($sql_texto);
-              $query_texto->execute();
-              $results_texto = $query_texto->fetchAll(PDO::FETCH_OBJ);
-            } catch (Exception $e) {
-              // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
-            }
-            ?>
             <div id="imagen" class="container tab-pane "><br>
               <div class="pad-mv">
                 <fieldset>
                   <div>
                     <p class="p-tb-10 fs-18 mayus title-paso-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_4_tit", "", $_SESSION['idioma']); ?></p>
-                    <!-- <p class="fs-configurator p-b-20 mayus title-paso-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_4_p", "", $_SESSION['idioma']); ?></p> -->
-                    <?php
-                    $x = 1;
-                    foreach ($results_texto as $result) { ?>
-                      <div id="id_<?= $result->idtexto_archivos ?>" class="textoArchivo" style="display:none">
-                        <p><i style="color:#00953E" class="ti-hand-point-right mr-5"></i><?= buscarTexto("PRG", "texto_archivos", $x . "", "descripcion", $_SESSION['idioma']); ?></p>
-                        <p><i style="color:#00953E" class="ti-hand-point-right mr-5"></i><?= buscarTexto("PRG", "texto_archivos", $x . ".1", "descripcion", $_SESSION['idioma']); ?></p>
-                        <p><i style="color:#00953E" class="ti-hand-point-right mr-5"></i><?= buscarTexto("PRG", "texto_archivos", $x . ".2", "descripcion", $_SESSION['idioma']); ?></p>
-                        <p><i style="color:#00953E" class="ti-hand-point-right mr-5"></i><?= buscarTexto("PRG", "texto_archivos", $x . ".3", "descripcion", $_SESSION['idioma']); ?></p>
-                      </div>
-                    <?php
-                      $x++;
-                    } ?>
-                    <p><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_4_p-indicaciones", "", $_SESSION['idioma']); ?></p>
+                    <p>Opción 1: Personaliza tu diseño a partir de una imagen</p>
+                    <p>Opción 2: Proporciona un PDF y detalles exactos</p>
 
                     <div>
                       <label for="archivo" class="btn mt-2"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_confirma-prop-intelectual-btn", "", $_SESSION['idioma']); ?></label>
@@ -645,9 +493,21 @@ require_once('assets/_partials/idioma.php');
                   <td>Color de la base: <span style="font-weight: bold;" id="resumenColorBase"></span></td>
                   <td></td>
                 </tr>
+                <tr id="tdMoldeBase" style="display: none;">
+                  <td>Molde de la base: <span style="font-weight: bold;" id="resumenMoldeBase"></span></td>
+                  <td></td>
+                </tr>
+                <tr id="tdPrecioBase" style="display: none;">
+                  <td>Precio de la base (<span style="font-weight: bold;" id="resumenPPUbase">0</span>€/ud)</td>
+                  <td><span style="font-weight: bold;" id="resumenPrecioBase"></span></td>
+                </tr>
                 <tr id="tdCantidadTopes" style="display: none;">
                   <td>Cantidad de topes: <span style="font-weight: bold;" id="resumenCantidadTopes"></span></td>
                   <td></td>
+                </tr>
+                <tr id="tdPrecioTopes" style="display: none;">
+                  <td>Precio topes (<span style="font-weight: bold;" id="resumenPPUtopes">0</span>€/ud)</td>
+                  <td><span style="font-weight: bold;" id="resumenPrecioTopes"></span></td>
                 </tr>
 
                 <!-- PASO 4 COLORES-->
@@ -685,58 +545,6 @@ require_once('assets/_partials/idioma.php');
         </div>
         </fieldset>
       </div>
-
-      <!--Valores que se pasaran por post al hacer submit del formulario-->
-      <!--Id producto-->
-      <input id="pstIdProducto" name="pstIdProducto" value="" hidden>
-      <!--Ancho-->
-      <input id="pstAncho" name="pstAncho" value="" hidden>
-      <!--Largo-->
-      <input id="pstLargo" name="pstLargo" value="" hidden>
-      <!--Superficie-->
-      <input id="pstSuperficie" name="pstSuperficie" value="" hidden>
-      <!--Cantidad-->
-      <input id="pstCantidad" name="pstCantidad" value="" hidden>
-      <!--colores_has_productos_id-->
-      <input id="pstIdColoresProducto" name="pstIdColoresProducto[]" value="" hidden>
-      <!--formas_id_formas-->
-      <input id="pstIdForma" name="pstIdForma" value="" hidden>
-      <!--base_has_colores_idbase-->
-      <input id="pstIdBase" name="pstIdBase" value="6" hidden>
-      <!--base_has_colores_idcolor-->
-      <input id="pstIdColorBase" name="pstIdColorBase" value="" hidden>
-      <!--idcolor_piel-->
-      <input id="pstIdColorPiel" name="pstIdColorPiel" value="" hidden>
-      <!--idcolor_metal-->
-      <input id="pstIdColorMetal" name="pstIdColorMetal" value="" hidden>
-      <!--ancho_base-->
-      <input id="pstAnchoBase" name="pstAnchoBase" value="" hidden>
-      <!--largo_base-->
-      <input id="pstLargoBase" name="pstLargoBase" value="" hidden>
-      <!--pelo-->
-      <input id="pstPelo" name="pstPelo" value="" hidden>
-      <!--cantidad_topes-->
-      <input id="pstCantidadTopes" name="pstCantidadTopes" value="" hidden>
-      <!--imagen-->
-      <img id="pstImagen" name="pstImagen" value="" hidden>
-      <!--idpedido-->
-      <input id="pstIdPedido" name="pstIdPedido" value="" hidden>
-      <!--precio por unidad producto-->
-      <input id="pstPxuProducto" name="pstPxuProducto" value="" hidden>
-      <!--precio por unidad base-->
-      <input id="pstPxuBase" name="pstPxuBase" value="" hidden>
-      <!--precio por unidad pelo-->
-      <input id="pstPxuPelo" name="pstPxuPelo" value="" hidden>
-      <!--precio molde producto-->
-      <input id="pstMoldeProducto" name="pstMoldeProducto" value="" hidden>
-      <!--precio molde base-->
-      <input id="pstMoldeBase" name="pstMoldeBase" value="" hidden>
-      <!--precio molde pelo-->
-      <!-- <input id="pstMoldePelo" name="pstMoldePelo" value="" hidden> -->
-      <!--precio topes de pulsera-->
-      <input id="pstPrecioTopes" name="pstPrecioTopes" value="" hidden>
-      <!--subtotal-->
-      <input id="pstSubtotal" name="pstSubtotal" value="" hidden>
 
       <!--Modal a que pedido agregar-->
       <div class="modal fade" id="elegirPedido" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -793,7 +601,6 @@ require_once('assets/_partials/idioma.php');
 
                     <div class="col-lg-6 col-md-6  caja-height p-4">
                       <h5 class="text-center"><?= buscarTexto("WEB", "muestrario", "modal-muestrario-existente", "", $_SESSION['idioma']); ?></h5><br>
-                      <!-- <p class="mb-3 text-modal" id="txtModalEP"></p> -->
                       <div id="divLinkAddPedido" style="display: none;">
                         <ul class="list-group list-group-flush" id="ulLinkAddPedido">
                         </ul>
@@ -806,189 +613,8 @@ require_once('assets/_partials/idioma.php');
           </div>
         </div>
       </div>
-
       </form>
-
-      <!-- Modal info de bases -->
-      <div class="modal fade" id="infoBases" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-
-            <div class="modal-body">
-              <div>
-                <h4 class="mb-5"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal_tit-bases", "", $_SESSION['idioma']); ?></h4>
-                <p><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal_info-bases", "", $_SESSION['idioma']); ?></p>
-                <h3 class="fs-20"><?php echo buscarTexto("PRG", "productos", 43, "nombre", $_SESSION['idioma']); ?></h3>
-                <p><?php echo buscarTexto("PRG", "productos", 43, "desc_larga", $_SESSION['idioma']); ?></p>
-                <ul class="fs-16">
-                  <li><strong><?php echo buscarTexto("PRG", "productos", 22, "nombre", $_SESSION['idioma']); ?> :</strong><?php echo buscarTexto("PRG", "productos", 43.1, "desc_larga", $_SESSION['idioma']); ?></li>
-                  <li><strong> <?php echo buscarTexto("PRG", "productos", 24, "nombre", $_SESSION['idioma']); ?> :</strong> <?php echo buscarTexto("PRG", "productos", 43.2, "desc_larga", $_SESSION['idioma']); ?></li>
-                  <li><strong> <?php echo buscarTexto("PRG", "productos", 25, "nombre", $_SESSION['idioma']); ?>: </strong> <?php echo buscarTexto("PRG", "productos", 43.3, "desc_larga", $_SESSION['idioma']); ?></li>
-                  <li><strong> <?php echo buscarTexto("PRG", "productos", 23, "nombre", $_SESSION['idioma']); ?>: </strong><?php echo buscarTexto("PRG", "productos", 43.4, "desc_larga", $_SESSION['idioma']); ?></li>
-                  <li><strong> <?php echo buscarTexto("PRG", "productos", 27, "nombre", $_SESSION['idioma']); ?>: </strong><?php echo buscarTexto("PRG", "productos", 43.5, "desc_larga", $_SESSION['idioma']); ?></li>
-                  <li><strong> <?php echo buscarTexto("PRG", "productos", 28, "nombre", $_SESSION['idioma']); ?>: </strong> <?php echo buscarTexto("PRG", "productos", 43.6, "desc_larga", $_SESSION['idioma']); ?></li>
-                  <li><strong> <?php echo buscarTexto("PRG", "productos", 29, "nombre", $_SESSION['idioma']); ?>: </strong> <?php echo buscarTexto("PRG", "productos", 43.7, "desc_larga", $_SESSION['idioma']); ?></li>
-                  <li><strong> <?php echo buscarTexto("PRG", "productos", 31, "nombre", $_SESSION['idioma']); ?>: </strong> <?php echo buscarTexto("PRG", "productos", 43.8, "desc_larga", $_SESSION['idioma']); ?></li>
-                  <li><strong> <?php echo buscarTexto("PRG", "productos", 32, "nombre", $_SESSION['idioma']); ?>: </strong> <?php echo buscarTexto("PRG", "productos", 43.9, "desc_larga", $_SESSION['idioma']); ?></li>
-                </ul>
-              </div><br>
-
-              <div>
-                <h3 class="fs-20"><?php echo buscarTexto("PRG", "productos", 44, "nombre", $_SESSION['idioma']); ?></h3>
-                <p><?php echo buscarTexto("PRG", "productos", 44, "desc_larga", $_SESSION['idioma']); ?></p>
-                <ul class="fs-16">
-                  <li><strong><?php echo buscarTexto("PRG", "productos", 31, "nombre", $_SESSION['idioma']); ?> :</strong><?php echo buscarTexto("PRG", "productos", 44.1, "desc_larga", $_SESSION['idioma']); ?></li>
-                  <li><strong> <?php echo buscarTexto("PRG", "productos", 3, "nombre", $_SESSION['idioma']); ?> :</strong> <?php echo buscarTexto("PRG", "productos", 44.2, "desc_larga", $_SESSION['idioma']); ?></li>
-                  <li><strong> <?php echo buscarTexto("PRG", "productos", 4, "nombre", $_SESSION['idioma']); ?>: </strong> <?php echo buscarTexto("PRG", "productos", 44.3, "desc_larga", $_SESSION['idioma']); ?></li>
-                  <li><strong> <?php echo buscarTexto("PRG", "productos", 5, "nombre", $_SESSION['idioma']); ?>: </strong><?php echo buscarTexto("PRG", "productos", 44.4, "desc_larga", $_SESSION['idioma']); ?></li>
-                  <li><strong> <?php echo buscarTexto("PRG", "productos", 7, "nombre", $_SESSION['idioma']); ?>: </strong><?php echo buscarTexto("PRG", "productos", 44.5, "desc_larga", $_SESSION['idioma']); ?></li>
-                  <li><strong> <?php echo buscarTexto("PRG", "productos", 34, "nombre", $_SESSION['idioma']); ?>: </strong> <?php echo buscarTexto("PRG", "productos", 44.6, "desc_larga", $_SESSION['idioma']); ?></li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= buscarTexto("WEB", "contacto", "cont_form_modal_btn", "", $_SESSION['idioma']); ?></button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modal info pelo -->
-      <div class="modal fade" id="infoPelo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title" id="exampleModalCenterTitle"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal_tit-pelo", "", $_SESSION['idioma']); ?></h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-
-            <div class="modal-body">
-              <div class="fs-16">
-                <?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal_txt-pelo", "", $_SESSION['idioma']); ?>
-              </div>
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= buscarTexto("WEB", "contacto", "cont_form_modal_btn", "", $_SESSION['idioma']); ?></button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal info condint -->
-    <?php
-    try {
-      $sql = "SELECT idproductos, desc_corta, desc_larga FROM productos WHERE idproductos = 47";
-      $query = $conn->query($sql);
-      $results = $query->fetchAll(PDO::FETCH_OBJ);
-    } catch (Exception $e) {
-      // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
-    }
-    ?>
-    <div class="modal fade" id="infoTopes" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-
-          <div class="modal-body">
-            <h3>Condint</h3>
-            <?php foreach ($results as $result) { ?>
-              <div>
-                <?= buscarTexto("PRG", "productos", $result->idproductos, "desc_larga", $_SESSION['idioma']); ?>
-              </div>
-            <?php } ?>
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= buscarTexto("WEB", "contacto", "cont_form_modal_btn", "", $_SESSION['idioma']); ?></button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal informacion-->
-    <div class="modal fade" id="informacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalCenterTitle"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_tit-info-prod", "", $_SESSION['idioma']); ?></h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-
-          <div class="modal-body">
-            <?php
-            try {
-              $sql = "SELECT  p.idproductos, p.nombre, p.desc_larga, p.desc_corta, p.molde, p.max_colores, i.idinformacion, 
-                i.descripcion, e.idenvios, e.descripcion as desc_envios, co.idconsejoslavado, co.descripcion as desc_consejos, p.imagen, 
-                f.imagen as imagen_forma,  p.idtexto_archivos, fp.formas_id_formas
-                FROM productos p 
-                INNER JOIN formas_has_productos fp ON fp.productos_idproductos = p.idproductos
-                INNER JOIN formas f ON  f.id_formas = fp.formas_id_formas
-                INNER JOIN informacion i ON  i.idinformacion = p.informacion_idinformacion
-                INNER JOIN envios e ON  e.idenvios = p.envios_idenvios
-                INNER JOIN consejoslavado co ON  co.idconsejoslavado = p.consejoslavado_idconsejoslavado
-                GROUP BY nombre";
-              $query = $conn->query($sql);
-              $results = $query->fetchAll(PDO::FETCH_OBJ);
-            } catch (Exception $e) {
-              // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
-            }
-            ?>
-            <div>
-              <h3 class="text-result" id=""></h3>
-              <?php foreach ($results as $result) { ?>
-                <div>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <img alt="<?= buscarTexto("WEB", "personaliza-tu-producto", "alt-info-producto1", "", $_SESSION['idioma']); ?>" style="display: none;" class="imagenes imagen_<?= $result->idproductos ?> img-fluid" src="data:image/png;base64,<?= base64_encode($result->imagen) ?>" />
-                    </div>
-
-                    <div class="col-md-6">
-                      <img alt="<?= buscarTexto("WEB", "personaliza-tu-producto", "alt-info-producto2", "", $_SESSION['idioma']); ?>" style="display: none;" class="text-center imagenesforma imagenforma_<?= $result->idproductos ?> img-fluid" src=" data:image/png;base64,<?= base64_encode($result->imagen_forma) ?>" />
-                    </div>
-                  </div>
-
-                  <div class="">
-                    <h4 style="display: none;" class=" fs-18 descripciones_cortas descripcioncorta_<?= $result->idproductos ?> mb-3"><?= buscarTexto("PRG", "productos", $result->idproductos, "desc_corta", $_SESSION['idioma']); ?></h4>
-                    <p style="display: none;" class="descripciones_largas descripcionlarga_<?= $result->idproductos ?> "><?= buscarTexto("PRG", "productos", $result->idproductos, "desc_larga", $_SESSION['idioma']); ?></p>
-                    <div style="display: none;" class="descripciones_info descripcioninfo_<?= $result->idproductos ?>  resumen">
-                      <p>
-                        <?= buscarTexto("PRG", "informacion", $result->idinformacion, "descripcion", $_SESSION['idioma']); ?>
-                      </p>
-                      <p>
-                        <?= buscarTexto("PRG", "informacion", $result->idinformacion, "descripcion1", $_SESSION['idioma']); ?>
-                      </p>
-                      <p>
-                        <?= buscarTexto("PRG", "informacion", $result->idinformacion, "descripcion2", $_SESSION['idioma']); ?>
-                      </p>
-                      <p>
-                        <?= buscarTexto("PRG", "informacion", $result->idinformacion, "descripcion3", $_SESSION['idioma']); ?>
-                      </p>
-                    </div>
-                  </div>
-                <?php } ?>
-                </div></br>
-            </div>
-          </div><!-- modal body -->
-        </div>
-      </div>
-    </div>
-  </div> <!-- row-principal -->
+    </div> <!-- row-principal -->
   </div><!-- fin-container -->
 
 
@@ -1013,7 +639,6 @@ require_once('assets/_partials/idioma.php');
       let tab2 = document.getElementById("a2");
       let tab3 = document.getElementById("a3");
       let tab4 = document.getElementById("a4");
-      let tab5 = document.getElementById("a5");
       nextTab.addEventListener("click", function() {
         i = (i == (tabs.length - 1)) ? 0 : i + 1;
         tabs[i].click();
@@ -1042,11 +667,8 @@ require_once('assets/_partials/idioma.php');
           case "#complementos":
             i = 2;
             break;
-          case "#colores":
-            i = 3;
-            break;
           case "#imagen":
-            i = 4;
+            i = 3;
             break;
         }
         subir();
@@ -1106,6 +728,7 @@ require_once('assets/_partials/idioma.php');
         $('#anadirCarrito').show();
         subir();
       });
+
 
       //movil
       // $('.primerBotonM').on('click', function() {

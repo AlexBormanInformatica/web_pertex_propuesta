@@ -5,10 +5,7 @@ try {
   print "¡Error!: " . $e->getMessage() . "<br/>";
   die();
 }
-?>
 
-
-<?php
 ob_start();
 /*
 _DISABLED = 0

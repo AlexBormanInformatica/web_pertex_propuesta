@@ -135,7 +135,7 @@ if (isset($_POST['nombreDisenoExiste'])) {
         $sentencia->bindParam(2, $_SESSION['ID'], PDO::PARAM_INT);
         $sentencia->execute();
     } catch (Exception $e) {
-        header("location: error?msg=" . $e->getCode());
+        echo $e->getMessage();
     }
 
     if ($sentencia->rowCount() == 1) {
@@ -157,7 +157,7 @@ if (isset($_POST['nombrePedidoExiste'])) {
         $sentencia->bindParam(2, $_SESSION['ID'], PDO::PARAM_INT);
         $sentencia->execute();
     } catch (Exception $e) {
-        header("location: error?msg=" . $e->getCode());
+        echo $e->getMessage();
     }
 
     if ($sentencia->rowCount() == 1) {
@@ -184,7 +184,7 @@ function datosCompletos()
             return true;
         }
     } catch (Exception $e) {
-        header("location: error?msg=" . $e->getCode());
+        echo $e->getMessage();
     }
 }
 
@@ -193,21 +193,66 @@ function datosCompletos()
  */
 if (isset($_POST['precio'])) {
     require "../includes/config.php";
+    $sqlCantidad = 0;
+    $cantidad = $_POST['cantidad'];
+    $superficie = $_POST['superficie'];
+    $idproducto = $_POST['idproducto'];
+
+    if ($cantidad == 1) { // Asignamos valor a variable que servira para la consulta SQL
+        $sqlCantidad = 1;
+    } else if ($cantidad > 1 && $cantidad <= 4) {
+        $sqlCantidad = 4;
+    } else if ($cantidad > 4 && $cantidad <= 9) {
+        $sqlCantidad = 9;
+    } else if ($cantidad > 9 && $cantidad <= 19) {
+        $sqlCantidad = 19;
+    } else if ($cantidad > 19 && $cantidad <= 34) {
+        $sqlCantidad = 34;
+    } else if ($cantidad > 34 && $cantidad <= 49) {
+        $sqlCantidad = 49;
+    } else if ($cantidad > 49 && $cantidad <= 99) {
+        $sqlCantidad = 99;
+    } else if ($cantidad > 99 && $cantidad <= 199) {
+        $sqlCantidad = 199;
+    } else if ($cantidad > 199 && $cantidad <= 349) {
+        $sqlCantidad = 349;
+    } else if ($cantidad > 349 && $cantidad <= 499) {
+        $sqlCantidad = 499;
+    } else if ($cantidad > 499 && $cantidad <= 749) {
+        $sqlCantidad = 749;
+    } else if ($cantidad > 749 && $cantidad <= 999) {
+        $sqlCantidad = 999;
+    } else if ($cantidad > 999 && $cantidad <= 1499) {
+        $sqlCantidad = 1499;
+    } else if ($cantidad > 1499 && $cantidad <= 1999) {
+        $sqlCantidad = 1999;
+    } else if ($cantidad > 1999 && $cantidad <= 2999) {
+        $sqlCantidad = 2999;
+    } else if ($cantidad > 2999 && $cantidad <= 3999) {
+        $sqlCantidad = 3999;
+    } else if ($cantidad > 3999 && $cantidad <= 5999) {
+        $sqlCantidad = 5999;
+    } else if ($cantidad > 5999 && $cantidad <= 7999) {
+        $sqlCantidad = 7999;
+    } else if ($cantidad > 7999 && $cantidad <= 9999) {
+        $sqlCantidad = 9999;
+    } else if ($cantidad > 9999) {
+        $sqlCantidad = 10000;
+    }
     try {
-        $sql_precios = "SELECT `" . $_POST['cantidad'] . "` FROM precios INNER JOIN productos ON productos.idproductos = precios.productos_idproductos 
-        WHERE productos_idproductos=? AND superficie=?";
-        $query_precios = $conn->prepare($sql_precios);
-        $query_precios->bindParam(1, $_POST['idproducto'], PDO::PARAM_INT);
-        $query_precios->bindParam(2, $_POST['superficie'], PDO::PARAM_STR);
-        $query_precios->execute();
-        echo $query_precios->fetchColumn();
+        $sql = "SELECT `" . $sqlCantidad . "` FROM `precios`  WHERE `productos_idproductos`= ? AND superficie > ? ORDER BY superficie ASC LIMIT 1;";
+        $query = $conn->prepare($sql);
+        $query->bindParam(1, $idproducto, PDO::PARAM_INT);
+        $query->bindParam(2, $superficie, PDO::PARAM_STR);
+        $query->execute();
+        echo $query->fetchColumn();
     } catch (Exception $e) {
-        header("location: error?msg=" . $e->getCode());
+        echo $e->getMessage();
     }
 }
 
 /**
- * Busca el precio del producto indicado segun la cantidad y superficie
+ * Busca el precio del producto indicado segun la $cantidad y superficie
  */
 if (isset($_POST['cantidadMinima'])) {
     require "../includes/config.php";
@@ -228,7 +273,7 @@ if (isset($_POST['cantidadMinima'])) {
         $query->execute();
         echo $query->fetchColumn();
     } catch (Exception $e) {
-        header("location: error?msg=" . $e->getCode());
+        echo $e->getMessage();
     }
 }
 
@@ -288,6 +333,88 @@ if (isset($_POST['buscarFormas'])) {
     $query->bindParam(1, $id, PDO::PARAM_INT);
     $query->execute();
     $jsonData = json_encode($query->fetchAll(PDO::FETCH_OBJ));
+    // Envía la respuesta JSON
+    echo $jsonData;
+}
+
+
+if (isset($_POST['buscarColores'])) {
+    require "../includes/config.php";
+    $id = $_POST['idproducto'];
+    $coloresData = []; // Un array para almacenar los datos de colores
+
+    //obtengo los id color
+    $sql = "SELECT idColor FROM colores_has_productos WHERE productos_idproductos=?";
+    $query = $conn->prepare($sql);
+    $query->bindParam(1, $id, PDO::PARAM_INT);
+    $query->execute();
+    $results_colores = $query->fetchAll(PDO::FETCH_OBJ);
+
+    foreach ($results_colores as $idcolor) {
+        //busco los colores 
+        $sql = "SELECT rgb_R, rgb_G, rgb_B, nombre
+        FROM colores WHERE idColor=?";
+        $query = $conn_prgborman->prepare($sql);
+        $query->bindParam(1, $idcolor->idColor, PDO::PARAM_INT);
+        $query->execute();
+        // Agregar los resultados al array
+        $coloresData[] = $query->fetchAll(PDO::FETCH_OBJ);
+    }
+    $jsonData = json_encode($coloresData);
+    // Envía la respuesta JSON
+    echo $jsonData;
+}
+
+if (isset($_POST['buscarMetal'])) {
+    require "../includes/config.php";
+    $id = $_POST['idproducto'];
+    $coloresData = []; // Un array para almacenar los datos de colores
+
+    //obtengo los id color
+    $sql = "SELECT colores_idColor FROM productos_has_modulo WHERE productos_idproductos=? AND modulo_idmodulo=1";
+    $query = $conn->prepare($sql);
+    $query->bindParam(1, $id, PDO::PARAM_INT);
+    $query->execute();
+    $results_colores = $query->fetchAll(PDO::FETCH_OBJ);
+
+    foreach ($results_colores as $idcolor) {
+        //busco los colores 
+        $sql = "SELECT rgb_R, rgb_G, rgb_B, nombre
+        FROM colores WHERE idColor=?";
+        $query = $conn_prgborman->prepare($sql);
+        $query->bindParam(1, $idcolor->colores_idColor, PDO::PARAM_INT);
+        $query->execute();
+        // Agregar los resultados al array
+        $coloresData[] = $query->fetchAll(PDO::FETCH_OBJ);
+    }
+    $jsonData = json_encode($coloresData);
+    // Envía la respuesta JSON
+    echo $jsonData;
+}
+
+if (isset($_POST['buscarPiel'])) {
+    require "../includes/config.php";
+    $id = $_POST['idproducto'];
+    $coloresData = []; // Un array para almacenar los datos de colores
+
+    //obtengo los id color
+    $sql = "SELECT colores_idColor FROM productos_has_modulo WHERE productos_idproductos=? AND modulo_idmodulo=2";
+    $query = $conn->prepare($sql);
+    $query->bindParam(1, $id, PDO::PARAM_INT);
+    $query->execute();
+    $results_colores = $query->fetchAll(PDO::FETCH_OBJ);
+
+    foreach ($results_colores as $idcolor) {
+        //busco los colores 
+        $sql = "SELECT rgb_R, rgb_G, rgb_B, nombre
+        FROM colores WHERE idColor=?";
+        $query = $conn_prgborman->prepare($sql);
+        $query->bindParam(1, $idcolor->colores_idColor, PDO::PARAM_INT);
+        $query->execute();
+        // Agregar los resultados al array
+        $coloresData[] = $query->fetchAll(PDO::FETCH_OBJ);
+    }
+    $jsonData = json_encode($coloresData);
     // Envía la respuesta JSON
     echo $jsonData;
 }

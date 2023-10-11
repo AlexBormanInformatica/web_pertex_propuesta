@@ -61,15 +61,15 @@ var altoInt = 0;
   anchoProductoInput.addEventListener('input', function () {
     anchoInt = parseInt(anchoProductoInput.value);
     //Como los valores de minimos y maximos están almacenados en centimetros, multiplico *10 para manejarlo en milimetro
-    var minimoIntAncho = parseInt($('select[name="tecnica"] :selected').attr('class').split(' ')[6]) * 10;
-    var maximoIntAncho = parseInt($('select[name="tecnica"] :selected').attr('class').split(' ')[9]) * 10;
+    var minimoIntAncho = parseInt($('select[name="tecnica"] :selected').attr('class').split(' ')[5]) * 10;
+    var maximoIntAncho = parseInt($('select[name="tecnica"] :selected').attr('class').split(' ')[7]) * 10;
     //Si el ancho y alto no están vacíos, verifico que el ancho esté dentro el min y max, el alto dentro del min y max
     //Si es correcto el ancho y alto, calculo la superficie y calculo el precio
     /*
-    [6] ancho minimo
-    [7] alto minimo
-    [8] ancho maximo
-    [9] alto maximo
+    [5] ancho minimo
+    [6] alto minimo
+    [7] ancho maximo
+    [8] alto maximo
     */
     if (anchoInt >= minimoIntAncho && anchoInt <= maximoIntAncho) {
       //El ancho del input está dentro del mínimo y máximo de la técnica.
@@ -77,13 +77,16 @@ var altoInt = 0;
       $('#errorAnchoProducto').hide();
 
       //Si altoInt y anchoInt > 0, calculo superficie y precio
-      if (anchoInt > 0 && anchoInt > 0) {
+      if (altoInt != "" && anchoInt != "" && altoInt > 0 && altoInt > 0) {
         calcularSuperficieProducto();
+      } else {
+        limpiarPaso2Medidas();
       }
     } else {
+      limpiarPaso2Medidas();
       //El ancho del input está fuera del mínimo y máximo de la técnica. Saco mensaje de error.
       anchoProductoInput.classList.add('input-error');
-      $('#errorAnchoProducto').text("El ancho debe ser mínimo " + minimoIntAncho + " milímetros y máximo " + maximoIntAncho + "milímetros");
+      $('#errorAnchoProducto').text("El ancho debe ser mínimo " + minimoIntAncho + " milímetros y máximo " + maximoIntAncho + " milímetros");
       $('#errorAnchoProducto').show();
     }
   });
@@ -97,15 +100,15 @@ var altoInt = 0;
   altoProducto.addEventListener('input', function () {
     altoInt = parseInt(altoProducto.value);
     //Como los valores de minimos y maximos están almacenados en centimetros, multiplico *10 para manejarlo en milimetro
-    var minimoIntAlto = parseInt($('select[name="tecnica"] :selected').attr('class').split(' ')[7]) * 10;
-    var maximoIntAlto = parseInt($('select[name="tecnica"] :selected').attr('class').split(' ')[9]) * 10;
+    var minimoIntAlto = parseInt($('select[name="tecnica"] :selected').attr('class').split(' ')[6]) * 10;
+    var maximoIntAlto = parseInt($('select[name="tecnica"] :selected').attr('class').split(' ')[8]) * 10;
     //Si el ancho y alto no están vacíos, verifico que el ancho esté dentro el min y max, el alto dentro del min y max
     //Si es correcto el ancho y alto, calculo la superficie y calculo el precio
     /*
-    [6] ancho minimo
-    [7] alto minimo
-    [8] ancho maximo
-    [9] alto maximo
+    [5] ancho minimo
+    [6] alto minimo
+    [7] ancho maximo
+    [8] alto maximo
     */
     if (altoInt >= minimoIntAlto && altoInt <= maximoIntAlto) {
       //El ancho del input está dentro del mínimo y máximo de la técnica.
@@ -113,13 +116,16 @@ var altoInt = 0;
       $('#errorAltoProducto').hide();
 
       //Si altoInt y anchoInt > 0, calculo superficie y precio
-      if (altoInt > 0 && altoInt > 0) {
+      if (altoInt != "" && anchoInt != "" && altoInt > 0 && altoInt > 0) {
         calcularSuperficieProducto();
+      } else {
+        limpiarPaso2Medidas();
       }
     } else {
+      limpiarPaso2Medidas();
       //El ancho del input está fuera del mínimo y máximo de la técnica. Saco mensaje de error.
       altoProducto.classList.add('input-error');
-      $('#errorAltoProducto').text("El alto debe ser mínimo " + minimoIntAlto + " milímetros y máximo " + maximoIntAlto + "milímetros");
+      $('#errorAltoProducto').text("El alto debe ser mínimo " + minimoIntAlto + " milímetros y máximo " + maximoIntAlto + " milímetros");
       $('#errorAltoProducto').show();
     }
   });
@@ -187,18 +193,217 @@ var altoInt = 0;
 
 //----------------------------------------------------------------FUNCIONES----------------------------------------------------------------
 function cargarCamposSegunTecnica() {
+  // --------------------Para el PASO 1---------------------------
+  //Oculto el campo primero
+  $('#divColores').hide(); //Div de colores limitados
+  $('#divColoresMetal').hide(); // Div de colores metalicos
+  $('#divColoresPiel').hide(); // Div de colores pieles
+
+  //[2] cmyk
+  //[3] colores
+  //Si es colores a 1 saco los colores a elegir
+  if ($('select[name="tecnica"] :selected').attr('class').split(' ')[3] == 1) {
+    //Relleno campos y muestro el div de los colores disponibles
+    document.getElementById('maximoColores').innerText = $('select[name="tecnica"] :selected').attr('class').split(' ')[0];
+    //Busco los colores y los pongo en el div de colores
+    $.ajax({
+      method: "POST",
+      url: "funciones/functions.php",
+      dataType: 'json',
+      data: {
+        buscarColores: "", idproducto: $('select[name="tecnica"] :selected').val()
+      }
+    }).done(function (response) {
+      // Obtén el contenedor donde deseas mostrar los colores
+      const colorContainer = document.getElementById("coloresProducto");
+      colorContainer.innerHTML = "";
+      // Recorre el arreglo de colores y crea elementos <div>
+      response.forEach((color, index) => {
+        // Accede a las propiedades RGB de cada objeto de color
+        const rgb_R = color[0].rgb_R;
+        const rgb_G = color[0].rgb_G;
+        const rgb_B = color[0].rgb_B;
+        const nombre = color[0].nombre;
+
+        // Crea un nuevo elemento div
+        const colorDiv = document.createElement('div');
+        colorDiv.className = `colores col-lg-color col-md-4 col-sm-6`;
+
+        // Crea un elemento label
+        const label = document.createElement('label');
+        label.className = 'cuadrado';
+        label.setAttribute('data-title', `${nombre}`);
+
+        // Crea un elemento input (checkbox)
+        const checkbox = document.createElement('input');
+        checkbox.name = 'colores';
+        checkbox.id = '';
+        checkbox.value = '';
+        checkbox.type = 'checkbox';
+
+        // Crea un elemento span para el checkmark
+        const checkmark = document.createElement('span');
+        checkmark.className = 'checkmark';
+        // Establece el color de fondo del elemento <div> utilizando los valores RGB
+        const rgbColor = `rgb(${rgb_R}, ${rgb_G}, ${rgb_B})`;
+        checkmark.style.backgroundColor = rgbColor;
+
+        // Agrega el checkbox y el checkmark al label
+        label.appendChild(checkbox);
+        label.appendChild(checkmark);
+
+        // Agrega el label al div de color
+        colorDiv.appendChild(label);
+        // Agrega el elemento <div> al contenedor
+        colorContainer.appendChild(colorDiv);
+      });
+    })
+    $('#divColores').show();
+  }
+
+  //Busco si tiene modulo de metal
+  $.ajax({
+    method: "POST",
+    url: "funciones/functions.php",
+    dataType: 'json',
+    data: {
+      buscarMetal: "", idproducto: $('select[name="tecnica"] :selected').val()
+    }
+  }).done(function (response) {
+    //Si regresa algo, es que tiene
+    if (response.length === 0) {
+    } else {
+      // Obtén el contenedor donde deseas mostrar los colores
+      const colorContainer = document.getElementById("coloresMetal");
+      colorContainer.innerHTML = "";
+      // Recorre el arreglo de colores y crea elementos <div>
+      response.forEach((color, index) => {
+        // Accede a las propiedades RGB de cada objeto de color
+        const rgb_R = color[0].rgb_R;
+        const rgb_G = color[0].rgb_G;
+        const rgb_B = color[0].rgb_B;
+        const nombre = color[0].nombre;
+
+        // Crea un nuevo elemento div
+        const colorDiv = document.createElement('div');
+        colorDiv.className = `metalicos col-lg-color col-md-4 col-sm-6`;
+
+        // Crea un elemento label
+        const label = document.createElement('label');
+        label.className = 'cuadrado';
+        label.setAttribute('data-title', `${nombre}`);
+
+        // Crea un elemento input (checkbox)
+        const checkbox = document.createElement('input');
+        checkbox.name = 'colores';
+        checkbox.id = '';
+        checkbox.value = '';
+        checkbox.type = 'checkbox';
+
+        // Crea un elemento span para el checkmark
+        const checkmark = document.createElement('span');
+        checkmark.className = 'checkmark';
+        // Establece el color de fondo del elemento <div> utilizando los valores RGB
+        const rgbColor = `rgb(${rgb_R}, ${rgb_G}, ${rgb_B})`;
+        checkmark.style.backgroundColor = rgbColor;
+
+        // Agrega el checkbox y el checkmark al label
+        label.appendChild(checkbox);
+        label.appendChild(checkmark);
+
+        // Agrega el label al div de color
+        colorDiv.appendChild(label);
+        // Agrega el elemento <div> al contenedor
+        colorContainer.appendChild(colorDiv);
+      });
+      $('#divColoresMetal').show();
+    }
+  });
+
+  //Busco si tiene modulo de piel
+  $.ajax({
+    method: "POST",
+    url: "funciones/functions.php",
+    dataType: 'json',
+    data: {
+      buscarPiel: "", idproducto: $('select[name="tecnica"] :selected').val()
+    }
+  }).done(function (response) {
+    //Si regresa algo, es que tiene
+    if (response.length === 0) {
+    } else {
+      // Obtén el contenedor donde deseas mostrar los colores
+      const colorContainer = document.getElementById("coloresPiel");
+      colorContainer.innerHTML = "";
+      // Recorre el arreglo de colores y crea elementos <div>
+      response.forEach((color, index) => {
+        // Accede a las propiedades RGB de cada objeto de color
+        const rgb_R = color[0].rgb_R;
+        const rgb_G = color[0].rgb_G;
+        const rgb_B = color[0].rgb_B;
+        const nombre = color[0].nombre;
+
+        // Crea un nuevo elemento div
+        const colorDiv = document.createElement('div');
+        colorDiv.className = `pieles col-lg-color col-md-4 col-sm-6`;
+
+        // Crea un elemento label
+        const label = document.createElement('label');
+        label.className = 'cuadrado';
+        label.setAttribute('data-title', `${nombre}`);
+
+        // Crea un elemento input (checkbox)
+        const checkbox = document.createElement('input');
+        checkbox.name = 'colores';
+        checkbox.id = '';
+        checkbox.value = '';
+        checkbox.type = 'checkbox';
+
+        // Crea un elemento span para el checkmark
+        const checkmark = document.createElement('span');
+        checkmark.className = 'checkmark';
+        // Establece el color de fondo del elemento <div> utilizando los valores RGB
+        const rgbColor = `rgb(${rgb_R}, ${rgb_G}, ${rgb_B})`;
+        checkmark.style.backgroundColor = rgbColor;
+
+        // Agrega el checkbox y el checkmark al label
+        label.appendChild(checkbox);
+        label.appendChild(checkmark);
+
+        // Agrega el label al div de color
+        colorDiv.appendChild(label);
+        // Agrega el elemento <div> al contenedor
+        colorContainer.appendChild(colorDiv);
+      });
+      $('#divColoresPiel').show();
+    }
+  });
+
   // --------------------Para el PASO 2 diseño---------------------------
   //Oculto todos los campos primero
   $('#anchoPorAlto').hide(); //Div de medidas
   $('#divInputAncho').hide(); // Div de ancho (input)
   $('#divSelectAncho').hide(); // Div de ancho (select)
+  $('#tdAnchoProducto').hide(); // Div de ancho (resumen)
+  $('#tdAltoProducto').hide(); // Div de alto (resumen)
+  $('#tdSuperficieProducto').hide(); // Div de superficie (resumen)
 
+  var thElement = document.getElementById('paso2_rowspan');
   // ¿La técnica seleccionada tiene ancho y alto (mínimos y máximos)? Sí = habilitar div medidas, No = deshabilito div medidas
   // [9] alto máximo = "" = sin medidas
   if ($('select[name="tecnica"] :selected').attr('class').split(' ')[9] == "") {
     $('#anchoPorAlto').hide();
+    $('#tdAnchoProducto').hide();
+    $('#tdAltoProducto').hide();
+    $('#tdSuperficieProducto').hide();
+    thElement.rowSpan = "1";
   } else {
+    thElement.rowSpan = "4";
+
     $('#anchoPorAlto').show();
+    $('#tdAnchoProducto').show();
+    $('#tdAltoProducto').show();
+    $('#tdSuperficieProducto').show();
 
     if ($('select[name="tecnica"] :selected').attr('class').split(' ')[6] == "") {
       // [9] ancho mínimo = "" = el ancho se selecciona
@@ -209,8 +414,6 @@ function cargarCamposSegunTecnica() {
       $('#divInputAncho').show();
       $('#divSelectAncho').hide();
     }
-
-
   }
 
   //¿El producto tiene formas? Sí = habilito las formas correspondientes al producto seleccionado
@@ -353,6 +556,46 @@ function verificarPaso1() {
 }
 
 /**
+ * Si las medidas son correctas (ancho, alto, superficie -> precio)
+ * Si ha elegido forma
+ * O si no aplica ninguna de las dos
+ */
+function verificarPaso2() {
+  var bool = true;
+
+  //Sin forma
+  if (document.getElementById("tdFormaProducto").style.display === "none") {
+  } else {
+    //Si requiere forma, verifico que haya elegido una forma
+    if (document.getElementById('resumenFormaProducto').innerText != "") {
+    } else {
+      bool = false;
+    }
+  }
+
+  // [9] alto máximo = "" = sin medidas
+  if ($('select[name="tecnica"] :selected').attr('class').split(' ')[9] == "") {
+  } else {
+    //Si lleva medidas y son correctas
+    if (document.getElementById('resumenSuperficieProducto').innerText != "" &&
+      document.getElementById('resumenPPU').innerText != "" &&
+      document.getElementById('resumenPrecioProducto').innerText != "") {
+    } else {
+      bool = false;
+    }
+  }
+
+  const elemento = document.querySelector('.paso2');
+  if (bool === true) {
+    pasoCompleto(elemento);
+    sumaSubtotal();
+  } else {
+    pasoIncompleto(elemento);
+  }
+
+}
+
+/**
  * Si no hay complemento = COMPLETO
  * Si elige base de tela, las medidas son correctar y ha elegido color = COMPLETO
  * Si elige base de cierre gancho o cirre gancho + pelo y ha elegido color = COMPLETO
@@ -383,34 +626,31 @@ function verificarPaso3() {
 
 
 function sumaSubtotal() {
-  // Filas de la tabla resumen/presupuesto
-  var filas = document.querySelectorAll('table tr');
-  // Variable para almacenar la suma
-  var suma = 0;
+  var moldeProducto = parseFloat(document.getElementById('resumenMoldeProducto').innerText.replace('€', '').replace(',', '.').trim());
+  var precioProducto = parseFloat(document.getElementById('resumenPrecioProducto').innerText.replace('€', '').replace(',', '.').trim());
+  var moldeBase = parseFloat(document.getElementById('resumenMoldeBase').innerText.replace('€', '').replace(',', '.').trim());
+  var precioBase = parseFloat(document.getElementById('resumenPrecioBase').innerText.replace('€', '').replace(',', '.').trim());
+  var precioTopes = parseFloat(document.getElementById('resumenPrecioTopes').innerText.replace('€', '').replace(',', '.').trim());
 
-  // Recorre las filas de la tabla
-  for (var i = 0; i < filas.length - 1; i++) {
-    // Obtén la tercera celda de la fila actual
-    var terceraCelda = filas[i].cells[1];
-    // Verifica si la tercera celda existe
-    if (terceraCelda) {
-      // Busca el elemento span dentro de la tercera celda
-      var spanPrecio = terceraCelda.querySelector('span');
-      // Verifica si el elemento span existe y tiene contenido
-      if (spanPrecio) {
-        var precioTexto = spanPrecio.textContent.trim();
-        // Verifica si el precio no está vacío y contiene el símbolo €
-        if (precioTexto !== '') {
-          // Extrae el número del texto y lo convierte a un número flotante
-          var precio = parseFloat(precioTexto.replace('€', '').trim());
-          // Verifica que el resultado sea un número válido
-          if (!isNaN(precio)) {
-            // Suma el precio al subtotal
-            suma += precio;
-          }
-        }
-      }
-    }
+  var suma = 0;
+  if (!isNaN(moldeProducto)) {
+    suma += moldeProducto;
+  }
+
+  if (!isNaN(precioProducto)) {
+    suma += precioProducto;
+  }
+
+  if (!isNaN(moldeBase)) {
+    suma += moldeBase;
+  }
+
+  if (!isNaN(precioBase)) {
+    suma += precioBase;
+  }
+
+  if (!isNaN(precioTopes)) {
+    suma += precioTopes;
   }
 
   // Relleno el campo del subtotal de la tabla
@@ -441,10 +681,46 @@ function pasoIncompleto(elemento) {
   elemento.textContent = 'INCOMPLETO';
 }
 
+function limpiarPaso2Medidas() {
+  document.getElementById('resumenAnchoProducto').innerText = "";
+  document.getElementById('resumenAltoProducto').innerText = "";
+  document.getElementById('resumenSuperficieProducto').innerHTML = "";
+  document.getElementById('resumenPPU').innerText = "";
+  document.getElementById('resumenPrecioProducto').innerText = "";
+  verificarPaso2();
+}
+
 function calcularPrecios() {
 
 }
 
 function calcularSuperficieProducto() {
+  var superficie = (anchoInt / 10) * (altoInt / 10); // Lo divido entre 10 para pasarlo a centimetros
+
+  // Busco la superficie y la cantidad en la tabla de precios y si es correcto, lo reflejo a la tabla de resumen-presupuesto
+  $.ajax({
+    method: "POST",
+    url: "funciones/functions.php",
+    data: {
+      precio: "", idproducto: $('select[name="tecnica"] :selected').val(), cantidad: inputCantidad.value, superficie: superficie
+    }
+  }).done(function (response) {
+    response = response.trim();
+
+    //Relleno los campos
+    if (response != "") {
+      document.getElementById('resumenAnchoProducto').innerText = anchoInt / 10 + "cm";
+      document.getElementById('resumenAltoProducto').innerText = altoInt / 10 + "cm";
+      document.getElementById('resumenSuperficieProducto').innerHTML = superficie + "<sup>2</sup>";
+      document.getElementById('resumenPPU').innerText = response.replace(".", ",");
+      document.getElementById('resumenPrecioProducto').innerText = (parseFloat(response) * parseInt(inputCantidad.value)).toFixed(2).replace(".", ",") + " €";
+    } else {
+      limpiarPaso2Medidas();
+    }
+
+    //Por último verifico todo el paso 2
+    verificarPaso2();
+  });
+
 
 }

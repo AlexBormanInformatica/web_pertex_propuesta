@@ -2,10 +2,17 @@
 //Global de la tecnica
 const selectProducto = document.getElementById('tecnica');
 const inputCantidad = document.getElementById('cantidad');
+const elementosColorMetal = document.getElementsByName('colormetal');
+const elementosColorPiel = document.getElementsByName('colorpiel');
+const elementosColores = document.getElementsByName('colores');
 const elementosBase = document.getElementsByName('base');
 const anchoProductoInput = document.getElementById('anchoProductoInput');
 const altoProducto = document.getElementById('altoProducto');
 const anchoProductoSelect = document.getElementById('anchoProductoSelect');
+var coloresSeleccionados = [];
+var colorMetalSeleccionado = [];
+var colorPielSeleccionado = [];
+var maximoColores = 0;
 var anchoInt = 0;
 var altoInt = 0;
 
@@ -53,6 +60,99 @@ var altoInt = 0;
     //los precios con la nueva cantidad
     calcularPrecios();
     sumaSubtotal();
+  });
+
+  /*
+  Detectar cambios en los colores a elegir del paso 1
+  */
+  document.getElementById("coloresProducto").addEventListener("change", function (event) {
+    //Verifico que la selección sea de los colores
+    if (event.target.type === "checkbox" && event.target.name === "colores") {
+      const valor = event.target.value;
+
+      if (event.target.checked) {
+        //Si esta seleccionado y la lista aun no está llena, lo agrego
+        if (coloresSeleccionados.length < maximoColores) {
+          coloresSeleccionados.push(valor);
+        } else {
+          //Si la lista está llena saco un mensaje "No puedes seleccioanr más de X colores"
+          event.target.checked = false;
+          alert("No puedes seleccionar más de " + maximoColores + " colores.");
+        }
+      } else {
+        //Si no es seleccion, lo elimino de la lista
+        const index = coloresSeleccionados.indexOf(valor);
+        if (index > -1) {
+          coloresSeleccionados.splice(index, 1);
+        }
+      }
+
+      //Imprimo la lista en la tabla resumen
+      document.getElementById('resumenColores').innerText = coloresSeleccionados;
+
+    }
+  });
+
+  /*
+  Detectar cambios en los colores a elegir para el soporte de piel del paso 1
+  */
+  document.getElementById("coloresPiel").addEventListener("change", function (event) {
+    //Verifico que la selección sea de los colores
+    if (event.target.type === "checkbox" && event.target.name === "colorpiel") {
+      const valor = event.target.value;
+
+      if (event.target.checked) {
+        //Si esta seleccionado y la lista aun no está llena, lo agrego
+        if (colorPielSeleccionado.length < 1) {
+          colorPielSeleccionado.push(valor);
+        } else {
+          //Si la lista está llena saco un mensaje "No puedes seleccioanr más de X colores"
+          event.target.checked = false;
+          alert("No puedes seleccionar más de " + 1 + " color.");
+        }
+      } else {
+        //Si no es seleccion, lo elimino de la lista
+        const index = colorPielSeleccionado.indexOf(valor);
+        if (index > -1) {
+          colorPielSeleccionado.splice(index, 1);
+        }
+      }
+
+      //Imprimo la lista en la tabla resumen
+      document.getElementById('resumenColorPiel').innerText = colorPielSeleccionado;
+
+    }
+  });
+
+  /*
+  Detectar cambios en los colores a elegir para le modulo de metal del paso 1
+  */
+  document.getElementById("coloresMetal").addEventListener("change", function (event) {
+    //Verifico que la selección sea de los colores
+    if (event.target.type === "checkbox" && event.target.name === "colormetal") {
+      const valor = event.target.value;
+
+      if (event.target.checked) {
+        //Si esta seleccionado y la lista aun no está llena, lo agrego
+        if (colorMetalSeleccionado.length < 1) {
+          colorMetalSeleccionado.push(valor);
+        } else {
+          //Si la lista está llena saco un mensaje "No puedes seleccioanr más de X colores"
+          event.target.checked = false;
+          alert("No puedes seleccionar más de " + 1 + " color.");
+        }
+      } else {
+        //Si no es seleccion, lo elimino de la lista
+        const index = colorMetalSeleccionado.indexOf(valor);
+        if (index > -1) {
+          colorMetalSeleccionado.splice(index, 1);
+        }
+      }
+
+      //Imprimo la lista en la tabla resumen
+      document.getElementById('resumenColorMetal').innerText = colorMetalSeleccionado;
+
+    }
   });
   // FIN PASO 1 ------------------------------------------------------------------------------------------//
 
@@ -130,6 +230,7 @@ var altoInt = 0;
     }
   });
 
+
   // FIN PASO 2: medidas--------------------------------------------------------------------------------//
 
   // PASO 3: complementos (bases y topes)--------------------------------------------------------------//
@@ -169,14 +270,12 @@ var altoInt = 0;
           $('#tdColorBase').show();
           document.getElementById('resumenTipoBase').innerText = "Cierre gancho";
           thElement.rowSpan = "2";
-          verificarBaseGancho();
           break;
         case "ganchopelo":
           $('#tdTipoBase').show();
           $('#tdColorBase').show();
           document.getElementById('resumenTipoBase').innerText = "Cierre gancho + pelo";
           thElement.rowSpan = "2";
-          verificarBaseGancho();
           break;
 
       }
@@ -189,22 +288,47 @@ var altoInt = 0;
   }
   // FIN PASO 3-----------------------------------------------------------------------------------------------//
 
+  // Agrega un manejador de eventos para detectar cuando el botón se deshabilita
+  const miBoton = document.getElementById('anadirCarrito');
+  miBoton.addEventListener('change', function () {
+    if (miBoton.disabled) {
+      miBoton.innerText = "FALTAN CAMPOS POR COMPLETAR";
+    } else {
+      miBoton.innerText = "ENCARGAR DISEÑO";
+    }
+  });
 })(jQuery);
 
 //----------------------------------------------------------------FUNCIONES----------------------------------------------------------------
 function cargarCamposSegunTecnica() {
   // --------------------Para el PASO 1---------------------------
-  //Oculto el campo primero
+  //Oculto los campos y vacío primero
+  document.getElementById("paso1_rowspan").rowSpan = 3;
+  coloresSeleccionados.length = 0;
+  document.getElementById('resumenColores').innerText = coloresSeleccionados;
+  colorMetalSeleccionado.length = 0;
+  document.getElementById('resumenColorMetal').innerText = coloresSeleccionados;
+  colorPielSeleccionado.length = 0;
+  document.getElementById('resumenColorPiel').innerText = coloresSeleccionados;
   $('#divColores').hide(); //Div de colores limitados
   $('#divColoresMetal').hide(); // Div de colores metalicos
   $('#divColoresPiel').hide(); // Div de colores pieles
+  $('#tdColores').hide(); // Div colores (resumen)
+  $('#tdColorPiel').hide(); // Div color piel (resumen)
+  $('#tdColorMetal').hide(); // Div color metal (resumen)
 
   //[2] cmyk
-  //[3] colores
+  //[3] colores_limitados
   //Si es colores a 1 saco los colores a elegir
   if ($('select[name="tecnica"] :selected').attr('class').split(' ')[3] == 1) {
     //Relleno campos y muestro el div de los colores disponibles
-    document.getElementById('maximoColores').innerText = $('select[name="tecnica"] :selected').attr('class').split(' ')[0];
+    maximoColores = parseInt($('select[name="tecnica"] :selected').attr('class').split(' ')[0]);
+    const spanMaxColores = document.getElementsByClassName('maximoColores');
+    // Recorrer los elementos y asignar el valor
+    for (let i = 0; i < spanMaxColores.length; i++) {
+      spanMaxColores[i].innerText = maximoColores;
+    }
+
     //Busco los colores y los pongo en el div de colores
     $.ajax({
       method: "POST",
@@ -237,8 +361,8 @@ function cargarCamposSegunTecnica() {
         // Crea un elemento input (checkbox)
         const checkbox = document.createElement('input');
         checkbox.name = 'colores';
-        checkbox.id = '';
-        checkbox.value = '';
+        checkbox.id = `${nombre}`;
+        checkbox.value = `${nombre}`;
         checkbox.type = 'checkbox';
 
         // Crea un elemento span para el checkmark
@@ -258,6 +382,8 @@ function cargarCamposSegunTecnica() {
         colorContainer.appendChild(colorDiv);
       });
     })
+    document.getElementById("paso1_rowspan").rowSpan = document.getElementById("paso1_rowspan").rowSpan + 1;
+    $('#tdColores').show();
     $('#divColores').show();
   }
 
@@ -295,9 +421,9 @@ function cargarCamposSegunTecnica() {
 
         // Crea un elemento input (checkbox)
         const checkbox = document.createElement('input');
-        checkbox.name = 'colores';
-        checkbox.id = '';
-        checkbox.value = '';
+        checkbox.name = 'colormetal';
+        checkbox.id = `${nombre}`;
+        checkbox.value = `${nombre}`;
         checkbox.type = 'checkbox';
 
         // Crea un elemento span para el checkmark
@@ -316,6 +442,8 @@ function cargarCamposSegunTecnica() {
         // Agrega el elemento <div> al contenedor
         colorContainer.appendChild(colorDiv);
       });
+      document.getElementById("paso1_rowspan").rowSpan = document.getElementById("paso1_rowspan").rowSpan + 1;
+      $('#tdColorMetal').show();
       $('#divColoresMetal').show();
     }
   });
@@ -354,9 +482,9 @@ function cargarCamposSegunTecnica() {
 
         // Crea un elemento input (checkbox)
         const checkbox = document.createElement('input');
-        checkbox.name = 'colores';
-        checkbox.id = '';
-        checkbox.value = '';
+        checkbox.name = 'colorpiel';
+        checkbox.id = `${nombre}`;
+        checkbox.value = `${nombre}`;
         checkbox.type = 'checkbox';
 
         // Crea un elemento span para el checkmark
@@ -375,6 +503,8 @@ function cargarCamposSegunTecnica() {
         // Agrega el elemento <div> al contenedor
         colorContainer.appendChild(colorDiv);
       });
+      document.getElementById("paso1_rowspan").rowSpan = document.getElementById("paso1_rowspan").rowSpan + 1;
+      $('#tdColorPiel').show();
       $('#divColoresPiel').show();
     }
   });
@@ -453,15 +583,30 @@ function cargarCamposSegunTecnica() {
 
 
   // --------------------Para el PASO 3 complementos---------------------------
-
   //Oculto todos los campos primero
+  // Recorre la lista de elementos y quita la clase "seleccionado"
+  document.querySelectorAll(".seleccionado").forEach(function (elemento) {
+    elemento.classList.remove("seleccionado");
+  });
+  document.getElementById("sinbase").checked = true;
+  document.getElementById("divSinBase").classList.add("seleccionado");// Agrega la clase "seleccionado" al div
   $('#topePulsera').hide(); //Div de topes
   $('#selectBase').hide(); // Div de bases
   $('#divTela').hide(); // Div base de tela
   $('#divGancho').hide(); // Div base de cierre gancho
   $('#divGanchoPelo').hide(); // Div base de cierre gancho + pelo
   $('#divSinBase').hide(); // Div sin base
-  $('#sincomplemento').hide(); // Div sin complementos disponibles
+  $('#sincomplemento').hide(); // Div sin complemento
+  $('#tdTipoBase').hide(); // Div tipo base (resumen)
+  $('#tdAnchoBase').hide(); // Div ancho base (resumen)
+  $('#tdAltoBase').hide(); // Div alto base (resumen)
+  $('#tdSuperficieBase').hide(); // Div  superficie base (resumen)
+  $('#tdColorBase').hide(); // Div color base (resumen)
+  $('#tdMoldeBase').hide(); // Div molde base (resumen)
+  $('#tdPrecioBase').hide(); // Div precio base (resumen)
+  $('#tdCantidadTopes').hide(); // Div cantidad topes (resumen)
+  $('#tdPrecioTopes').hide(); // Div precio topes (resumen)
+  document.getElementById("paso3_rowspan").rowSpan = 1;
 
   //¿Puede tener topes?
   //  [5] Tope == 1 = Sí
@@ -545,10 +690,47 @@ function verificarCantidad() {
  * Si hay una técnica elegida, y cantidad correctamente asignada, el paso 1 pasa a COMPLETO
  */
 function verificarPaso1() {
+  var bool = true;
+
   // Encuentra el elemento por su clase
   const elemento = document.querySelector('.paso1');
 
   if (selectProducto.value != "" && document.getElementById('resumenCantidad').innerText != "") {
+  } else {
+    bool = false;
+  }
+
+  //Sin color a elegir
+  if (document.getElementById("tdColores").style.display === "none") {
+  } else {
+    //Si debe elegir colores, que sea al menos uno
+    if (document.getElementById('resumenColores').innerText != "") {
+    } else {
+      bool = false;
+    }
+  }
+
+  //Sin color piel
+  if (document.getElementById("tdColorPiel").style.display === "none") {
+  } else {
+    //Si debe elegir colores
+    if (document.getElementById('resumenColorPiel').innerText != "") {
+    } else {
+      bool = false;
+    }
+  }
+
+  //Sin color metal
+  if (document.getElementById("tdColorMetal").style.display === "none") {
+  } else {
+    //Si debe elegir colores
+    if (document.getElementById('resumenColorMetal').innerText != "") {
+    } else {
+      bool = false;
+    }
+  }
+
+  if (bool === true) {
     pasoCompleto(elemento);
   } else {
     pasoIncompleto(elemento);
@@ -711,7 +893,7 @@ function calcularSuperficieProducto() {
     if (response != "") {
       document.getElementById('resumenAnchoProducto').innerText = anchoInt / 10 + "cm";
       document.getElementById('resumenAltoProducto').innerText = altoInt / 10 + "cm";
-      document.getElementById('resumenSuperficieProducto').innerHTML = superficie + "<sup>2</sup>";
+      document.getElementById('resumenSuperficieProducto').innerHTML = superficie + "cm<sup>2</sup>";
       document.getElementById('resumenPPU').innerText = response.replace(".", ",");
       document.getElementById('resumenPrecioProducto').innerText = (parseFloat(response) * parseInt(inputCantidad.value)).toFixed(2).replace(".", ",") + " €";
     } else {

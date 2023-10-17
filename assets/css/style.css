@@ -1143,7 +1143,6 @@ article {
     background: #00953e;
     -moz-user-select: none;
     user-select: none;
-    text-transform: capitalize;
     color: #fff;
     cursor: pointer;
     display: inline-block;
@@ -2141,11 +2140,6 @@ div.caja-tarjeta {
 .btn-email:hover {
   color: #0056b3;
   text-decoration: none;
-}
-
-.color-alert {
-  background-color: #ffe4a9;
-  margin: 5px;
 }
 
 .mensaje-color {

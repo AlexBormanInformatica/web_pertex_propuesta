@@ -2943,7 +2943,7 @@ input:focus {
 
 .flex-column.nav-pills {
   background-color: #00953e;
-  /* height: 800px; */
+  height: 800px;
   width: 150px;
 }
 
@@ -3508,6 +3508,28 @@ h3.tit-form {
   overflow-x: hidden;
   overflow-y: scroll;
   width: 100%;
+}
+
+.este2 {
+  height: 800px;
+  line-height: 1em;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  width: 100%;
+}
+
+.este2 table tfoot {
+  position: -webkit-sticky; /* Webkit (Chrome, Safari) */
+  position: sticky;
+  bottom: 0;
+  background-color: #f2f2f2;
+  z-index: 2;
+}
+
+.color-alert {
+  background-color: #ffe4a9;
+  margin: 5px;
+  border-radius: 5px;
 }
 
 @media (max-width: 992px) {

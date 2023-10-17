@@ -32,8 +32,8 @@ require_once('assets/_partials/idioma.php');
 <body>
   <!-- ----------------------------MENU MOVIL-------------------------------------- -->
 
-  <!-- <div class="color-nav m-b-30 ">
-    <div class="nav nav-pills-mv divpills2 evenly" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+  <div class="color-nav m-b-30 ">
+    <!--  <div class="nav nav-pills-mv divpills2 evenly" id="v-pills-tab" role="tablist" aria-orientation="vertical">
       <div class="primerBotonM nav-link active a-color text-center" id="v-pills-home" data-toggle="pill" href="#tecnicas" role="tab" aria-controls="v-pills-home" aria-selected="true">
         <a class="m-auto"><img id="imgtecnicam" src="iconos/Tecnica3.png" alt="<?= buscarTexto("WEB", "personaliza-tu-producto", "alt-tecnica", "", $_SESSION['idioma']); ?>"></a>
       </div>
@@ -49,8 +49,8 @@ require_once('assets/_partials/idioma.php');
       <div class="cuartoBotonM nav-link a-color text-center" id="v-pills-settings" data-toggle="pill" href="#imagen" role="tab" aria-controls="v-pills-settings" aria-selected="false">
         <a><img id="imgsubirfotom" src="iconos/Subir-foto6.png" alt="<?= buscarTexto("WEB", "personaliza-tu-producto", "alt-foto", "", $_SESSION['idioma']); ?>"></a>
       </div>
-    </div>
-  </div> -->
+    </div>-->
+  </div>
 
   <!-- ---------------------------------FIN MENU MOVIL-------------------------------- -->
   <div class="container p-0">
@@ -96,8 +96,8 @@ require_once('assets/_partials/idioma.php');
                 <fieldset>
                   <?php
                   try {
-                    $sql = "SELECT c.idCategorias, p.idproductos, p.nombre, p.molde, p.max_colores, p.cmyk, p.colores, p.tope, p.imagen, p.idtexto_archivos, 
-                    p.alto_min, p.ancho_min, p.ancho_max, p.alto_max
+                    $sql = "SELECT c.idCategorias, p.idproductos, p.nombre, p.molde, p.max_colores, p.cmyk, 
+                    p.colores_pantone, p.colores_limitados, p.tope, p.alto_min, p.ancho_min, p.ancho_max, p.alto_max
                     FROM categorias c 
                     INNER JOIN productos p ON c.idCategorias = p.categorias_idCategorias
                     GROUP BY nombre";
@@ -123,14 +123,13 @@ require_once('assets/_partials/idioma.php');
                           ?>
                             <optgroup label="<?= buscarTexto("PRG", "categorias", $result, "categoriaNombre", $_SESSION['idioma']); ?>">
                               <?php foreach ($productos as $producto) :
-                                if ($producto['idproductos'] != '47') {
                               ?>
-                                  <option class="<?= $producto['max_colores']  ?> <?= $producto['molde']  ?> <?= $producto['cmyk']  ?> <?= $producto['colores']  ?> <?= $producto['tope']  ?> <?= $producto['ancho_min']  ?> <?= $producto['alto_min']  ?> <?= $producto['ancho_max']  ?> <?= $producto['alto_max']  ?>" value="<?= $producto['idproductos']  ?>">
-                                    <!--
+                                <option class="<?= $producto['max_colores']  ?> <?= $producto['molde']  ?> <?= $producto['cmyk']  ?> <?= $producto['colores_limitados']  ?> <?= $producto['tope']  ?> <?= $producto['ancho_min']  ?> <?= $producto['alto_min']  ?> <?= $producto['ancho_max']  ?> <?= $producto['alto_max']  ?>" value="<?= $producto['idproductos']  ?> <?= $producto['colores_pantone']  ?>">
+                                  <!--
                                     class:[0] maximo de colores -> máximo de colores a elegir 
                                           [1] molde -> es el precio del molde del producto
                                           [2] cmyk -> si el color va por cmyk (no selecciona colores) 
-                                          [3] colores -> si tiene colores limitados, debe elegir
+                                          [3] colores_limitados -> si tiene colores limitados, debe elegir en el paso 1
                                           //Si no es cmyk ni colores (ambos 0), el color lo subira por pdf con la imagen,
                                           subira imagen y elegira de la paleta, o lo pondra en los comentarios
                                           [4] tope -> si el producto admite tope
@@ -138,11 +137,12 @@ require_once('assets/_partials/idioma.php');
                                           [6] alto minimo
                                           [7] ancho maximo
                                           [8] alto maximo
+                                          [9] colores_pantone -> si tiene colores, debe elegir en el paso 4
                                     -->
-                                    <?= buscarTexto("PRG", "productos", $producto['idproductos'], "nombre", $_SESSION['idioma']);
-                                    ?>
-                                  </option>
-                              <?php }
+                                  <?= buscarTexto("PRG", "productos", $producto['idproductos'], "nombre", $_SESSION['idioma']);
+                                  ?>
+                                </option>
+                              <?php
                               endforeach ?>
                             </optgroup>
                           <?php
@@ -168,18 +168,18 @@ require_once('assets/_partials/idioma.php');
 
                     <!--Colores producto-->
                     <div class="row col-12 p-all-10" id="divColores" style="display: none;">
-                      <p class="fs-configurator">Colores disponibles (selecciona hasta <span id="maximoColores"></span>):</p>
+                      <p class="fs-configurator">Colores disponibles (selecciona hasta <span class="maximoColores"></span>):</p>
                       <div id="coloresProducto" class="row">
                       </div>
                     </div>
-               
+
                     <!--Colores piel-->
                     <div class="" id="divColoresPiel" style="display: none;">
                       <p class="fs-configurator">Colores disponibles del soporte de piel:</p>
                       <div id="coloresPiel" class="row col-12 p-all-10">
                       </div>
                     </div>
-                  
+
                     <!--Colores metal-->
                     <div class="" id="divColoresMetal" style="display: none;">
                       <p class="fs-configurator">Colores disponibles para el módulo de metal esmaltado:</p>
@@ -378,17 +378,29 @@ require_once('assets/_partials/idioma.php');
                 <fieldset>
                   <div>
                     <p class="p-tb-10 fs-18 mayus title-paso-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_4_tit", "", $_SESSION['idioma']); ?></p>
-                    <p>Opción 1: Personaliza tu diseño a partir de una imagen</p>
-                    <p>Opción 2: Proporciona un PDF y detalles exactos</p>
+                    <p>Carga tu diseño en la <b>mayor calidad y resolución</b> disponible.</p>
 
-                    <div>
-                      <label for="archivo" class="btn mt-2"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_confirma-prop-intelectual-btn", "", $_SESSION['idioma']); ?></label>
-                      <input style="visibility:hidden;" name="archivo" id="archivo" type="file" /><br>
-                    </div>
-                    <div class="limit-w m-tb-50">
+                    <p id="textoPantone" style="display: none;">Para la técnica seleccionada, especifica tus colores de una de las siguientes formas:</p>
+                    <p id="textoCMYK" style="display: none;">Para la técnica seleccionada se definirán los colores por el contenido del archivo, o puedes indicarnos los códigos CMYK:</p>
+
+                    <p class="fs-configurator"><i class="ti-hand-point-right" aria-hidden="true"></i> Imagen en formato .png o .jpg. <span>Se generará una paleta de colores donde puedes seleccionar hasta <span class="maximoColores"></span> colores.</span></p>
+                    <p class="fs-configurator"><i class="ti-hand-point-right" aria-hidden="true"></i> PDF con las imágenes necesarias. Puede incluir instruccies adicionales.</p>
+                    <p class="fs-configurator"><i class="ti-hand-point-right" aria-hidden="true"></i> Diseño vectorizado en formato ai, eps o svg.</p>
+
+                    <label for="archivo" class="btn mt-2 mb-5">Selecciona</label>
+                    <input style="visibility:hidden;" name="archivo" id="archivo" type="file" /><br>
+                    <div class="limit-w m-tb-50" style="display: none;">
                       <img id="imagenPrevisualizacion">
                     </div>
 
+                    <div class="color-alert p-2" style="font-size: 16px;">
+                      <i class="ti-alert" aria-hidden="true"></i> De no especificar los colores, nuestros diseñadores elegiran según la imagen proporcionada.
+                    </div>
+
+                    <div class="mt-3 mb-3">
+                      <label for="comentariosDiseno" class="form-label">Ingresa códigos de color, instrucciones específicas o comentarios adicionales:</label>
+                      <textarea class="form-control" id="comentariosDiseno" name="comentariosDiseno" rows=5 cols=50></textarea>
+                    </div>
                   </div>
                 </fieldset>
               </div>
@@ -398,15 +410,13 @@ require_once('assets/_partials/idioma.php');
           <div class="nav  nav-pills" id="h-pills-tab" role="tablist" style="float:right">
             <a class="btn mb-5" id="v-pills-next-tab" data-toggle="pill" href="#" role="tab" aria-controls="v-pills-profile" aria-selected="false"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_btn-sig-diseno", "", $_SESSION['idioma']); ?></a>
             <a class="btn mb-5" id="v-pills-next-tabmv" data-toggle="pill" href="#" role="tab" aria-controls="v-pills-profile" aria-selected="false"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_btn-sig", "", $_SESSION['idioma']); ?></a>
-            <?php if ($user->is_logged_in()) { ?>
-              <button style="display:none" id="anadirCarrito" type="button" data-toggle="modal" data-target="#elegirPedido" class="btn mb5"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_confirma-añadir", "", $_SESSION['idioma']); ?></button>
-              <button class="btn mb-5" style="display:none" id="anadirCarritoMV" type="button" data-toggle="modal" data-target="#elegirPedido"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_confirma-añadir", "", $_SESSION['idioma']); ?></button>
-            <?php } ?>
+            <button style="display:none" id="anadirCarrito" type="button" data-toggle="modal" data-target="#encargarModal" class="btn mb5" disabled>FALTAN CAMPOS POR COMPLETAR</button>
+            <button class="btn mb-5" style="display:none" id="anadirCarritoMV" type="button" data-toggle="modal" data-target="#encargarModal"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_confirma-añadir", "", $_SESSION['idioma']); ?></button>
           </div>
       </div>
 
       <!--RESUMEN Y PRESUPUESTO-->
-      <div class="col-md-4  p-0">
+      <div class="col-md-4 este2 p-0">
         <div id="tu-producto" class="container tab-pane fade active show">
           <div class="caja-confirma">
             <p class="p-t-20 fs-20 mayus confirma-text"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_confirma_title", "", $_SESSION['idioma']); ?></p>
@@ -431,7 +441,7 @@ require_once('assets/_partials/idioma.php');
               <table class="table table-striped table-bordered" style="font-size: 14px;">
                 <!-- PASO 1 TECNICA-->
                 <tr>
-                  <th rowspan="3">Paso 1<br>
+                  <th rowspan="3" id="paso1_rowspan">Paso 1<br>
                     <div class="paso1 paso-incompleto">INCOMPLETO</div>
                   </th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
                   <td>Técnica: <span style="font-weight: bold;" id="resumenTecnica"></span></td>
@@ -443,6 +453,18 @@ require_once('assets/_partials/idioma.php');
                 </tr>
                 <tr>
                   <td>Cantidad: <span style="font-weight: bold;" id="resumenCantidad"></span></td>
+                  <td></td>
+                </tr>
+                <tr id="tdColores" style="display: none;">
+                  <td>Colores: <span style="font-weight: bold;" id="resumenColores"></span></td>
+                  <td></td>
+                </tr>
+                <tr id="tdColorPiel" style="display: none;">
+                  <td>Color piel: <span style="font-weight: bold;" id="resumenColorPiel"></span></td>
+                  <td></td>
+                </tr>
+                <tr id="tdColorMetal" style="display: none;">
+                  <td>Color metal: <span style="font-weight: bold;" id="resumenColorMetal"></span></td>
                   <td></td>
                 </tr>
 
@@ -510,313 +532,254 @@ require_once('assets/_partials/idioma.php');
                   <td><span style="font-weight: bold;" id="resumenPrecioTopes"></span></td>
                 </tr>
 
-                <!-- PASO 4 COLORES-->
-                <tr>
-                  <th rowspan="">Paso 4<div class="paso-incompleto">INCOMPLETO</div>
+                <!-- PASO 5-->
+                <tr></tr>
+                  <th rowspan="">Paso 5<div class="paso-incompleto">INCOMPLETO</div>
                   </th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
-                  <td id="tdColores" style="display: none;">Colores elegidos: <span style="font-weight: bold;" id="resumenColoresElegidos"></span></td>
+                  <td>Imagen: <span style="font-weight: bold;" id="resumenImagen"></span></td>
                   <td></td>
                 </tr>
-                <tr id="tdColorPiel" style="display: none;">
-                  <td>Color piel: <span style="font-weight: bold;" id="resumenColorPiel"></span></td>
-                  <td></td>
-                </tr>
-                <tr id="tdColorMetal" style="display: none;">
-                  <td>Color metal: <span style="font-weight: bold;" id="resumenColorMetal"></span></td>
-                  <td></td>
-                </tr>
+
+                <!-- SUBTOTAL -->
+                <tfoot>
+                  <tr>
+                    <th colspan="2" style="text-align: right;">SUBTOTAL</th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
+                    <th><span style="font-weight: bold;" id="resumenSubtotal"></span></th>
+                  </tr>
+                </tfoot>
+              </table>
             </div>
-
-            <!-- PASO 5-->
-            <tr>
-              <th rowspan="">Paso 5<div class="paso-incompleto">INCOMPLETO</div>
-              </th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
-              <td>Imagen: <span style="font-weight: bold;" id="resumenImagen"></span></td>
-              <td></td>
-            </tr>
-
-            <!-- SUBTOTAL -->
-            <tr>
-              <th colspan="2" style="text-align: right;">SUBTOTAL</th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
-              <th><span style="font-weight: bold;" id="resumenSubtotal"></span></th>
-            </tr>
-            <!-- Otras filas se generan dinámicamente con JavaScript -->
-            </table>
+          </fieldset>
         </div>
-        </fieldset>
-      </div>
 
-      <!--Modal a que pedido agregar-->
-      <div class="modal fade" id="elegirPedido" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 1000px;">
-          <div class="modal-content modal-aviso">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-
-            <div id="divPTPMal" class="text-center p-all-10">
-              <i id="icono-modal-agregar" class="fa fa-info-circle fa-4x"></i>
-            </div>
-            <div id="divPTPBien" class="text-center p-all-10">
-              <h3><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal-ped-tit", "", $_SESSION['idioma']); ?></h3>
-              <p class="mb-3"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal-ped-p1", "", $_SESSION['idioma']); ?></p>
-            </div>
-
-            <div class="modal-body">
-              <p class="mb-3 text-modal text-center" id="txtModalEP" style="display: none;"></p>
-              <div id="divNombres">
-                <div class="mb-3 text-center p-all-10">
-                  <p class="text-center">
-                    <span class="numeros">1</span>
-                  </p>
-                  <h4 class="mb-3"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal-ped-subtit1", "", $_SESSION['idioma']); ?></h4>
-                  <p class="mb-3 verde-color"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_mensaje-add", "", $_SESSION['idioma']); ?></p>
-                  <p class="mb-3 text-modal"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_nomper", "", $_SESSION['idioma']); ?></p>
-                  <p id="contador1">0 / 45</p>
-                  <input class="nice-select-p mx-auto" id="pstNombrePer" name="pstNombrePer" value="" maxlength="45" onkeyup="countChars(this);"><br>
-                  <p style="display:none;" id="ombreDiseno" class="fs-configurator-2">Nombre de diseño ya existe.</p>
-                </div>
-                <div class="mb-3 text-center p-all-10">
-                  <p class="text-center">
-                    <span class="numeros">2</span>
-                  </p>
-                  <h4 class="mb-3 text-center"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal-ped-subtit2", "", $_SESSION['idioma']); ?></h4>
-                  <div class="row justify-content-center">
-                    <p class="mb-3"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_modal-ped-p2", "", $_SESSION['idioma']); ?></p>
-                    <div class="col-lg-6 col-md-6p-4">
-                      <h5 class="text-center"><?= buscarTexto("WEB", "muestrario", "modal-muestrario-nuevo", "", $_SESSION['idioma']); ?></h5><br>
-                      <p class="mb-3 verde-color "><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_mensaje-add", "", $_SESSION['idioma']); ?></p>
-                      <p class="mb-3 text-modal"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_nomped", "", $_SESSION['idioma']); ?>:</p>
-                      <p id="contador2">0 / 45</p>
-                      <input class="nice-select-p mx-auto" id="pstNombrePed" name="pstNombrePed" value="" maxlength="45" onkeyup="countChars2(this);">
-                      <p class="p-tb-20 fs-configurator-2" id="nombre_repetido" style="display:none;"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_mensaje-existe", "", $_SESSION['idioma']); ?></p>
-                      <br>
-
-                      <button type="button" onclick="document.forms['formularioPersonalizar'].submit();" id="btnPedidoNuevo" class="btn">
-                        <span class="button__text"><?= buscarTexto("WEB", "muestrario", "modal-muestrario-nuevo-btn", "", $_SESSION['idioma']); ?></span>
-                      </button>
-                    </div>
-
-                    <div class="col-lg-6 col-md-6  caja-height p-4">
-                      <h5 class="text-center"><?= buscarTexto("WEB", "muestrario", "modal-muestrario-existente", "", $_SESSION['idioma']); ?></h5><br>
-                      <div id="divLinkAddPedido" style="display: none;">
-                        <ul class="list-group list-group-flush" id="ulLinkAddPedido">
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+        <!--Modal a que pedido agregar-->
+        <div class="modal fade" id="encargarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 1000px;">
+            <div class="modal-content modal-aviso">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
               </div>
+
+              <div class="text-center p-all-10">
+                <h3>¡Casi listo!</h3>
+              </div>
+
+              <div class="modal-body">
+                <p class="mb-3">Por favor, revisa tus datos de diseño y asegúrate de que todo esté correcto.</p>
+                <p>Tu diseño será entregado a nuestros diseñadores, y recibirás información sobre el proceso en tu correo electrónico.</p>
+
+                <button type="submit" class="btn btn-primary">ENCARGAR DISEÑO</button>
+              </div>
+
             </div>
           </div>
         </div>
-      </div>
-      </form>
-    </div> <!-- row-principal -->
-  </div><!-- fin-container -->
+        </form>
+      </div> <!-- row-principal -->
+    </div><!-- fin-container -->
 
 
-  <script>
-    function subir() {
-      $("html, body").animate({
-        scrollTop: 0
-      }, "slow");
-      $("#inicioScroll").animate({
-        scrollTop: 0
-      }, "slow");
-    }
+    <script>
+      function subir() {
+        $("html, body").animate({
+          scrollTop: 0
+        }, "slow");
+        $("#inicioScroll").animate({
+          scrollTop: 0
+        }, "slow");
+      }
 
-    var i = 0;
-    window.addEventListener("load", function() {
-      // $('#modalPrincipal').modal('show');
-      let tabs = document.querySelectorAll(".divpills a");
-      let tabsMovil = document.querySelectorAll(".divpills2 a");
-      let nextTab = document.getElementById("v-pills-next-tab");
-      let nextTabMovil = document.getElementById("v-pills-next-tabmv");
-      let tab1 = document.getElementById("a1");
-      let tab2 = document.getElementById("a2");
-      let tab3 = document.getElementById("a3");
-      let tab4 = document.getElementById("a4");
-      nextTab.addEventListener("click", function() {
-        i = (i == (tabs.length - 1)) ? 0 : i + 1;
-        tabs[i].click();
-        //imprimir ventana modal principal
-        $('#printButton').on('click', function() {
-          if ($('.modal').is(':visible')) {
-            var modalId = $(event.target).closest('.modal').attr('id');
-            $('body').css('visibility', 'hidden');
-            $("#" + modalId).css('visibility', 'visible');
-            $('#' + modalId).removeClass('modal');
-            window.print();
-            $('body').css('visibility', 'visible');
-            $('#' + modalId).addClass('modal');
-          } else {
-            window.print();
+      var i = 0;
+      window.addEventListener("load", function() {
+        // $('#modalPrincipal').modal('show');
+        let tabs = document.querySelectorAll(".divpills a");
+        let tabsMovil = document.querySelectorAll(".divpills2 a");
+        let nextTab = document.getElementById("v-pills-next-tab");
+        let nextTabMovil = document.getElementById("v-pills-next-tabmv");
+        let tab1 = document.getElementById("a1");
+        let tab2 = document.getElementById("a2");
+        let tab3 = document.getElementById("a3");
+        let tab4 = document.getElementById("a4");
+        nextTab.addEventListener("click", function() {
+          i = (i == (tabs.length - 1)) ? 0 : i + 1;
+          tabs[i].click();
+          //imprimir ventana modal principal
+          $('#printButton').on('click', function() {
+            if ($('.modal').is(':visible')) {
+              var modalId = $(event.target).closest('.modal').attr('id');
+              $('body').css('visibility', 'hidden');
+              $("#" + modalId).css('visibility', 'visible');
+              $('#' + modalId).removeClass('modal');
+              window.print();
+              $('body').css('visibility', 'visible');
+              $('#' + modalId).addClass('modal');
+            } else {
+              window.print();
+            }
+          });
+
+          switch ($('.nav-link[aria-selected="true"]').eq(1).attr("href")) {
+            case "#tecnicas":
+              i = 0;
+              break;
+            case "#diseno":
+              i = 1;
+              break;
+            case "#complementos":
+              i = 2;
+              break;
+            case "#imagen":
+              i = 3;
+              break;
           }
+          subir();
+        }, false);
+
+        nextTabMovil.addEventListener("click", function() {
+          i = (i == (tabsMovil.length - 1)) ? 0 : i + 1;
+          tabsMovil[i].click();
+          subir();
+        }, false);
+
+        ////////////////////iconos tabs//////////////////////
+        $('.primerBoton').on('click', function() {
+          i = 0;
+          // $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica3.png");
+          // $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno6.png");
+          // $('#imgcolores')[0].setAttribute("src", "iconos/Colores6.png");
+          // $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto6.png");
+
+          nextTab.textContent = $('#ptp_btn-sig').text() + " -> " + $('#nav2').text();
+          $('#v-pills-next-tab').show();
+          $('#anadirCarrito').hide();
+          subir();
+        });
+        $('.segundoBoton').on('click', function() {
+          i = 1;
+          // $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica6.png");
+          // $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno3.png");
+          // $('#imgcolores')[0].setAttribute("src", "iconos/Colores6.png");
+          // $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto6.png");
+
+          nextTab.textContent = $('#ptp_btn-sig').text() + " -> " + $('#nav3').text();
+          $('#v-pills-next-tab').show();
+          $('#anadirCarrito').hide();
+          subir();
+        });
+        $('.tercerBoton').on('click', function() {
+          i = 2;
+          // $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica6.png");
+          // $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno6.png");
+          // $('#imgcolores')[0].setAttribute("src", "iconos/Colores3.png");
+          // $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto6.png");
+
+          nextTab.textContent = $('#ptp_btn-sig').text() + " -> " + $('#nav4').text();
+          $('#v-pills-next-tab').show();
+          $('#anadirCarrito').hide();
+          subir();
+        });
+        $('.cuartoBoton').on('click', function() {
+          i = 3;
+          // $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica6.png");
+          // $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno6.png");
+          // $('#imgcolores')[0].setAttribute("src", "iconos/Colores6.png");
+          // $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto3.png");
+
+          $('#v-pills-next-tab').hide();
+          $('#anadirCarrito').show();
+          subir();
         });
 
-        switch ($('.nav-link[aria-selected="true"]').eq(1).attr("href")) {
-          case "#tecnicas":
-            i = 0;
-            break;
-          case "#diseno":
-            i = 1;
-            break;
-          case "#complementos":
-            i = 2;
-            break;
-          case "#imagen":
-            i = 3;
-            break;
-        }
-        subir();
+
+        //movil
+        // $('.primerBotonM').on('click', function() {
+        //   i = 0;
+        //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica3.png");
+        //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno6.png");
+        //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores6.png");
+        //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto6.png");
+
+        //   $('#v-pills-next-tabmv').show();
+        //   $('#anadirCarritoMV').hide();
+        // });
+        // $('.segundoBotonM').on('click', function() {
+        //   i = 1;
+        //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica6.png");
+        //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno3.png");
+        //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores6.png");
+        //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto6.png");
+
+        //   $('#v-pills-next-tabmv').show();
+        //   $('#anadirCarritoMV').hide();
+        // });
+        // $('.tercerBotonM').on('click', function() {
+        //   i = 2;
+        //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica6.png");
+        //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno6.png");
+        //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores3.png");
+        //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto6.png");
+
+        //   $('#v-pills-next-tabmv').show();
+        //   $('#anadirCarritoMV').hide();
+        // });
+        // $('.cuartoBotonM').on('click', function() {
+        //   i = 3;
+        //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica6.png");
+        //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno6.png");
+        //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores6.png");
+        //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto3.png");
+
+        //   $('#v-pills-next-tabmv').hide();
+        //   $('#anadirCarritoMV').show();
+        // });
+
+        $(document).on('click', '#btnPedidoNuevo', function() {
+          $('#btnPedidoNuevo').addClass("button--loading");
+          $('#btnPedidoNuevo').prop("disabled", true);
+        });
       }, false);
 
-      nextTabMovil.addEventListener("click", function() {
-        i = (i == (tabsMovil.length - 1)) ? 0 : i + 1;
-        tabsMovil[i].click();
-        subir();
-      }, false);
+      function submitDelForm(id) {
+        $('#ulLinkAddPedido').hide();
+        $('#pstIdPedido').val(id);
 
-      ////////////////////iconos tabs//////////////////////
-      $('.primerBoton').on('click', function() {
-        i = 0;
-        // $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica3.png");
-        // $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno6.png");
-        // $('#imgcolores')[0].setAttribute("src", "iconos/Colores6.png");
-        // $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto6.png");
+        $('#formularioPersonalizar').submit();
+      }
 
-        nextTab.textContent = $('#ptp_btn-sig').text() + " -> " + $('#nav2').text();
-        $('#v-pills-next-tab').show();
-        $('#anadirCarrito').hide();
-        subir();
+      function countChars(obj) {
+        document.getElementById("contador1").innerHTML = obj.value.length + ' / 45';
+      }
+
+      function countChars2(obj) {
+        document.getElementById("contador2").innerHTML = obj.value.length + ' / 45';
+      }
+    </script>
+
+    <script src="./assets/js/vendor/modernizr-3.5.0.min.js"></script>
+    <script src="./assets/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="./assets/js/popper.min.js"></script>
+    <script src="./assets/js/bootstrap.min.js"></script>
+    <script src="./assets/js/jquery.slicknav.min.js"></script>
+    <script src="./assets/js/jquery.scrollUp.min.js"></script>
+    <script src="./assets/js/jquery.form.js"></script>
+    <script src="./assets/js/jquery.validate.min.js"></script>
+    <script src="./assets/js/jquery.ajaxchimp.min.js"></script>
+    <script src="./assets/js/cookies.js"></script>
+    <script src="./assets/js/encargar-diseno.js"></script>
+    <script src="./assets/js/main.js"></script>
+    <script src="./assets/js/historial-pedidos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pselect.js@4.0.1/dist/pselect.min.js"></script>
+
+    <script>
+      $('input[name="base"]').change(function() {
+        // Quitar la clase 'seleccionado' de todos los elementos 'input' con 'name="base"'
+        $('input[name="base"]').parent().removeClass('seleccionado');
+        // Agregar la clase 'seleccionado' solo al elemento actual
+        $(this).parent().addClass('seleccionado');
       });
-      $('.segundoBoton').on('click', function() {
-        i = 1;
-        // $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica6.png");
-        // $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno3.png");
-        // $('#imgcolores')[0].setAttribute("src", "iconos/Colores6.png");
-        // $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto6.png");
-
-        nextTab.textContent = $('#ptp_btn-sig').text() + " -> " + $('#nav3').text();
-        $('#v-pills-next-tab').show();
-        $('#anadirCarrito').hide();
-        subir();
-      });
-      $('.tercerBoton').on('click', function() {
-        i = 2;
-        // $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica6.png");
-        // $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno6.png");
-        // $('#imgcolores')[0].setAttribute("src", "iconos/Colores3.png");
-        // $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto6.png");
-
-        nextTab.textContent = $('#ptp_btn-sig').text() + " -> " + $('#nav4').text();
-        $('#v-pills-next-tab').show();
-        $('#anadirCarrito').hide();
-        subir();
-      });
-      $('.cuartoBoton').on('click', function() {
-        i = 3;
-        // $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica6.png");
-        // $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno6.png");
-        // $('#imgcolores')[0].setAttribute("src", "iconos/Colores6.png");
-        // $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto3.png");
-
-        $('#v-pills-next-tab').hide();
-        $('#anadirCarrito').show();
-        subir();
-      });
-
-
-      //movil
-      // $('.primerBotonM').on('click', function() {
-      //   i = 0;
-      //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica3.png");
-      //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno6.png");
-      //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores6.png");
-      //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto6.png");
-
-      //   $('#v-pills-next-tabmv').show();
-      //   $('#anadirCarritoMV').hide();
-      // });
-      // $('.segundoBotonM').on('click', function() {
-      //   i = 1;
-      //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica6.png");
-      //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno3.png");
-      //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores6.png");
-      //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto6.png");
-
-      //   $('#v-pills-next-tabmv').show();
-      //   $('#anadirCarritoMV').hide();
-      // });
-      // $('.tercerBotonM').on('click', function() {
-      //   i = 2;
-      //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica6.png");
-      //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno6.png");
-      //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores3.png");
-      //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto6.png");
-
-      //   $('#v-pills-next-tabmv').show();
-      //   $('#anadirCarritoMV').hide();
-      // });
-      // $('.cuartoBotonM').on('click', function() {
-      //   i = 3;
-      //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica6.png");
-      //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno6.png");
-      //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores6.png");
-      //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto3.png");
-
-      //   $('#v-pills-next-tabmv').hide();
-      //   $('#anadirCarritoMV').show();
-      // });
-
-      $(document).on('click', '#btnPedidoNuevo', function() {
-        $('#btnPedidoNuevo').addClass("button--loading");
-        $('#btnPedidoNuevo').prop("disabled", true);
-      });
-    }, false);
-
-    function submitDelForm(id) {
-      $('#ulLinkAddPedido').hide();
-      $('#pstIdPedido').val(id);
-
-      $('#formularioPersonalizar').submit();
-    }
-
-    function countChars(obj) {
-      document.getElementById("contador1").innerHTML = obj.value.length + ' / 45';
-    }
-
-    function countChars2(obj) {
-      document.getElementById("contador2").innerHTML = obj.value.length + ' / 45';
-    }
-  </script>
-
-  <script src="./assets/js/vendor/modernizr-3.5.0.min.js"></script>
-  <script src="./assets/js/vendor/jquery-1.12.4.min.js"></script>
-  <script src="./assets/js/popper.min.js"></script>
-  <script src="./assets/js/bootstrap.min.js"></script>
-  <script src="./assets/js/jquery.slicknav.min.js"></script>
-  <script src="./assets/js/jquery.scrollUp.min.js"></script>
-  <script src="./assets/js/jquery.form.js"></script>
-  <script src="./assets/js/jquery.validate.min.js"></script>
-  <script src="./assets/js/jquery.ajaxchimp.min.js"></script>
-  <script src="./assets/js/cookies.js"></script>
-  <script src="./assets/js/encargar-diseno.js"></script>
-  <script src="./assets/js/main.js"></script>
-  <script src="./assets/js/historial-pedidos.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/pselect.js@4.0.1/dist/pselect.min.js"></script>
-
-  <script>
-    $('input[name="base"]').change(function() {
-      // Quitar la clase 'seleccionado' de todos los elementos 'input' con 'name="base"'
-      $('input[name="base"]').parent().removeClass('seleccionado');
-      // Agregar la clase 'seleccionado' solo al elemento actual
-      $(this).parent().addClass('seleccionado');
-    });
-  </script>
+    </script>
 </body>
 
 </html>

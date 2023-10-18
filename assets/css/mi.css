@@ -2937,22 +2937,6 @@ input:focus {
   justify-content: space-around;
 }
 
-.nav-link:hover {
-  cursor: pointer;
-}
-
-.flex-column.nav-pills {
-  background-color: #00953e;
-  height: 800px;
-  width: 150px;
-}
-
-.nav-link {
-  display: block;
-  padding: 20px 20px;
-  height: auto;
-  width: 150px;
-}
 
 .col-lg-color {
   -ms-flex: 0 0 15%;
@@ -4062,4 +4046,11 @@ input[type="number"] {
 
 .input-error {
   box-shadow: 0 0 10px red;
+}
+
+.btn[disabled] {
+  background-color: #ccc; /* Cambia el color de fondo cuando está deshabilitado */
+  color: #888; /* Cambia el color del texto cuando está deshabilitado */
+  cursor: not-allowed; /* Cambia el cursor a "no permitido" cuando está deshabilitado */
+  /* Otros estilos específicos para el botón deshabilitado */
 }

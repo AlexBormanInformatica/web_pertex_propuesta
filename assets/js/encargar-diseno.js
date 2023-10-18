@@ -1,15 +1,15 @@
 //Dinamismo del formulario encargar-diseño
-//Global de la tecnica
+
+//Globales del formulario
 const selectProducto = document.getElementById('tecnica');
 const inputCantidad = document.getElementById('cantidad');
-const elementosColorMetal = document.getElementsByName('colormetal');
-const elementosColorPiel = document.getElementsByName('colorpiel');
-const elementosColores = document.getElementsByName('colores');
 const elementosBase = document.getElementsByName('base');
 const elementosTope = document.getElementsByName('tope');
+const elementosFormas = document.getElementsByName('formas');
 const anchoProductoInput = document.getElementById('anchoProductoInput');
 const altoProducto = document.getElementById('altoProducto');
 const anchoProductoSelect = document.getElementById('anchoProductoSelect');
+//Valores
 var coloresSeleccionados = [];
 var colorMetalSeleccionado = [];
 var colorPielSeleccionado = [];
@@ -17,11 +17,20 @@ var colorBaseSeleccionado = [];
 var maximoColores = 0;
 var anchoInt = 0;
 var altoInt = 0;
-
+//Tabla resumen
 var paso1_rowspan = document.getElementById('paso1_rowspan');
 var paso2_rowspan = document.getElementById('paso2_rowspan');
 var paso3_rowspan = document.getElementById('paso3_rowspan');
 var paso4_rowspan = document.getElementById('paso4_rowspan');
+//Booleanos que determinarán qué necesita según la técnica
+var colores_limitados = false;
+var colorPiel = false;
+var colorMetal = false;
+var medidas = false;
+var forma = false;
+var medidasBase = false;
+var colorBase = false;
+var cantidadTopes = false;
 
 
 // Listener de los campos y dinamismo del formulario
@@ -260,6 +269,34 @@ var paso4_rowspan = document.getElementById('paso4_rowspan');
   });
 
 
+  for (var i = 0; i < elementosFormas.length; i++) {
+    elementosFormas[i].addEventListener('input', function () {
+      if (this.checked) {
+        var nombreForma = $(this).closest('div').find('p').text();
+        document.getElementById('resumenFormaProducto').innerText = nombreForma;
+
+        //Busco si el precio va por la forma, y lo meustro de ser asi
+        $.ajax({
+          method: "POST",
+          url: "funciones/functions.php",
+          data: {
+            precioPorForma: "", idproducto: $('select[name="tecnica"] :selected').val(), cantidad: inputCantidad.value, idforma: this.value
+          }
+        }).done(function (response) {
+          response = response.trim();
+
+          //Relleno los campos
+          if (response != "") {
+            document.getElementById('resumenPPU').innerText = response.replace(".", ",");
+            document.getElementById('resumenPrecioProducto').innerText = (parseFloat(response) * parseInt(inputCantidad.value)).toFixed(2).replace(".", ",") + " €";
+          }
+
+          //Por último verifico todo el paso 2
+          verificarPaso2();
+        });
+      }
+    });
+  }
   // FIN PASO 2: medidas--------------------------------------------------------------------------------//
 
   // PASO 3: complementos (bases y topes)--------------------------------------------------------------//
@@ -270,7 +307,8 @@ var paso4_rowspan = document.getElementById('paso4_rowspan');
       // Referencia al elemento con el id 'paso3_rowspan'
       // Cambia el valor de rowspan a un nuevo valor deseado
       paso3_rowspan.rowSpan = "";
-
+      medidasBase = false;
+      colorBase = false;
       //Oculto y vacío los campos primero
       $('#tdTipoBase').hide();// Tipo de base (resumen)
       $('#tdAnchoBase').hide();// Ancho base de tela (resumen)
@@ -278,7 +316,7 @@ var paso4_rowspan = document.getElementById('paso4_rowspan');
       $('#tdSuperficieBase').hide(); // Superficie base de tela (resumen)
       $('#tdColorBase').hide();//Color base (resumen)
       $('#tdMoldeBase').hide();// Molde de la base(resumen)
-      $('#tdPrecioBase').hide();// Precio de la base(resumen)
+      $('#tdPrecioComplemento').hide();// Precio de la base(resumen)
       $('#divColoresBase').hide();//Div colores
       document.getElementById('resumenTipoBase').innerText = "";
       paso3_rowspan.rowSpan = "1";
@@ -314,7 +352,7 @@ var paso4_rowspan = document.getElementById('paso4_rowspan');
 
           // Crea un elemento input (checkbox)
           const checkbox = document.createElement('input');
-          checkbox.name = 'colores';
+          checkbox.name = 'colorbase';
           checkbox.id = `${nombre}`;
           checkbox.value = `${nombre}`;
           checkbox.type = 'checkbox';
@@ -341,6 +379,8 @@ var paso4_rowspan = document.getElementById('paso4_rowspan');
       //Relleno el resumen depende la base elegida
       switch (this.value) {
         case "1":
+          medidasBase = true;
+          colorBase = true;
           $('#divColoresBase').show();
           $('#divMedidasTela').show();
           $('#tdTipoBase').show();
@@ -349,30 +389,32 @@ var paso4_rowspan = document.getElementById('paso4_rowspan');
           $('#tdSuperficieBase').show();
           $('#tdColorBase').show();
           $('#tdMoldeBase').show();
-          $('#tdPrecioBase').show();
+          $('#tdPrecioComplemento').show();
           document.getElementById('resumenTipoBase').innerText = "Tela";
-          paso3_rowspan.rowSpan = "5";
+          paso3_rowspan.rowSpan = "7";
           pasoIncompleto(document.querySelector('.paso3'));
           verificarBaseTela();
           break;
         case "2":
+          colorBase = true;
           $('#divColoresBase').show();
           $('#tdTipoBase').show();
           $('#tdColorBase').show();
           $('#tdMoldeBase').show();
-          $('#tdPrecioBase').show();
+          $('#tdPrecioComplemento').show();
           document.getElementById('resumenTipoBase').innerText = "Cierre gancho";
-          paso3_rowspan.rowSpan = "2";
+          paso3_rowspan.rowSpan = "3";
           pasoIncompleto(document.querySelector('.paso3'));
           break;
         case "3":
+          colorBase = true;
           $('#divColoresBase').show();
           $('#tdTipoBase').show();
           $('#tdColorBase').show();
           $('#tdMoldeBase').show();
-          $('#tdPrecioBase').show();
+          $('#tdPrecioComplemento').show();
           document.getElementById('resumenTipoBase').innerText = "Cierre gancho + pelo";
-          paso3_rowspan.rowSpan = "2";
+          paso3_rowspan.rowSpan = "3";
           pasoIncompleto(document.querySelector('.paso3'));
           break;
 
@@ -385,12 +427,45 @@ var paso4_rowspan = document.getElementById('paso4_rowspan');
     });
   }
 
-  // Detecta cuando marquen si quiere base o no
+  /*
+  Detectar cambios en los colores a elegir para la base
+  */
+  document.getElementById("coloresBase").addEventListener("change", function (event) {
+    //Verifico que la selección sea de los colores
+    if (event.target.type === "checkbox" && event.target.name === "colorbase") {
+      const valor = event.target.value;
+
+      if (event.target.checked) {
+        //Si esta seleccionado y la lista aun no está llena, lo agrego
+        if (colorBaseSeleccionado.length < 1) {
+          colorBaseSeleccionado.push(valor);
+        } else {
+          //Si la lista está llena saco un mensaje "No puedes seleccioanr más de X colores"
+          event.target.checked = false;
+          alert("No puedes seleccionar más de " + 1 + " color.");
+        }
+      } else {
+        //Si no es seleccion, lo elimino de la lista
+        const index = colorBaseSeleccionado.indexOf(valor);
+        if (index > -1) {
+          colorBaseSeleccionado.splice(index, 1);
+        }
+      }
+
+      //Imprimo la lista en la tabla resumen
+      document.getElementById('resumenColorBase').innerText = colorBaseSeleccionado;
+
+    }
+    verificarPaso1();
+  });
+
+  // Detecta cuando marquen si quiere tope o no
   // Itera a través de la colección y agrega un evento a cada elemento
   for (var i = 0; i < elementosTope.length; i++) {
     elementosTope[i].addEventListener('input', function () {
       switch (this.value) {
         case "1":// Sí quiere topes
+          cantidadTopes = true;
           $('#divCantidadTopes').show();
           $('#tdCantidadTopes').show();
           $('#tdPrecioComplemento').show();
@@ -410,7 +485,7 @@ var paso4_rowspan = document.getElementById('paso4_rowspan');
   // FIN PASO 3-----------------------------------------------------------------------------------------------//
 
   // Agrega un manejador de eventos para detectar cuando el botón se deshabilita
-  const miBoton = document.getElementById('anadirCarrito');
+  const miBoton = document.getElementById('encargarDiseno');
   miBoton.addEventListener('change', function () {
     if (miBoton.disabled) {
       miBoton.innerText = "FALTAN CAMPOS POR COMPLETAR";
@@ -431,6 +506,10 @@ function cargarCamposSegunTecnica() {
   document.getElementById('resumenColorMetal').innerText = colorMetalSeleccionado;// Asigno la lista vacia
   colorPielSeleccionado.length = 0;//Vacio la lista de color piel
   document.getElementById('resumenColorPiel').innerText = colorPielSeleccionado;// Asigno la lista vacia
+
+  colores_limitados = false;
+  colorMetal = false;
+  colorPiel = false;
 
   $('#divColores').hide(); //Div de colores limitados
   $('#divColoresMetal').hide(); // Div de colores metalicos
@@ -478,6 +557,7 @@ function cargarCamposSegunTecnica() {
   //[3] colores_limitados
   //Si es colores a 1 saco los colores a elegir
   if ($('select[name="tecnica"] :selected').attr('class').split(' ')[3] == 1) {
+    colores_limitados = true;
     //Relleno campos y muestro el div de los colores disponibles
     maximoColores = parseInt($('select[name="tecnica"] :selected').attr('class').split(' ')[0]);
     const spanMaxColores = document.getElementsByClassName('maximoColores');
@@ -565,6 +645,7 @@ function cargarCamposSegunTecnica() {
     //Si regresa algo, es que tiene
     if (response.length === 0) {
     } else {
+      colorMetal = true;
       // Obtén el contenedor donde deseas mostrar los colores
       const colorContainer = document.getElementById("coloresMetal");
       colorContainer.innerHTML = "";
@@ -626,6 +707,7 @@ function cargarCamposSegunTecnica() {
     //Si regresa algo, es que tiene
     if (response.length === 0) {
     } else {
+      colorPiel = true;
       // Obtén el contenedor donde deseas mostrar los colores
       const colorContainer = document.getElementById("coloresPiel");
       colorContainer.innerHTML = "";
@@ -674,8 +756,10 @@ function cargarCamposSegunTecnica() {
       $('#divColoresPiel').show();
     }
   });
-  
+
   // --------------------Para el PASO 2 diseño---------------------------
+  medidas = false;
+  forma = false;
   //Oculto todos los campos primero
   $('#anchoPorAlto').hide(); //Div de medidas
   $('#divInputAncho').hide(); // Div de ancho (input)
@@ -694,7 +778,14 @@ function cargarCamposSegunTecnica() {
   anchoProductoInput.value = "";
   altoProducto.value = "";
   anchoProductoSelect.selectedIndex = 0;
-
+  //Vacío los campos y los marco incompleto
+  document.getElementById("resumenPPU").innerText = "";
+  document.getElementById("resumenPrecioProducto").innerText = "";
+  document.getElementById("resumenAnchoProducto").innerText = "";
+  document.getElementById("resumenAltoProducto").innerText = "";
+  document.getElementById("resumenSuperficieProducto").innerText = "";
+  document.getElementById("resumenFormaProducto").innerText = "";
+  pasoIncompleto(document.querySelector('.paso2'));
 
   // ¿La técnica seleccionada tiene ancho y alto (mínimos y máximos)? Sí = habilitar div medidas, No = deshabilito div medidas
   // [8] alto máximo = "" = sin medidas
@@ -705,6 +796,7 @@ function cargarCamposSegunTecnica() {
     $('#tdSuperficieProducto').hide();
     paso2_rowspan.rowSpan = "1";
   } else {
+    medidas = true;
     paso2_rowspan.rowSpan = "4";
 
     $('#anchoPorAlto').show();
@@ -733,18 +825,24 @@ function cargarCamposSegunTecnica() {
     }
   }).done(function (response) {
     if (response.length > 0) {// Si tiene formas
+      forma = true;
       //Muestro el div para las formas
       $('#divFormas').show();
-      
-      console.log(response);
+      $('#tdFormaProducto').show();
+      paso2_rowspan.rowSpan = paso2_rowspan.rowSpan + 1;
+
+      //Recorro el response y muestro cada div correspondiente
       for (var i = 0; i < response.length; i++) {
-        document.getElementById("forma"+response[i].id_formas.toString()).style.display = "block";
+        document.getElementById("forma" + response[i].id_formas.toString()).style.display = "block";
       }
-    } 
+    }
   });
 
 
   // --------------------Para el PASO 3 complementos---------------------------
+  medidasBase = false;
+  colorBase = false;
+  cantidadTopes = false;
   pasoCompleto(document.querySelector('.paso3'));
   //Oculto todos los campos primero
   // Recorre la lista de elementos y quita la clase "seleccionado"
@@ -768,7 +866,7 @@ function cargarCamposSegunTecnica() {
   $('#tdSuperficieBase').hide(); // Div  superficie base (resumen)
   $('#tdColorBase').hide(); // Div color base (resumen)
   $('#tdMoldeBase').hide(); // Div molde base (resumen)
-  $('#tdPrecioBase').hide(); // Div precio base (resumen)
+  $('#tdPrecioComplemento').hide(); // Div precio base (resumen)
   $('#tdCantidadTopes').hide(); // Div cantidad topes (resumen)
   $('#tdPrecioTopes').hide(); // Div precio topes (resumen)
   paso3_rowspan.rowSpan = 1;
@@ -875,9 +973,8 @@ function verificarPaso1() {
     bool = false;
   }
 
-  //Sin color a elegir
-  if (document.getElementById("tdColores").style.display === "none") {
-  } else {
+  //Color a elegir
+  if (colores_limitados == true) {
     //Si debe elegir colores, que sea al menos uno
     if (document.getElementById('resumenColores').innerText != "") {
     } else {
@@ -885,9 +982,8 @@ function verificarPaso1() {
     }
   }
 
-  //Sin color piel
-  if (document.getElementById("tdColorPiel").style.display == "none") {
-  } else {
+  //Color piel a elegir
+  if (colorPiel == true) {
     //Si debe elegir color
     if (document.getElementById('resumenColorPiel').innerText != "") {
     } else {
@@ -895,9 +991,8 @@ function verificarPaso1() {
     }
   }
 
-  //Sin color metal
-  if (document.getElementById("tdColorMetal").style.display == "none") {
-  } else {
+  //Color metal a elegir
+  if (colorMetal == true) {
     //Si debe elegir color
     if (document.getElementById('resumenColorMetal').innerText != "") {
     } else {
@@ -920,19 +1015,16 @@ function verificarPaso1() {
 function verificarPaso2() {
   var bool = true;
 
-  //Sin forma
-  if (document.getElementById("tdFormaProducto").style.display === "none") {
-  } else {
+  //Con forma
+  if (forma == true) {
     //Si requiere forma, verifico que haya elegido una forma
     if (document.getElementById('resumenFormaProducto').innerText != "") {
     } else {
       bool = false;
     }
   }
-
-  // [9] alto máximo = "" = sin medidas
-  if ($('select[name="tecnica"] :selected').attr('class').split(' ')[9] == "") {
-  } else {
+  // Con medidas
+  if (medidas == true) {
     //Si lleva medidas y son correctas
     if (document.getElementById('resumenSuperficieProducto').innerText != "" &&
       document.getElementById('resumenPPU').innerText != "" &&
@@ -1013,7 +1105,7 @@ function sumaSubtotal() {
   }
 
   // Relleno el campo del subtotal de la tabla
-  document.getElementById('resumenSubtotal').innerText = suma + " €";
+  document.getElementById('resumenSubtotal').innerText = suma.toString().replace('.', ',') + " €";
 }
 
 function verificarBaseTela() {
@@ -1029,6 +1121,47 @@ function pasoCompleto(elemento) {
 
   // Cambia el contenido de texto
   elemento.textContent = 'COMPLETO';
+
+  // Elementos de navegación de las pestañas
+  var elementosNavegacion = document.querySelectorAll(".nav-link");
+  elementosNavegacion.forEach(function (elemento) {
+    // Verifica si el elemento actual tiene la clase "active"
+    if (elemento.classList.contains("active")) {
+      var idDelElementoActivo = elemento.getAttribute("id");
+      var boton = document.getElementById("v-pills-next-tab");
+
+      // Verifico si el paso en el que estoy esta COMPLETO, para habilitar el botón de SIGUIENTE PASO
+      switch (idDelElementoActivo) {
+        case "nav-paso1":
+          if (document.querySelector(".paso1").classList.contains("paso-completo")) {
+            boton.removeAttribute("disabled"); // Habilita el botón
+            boton.textContent = "SIGUIENTE PASO";  // Cambia el texto del botón
+          }
+          break;
+
+        case "nav-paso2":
+          if (document.querySelector(".paso2").classList.contains("paso-completo")) {
+            boton.removeAttribute("disabled"); // Habilita el botón
+            boton.textContent = "SIGUIENTE PASO";  // Cambia el texto del botón
+          }
+          break;
+
+        case "nav-paso3":
+          if (document.querySelector(".paso3").classList.contains("paso-completo")) {
+            boton.removeAttribute("disabled"); // Habilita el botón
+            boton.textContent = "SIGUIENTE PASO";  // Cambia el texto del botón
+          }
+          break;
+
+        case "nav-paso4":
+          if (document.querySelector(".paso3").classList.contains("paso-completo")) {
+            document.getElementById("encargarDiseno").removeAttribute("disabled"); // Habilita el botón
+            document.getElementById("encargarDiseno").textContent = "ENCARGAR DISEÑO";  // Cambia el texto del botón
+          }
+          break;
+      }
+    }
+  });
 }
 
 function pasoIncompleto(elemento) {
@@ -1038,6 +1171,47 @@ function pasoIncompleto(elemento) {
 
   // Cambia el contenido de texto
   elemento.textContent = 'INCOMPLETO';
+
+  // Elementos de navegación de las pestañas
+  var elementosNavegacion = document.querySelectorAll(".nav-link");
+  elementosNavegacion.forEach(function (elemento) {
+    // Verifica si el elemento actual tiene la clase "active"
+    if (elemento.classList.contains("active")) {
+      var idDelElementoActivo = elemento.getAttribute("id");
+      var boton = document.getElementById("v-pills-next-tab");
+
+      // Verifico si el paso en el que estoy esta INCOMPLETO, para deshabilitar el botón
+      switch (idDelElementoActivo) {
+        case "nav-paso1":
+          if (document.querySelector(".paso1").classList.contains("paso-incompleto")) {
+            boton.setAttribute("disabled", "true");// Deshabilita el botón
+            boton.textContent = "FALTAN CAMPOS POR COMPLETAR";  // Cambia el texto del botón
+          }
+          break;
+
+        case "nav-paso2":
+          if (document.querySelector(".paso2").classList.contains("paso-incompleto")) {
+            boton.setAttribute("disabled", "true");// Deshabilita el botón
+            boton.textContent = "FALTAN CAMPOS POR COMPLETAR";  // Cambia el texto del botón
+          }
+          break;
+
+        case "nav-paso3":
+          if (document.querySelector(".paso3").classList.contains("paso-incompleto")) {
+            boton.setAttribute("disabled", "true");// Deshabilita el botón
+            boton.textContent = "FALTAN CAMPOS POR COMPLETAR";  // Cambia el texto del botón
+          }
+          break;
+
+        case "nav-paso4":
+          if (document.querySelector(".paso4").classList.contains("paso-incompleto")) {
+            document.getElementById("encargarDiseno").setAttribute("disabled", "true");// Deshabilita el botón
+            document.getElementById("encargarDiseno").textContent = "FALTAN CAMPOS POR COMPLETAR";  // Cambia el texto del botón
+          }
+          break;
+      }
+    }
+  });
 }
 
 function limpiarPaso2Medidas() {
@@ -1054,7 +1228,7 @@ function calcularPrecios() {
 }
 
 function calcularSuperficieProducto() {
-  var superficie = (anchoInt / 10) * (altoInt / 10); // Lo divido entre 10 para pasarlo a centimetros
+  var superficie = ((anchoInt / 10) * (altoInt / 10)).toFixed(2); // Lo divido entre 10 para pasarlo a centimetros
 
   // Busco la superficie y la cantidad en la tabla de precios y si es correcto, lo reflejo a la tabla de resumen-presupuesto
   $.ajax({
@@ -1068,9 +1242,9 @@ function calcularSuperficieProducto() {
 
     //Relleno los campos
     if (response != "") {
-      document.getElementById('resumenAnchoProducto').innerText = anchoInt / 10 + "cm";
-      document.getElementById('resumenAltoProducto').innerText = altoInt / 10 + "cm";
-      document.getElementById('resumenSuperficieProducto').innerHTML = superficie + "cm<sup>2</sup>";
+      document.getElementById('resumenAnchoProducto').innerText = (anchoInt / 10).toString().replace(".", ",") + "cm";
+      document.getElementById('resumenAltoProducto').innerText = (altoInt / 10).toString().replace(".", ",") + "cm";
+      document.getElementById('resumenSuperficieProducto').innerHTML = superficie.toString().replace(".", ",") + "cm<sup>2</sup>";
       document.getElementById('resumenPPU').innerText = response.replace(".", ",");
       document.getElementById('resumenPrecioProducto').innerText = (parseFloat(response) * parseInt(inputCantidad.value)).toFixed(2).replace(".", ",") + " €";
     } else {

@@ -83,7 +83,6 @@ div.caja-height-2 {
   width: auto;
   border-radius: 30px;
   background-color: #d8f3ea;
-
 }
 div.caja-height-up {
   height: auto;
@@ -1039,6 +1038,22 @@ article {
 
 /************ about_us css end ***************/
 
+.nav-link:hover {
+  cursor: pointer;
+}
+
+.flex-column.nav-pills {
+  background-color: #00953e;
+  height: 800px;
+  width: 150px;
+}
+
+.nav-link {
+  display: block;
+  padding: 20px 20px;
+  height: auto;
+  width: 150px;
+}
 .nav-tabs .nav-item.show .nav-link,
 .nav-tabs .nav-link {
   font-size: 18px;
@@ -1099,7 +1114,7 @@ article {
   }
 }
 .configurator-nav {
- margin-top: 10px;
+  margin-top: 10px;
   color: #fff;
   font-size: 16px;
 }
@@ -1140,27 +1155,27 @@ article {
 }
 
 .btn {
-    background: #00953e;
-    -moz-user-select: none;
-    user-select: none;
-    color: #fff;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 18px;
-    font-weight: 400;
-    letter-spacing: -0.4px;
-    line-height: 1.2em;
-    margin-bottom: 0;
-    padding: 10px 24px 10px 24px;
-    margin: 10px;
-    cursor: pointer;
-    transition: color 0.4s linear;
-    position: relative;
-    z-index: 1;
-    border-radius: 25px;
-    overflow: hidden;
-    margin: 0;
-    transition: 0.25s;
+  background: #00953e;
+  -moz-user-select: none;
+  user-select: none;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: -0.4px;
+  line-height: 1.2em;
+  margin-bottom: 0;
+  padding: 10px 24px 10px 24px;
+  margin: 10px;
+  cursor: pointer;
+  transition: color 0.4s linear;
+  position: relative;
+  z-index: 1;
+  border-radius: 25px;
+  overflow: hidden;
+  margin: 0;
+  transition: 0.25s;
 }
 .btn-fino {
   background: #0474ba;
@@ -1198,7 +1213,6 @@ article {
   background: #00953e;
   color: #fff;
 }
-
 
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
@@ -2089,7 +2103,6 @@ div.caja-height-404 {
   }
 }
 
-
 span.numeros {
   /* margin-bottom: 30px; */
   background: #00953e;
@@ -2109,28 +2122,25 @@ span.numeros {
   box-shadow: 7px 7px 5px 0px rgb(50 50 50 / 75%);
 }
 
-.borde-izquierdo{
+.borde-izquierdo {
   border-left: gainsboro solid 1px;
 }
 
-.borde-superior{
+.borde-superior {
   border-top: gainsboro solid 1px;
 }
 
-.btnRepetir{
-  color:#00953e !important;
+.btnRepetir {
+  color: #00953e !important;
 }
-
 
 div.caja-tarjeta {
   width: auto;
   height: 100%;
   border-radius: 10px;
   background-color: white;
-  box-shadow: 5px 5px 15px #B8D1C9;
-
+  box-shadow: 5px 5px 15px #b8d1c9;
 }
-
 
 .btn-email {
   color: #007bff;
@@ -2148,7 +2158,6 @@ div.caja-tarjeta {
 }
 
 .btn-archivo {
-
   margin: 5px 0px 10px;
   padding: 5px 38px !important;
 }
@@ -2160,6 +2169,6 @@ div.caja-tarjeta {
   padding-top: 50px;
 }
 
-#imagenPrevisualizacion{
-    max-width: -webkit-fill-available;
+#imagenPrevisualizacion {
+  max-width: -webkit-fill-available;
 }

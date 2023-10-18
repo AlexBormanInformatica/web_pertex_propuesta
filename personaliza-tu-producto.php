@@ -59,25 +59,25 @@ require_once('assets/_partials/idioma.php');
         <div class="">
           <div class="nav nav-pills flex-column divpills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
             <!--PASO 1 TECNICA-->
-            <div class="primerBoton nav-link active a-color text-center pt-5" id="v-pills-home" data-toggle="pill" href="#tecnicas" role="tab" aria-controls="v-pills-home" aria-selected="true">
+            <div class="primerBoton nav-link active a-color text-center pt-5" id="nav-paso1" data-toggle="pill" href="#tecnicas" role="tab" aria-controls="nav-paso1" aria-selected="true">
               <a class="m-auto" id="a1"><img id="imgtecnica" src="iconos/Tecnica3.png" alt="<?= buscarTexto("WEB", "personaliza-tu-producto", "alt-tecnica", "", $_SESSION['idioma']); ?>"></a>
               <p class="configurator-nav text-center">1. <?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_nav-items-1", "", $_SESSION['idioma']); ?></p>
             </div>
 
             <!--PASO 2 DISEÑO-->
-            <div class="segundoBoton nav-link a-color text-center" id="v-pills-profile" data-toggle="pill" href="#diseno" role="tab" aria-controls="v-pills-profile" aria-selected="false">
+            <div class="segundoBoton nav-link a-color text-center" id="nav-paso2" data-toggle="pill" href="#diseno" role="tab" aria-controls="nav-paso2" aria-selected="false">
               <a id="a2"><img id="imgdiseno" src="iconos/Diseno6.png" alt="<?= buscarTexto("WEB", "personaliza-tu-producto", "alt-diseno", "", $_SESSION['idioma']); ?>"></a>
               <p class="configurator-nav text-center">2. <?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_nav-items-2", "", $_SESSION['idioma']); ?></p>
             </div>
 
             <!--PASO 3 COMPLEMENTOS-->
-            <div class="tercerBoton nav-link a-color text-center" id="v-pills-profile" data-toggle="pill" href="#complementos" role="tab" aria-controls="v-pills-profile" aria-selected="false">
+            <div class="tercerBoton nav-link a-color text-center" id="nav-paso3" data-toggle="pill" href="#complementos" role="tab" aria-controls="nav-paso3" aria-selected="false">
               <a id="a3"><img id="imgcomplementos" src="iconos/Diseno6.png" alt=""></a>
               <p class="configurator-nav text-center">3. Complementos</p>
             </div>
 
             <!--PASO 4 IMAGEN-->
-            <div class="cuartoBoton nav-link a-color text-center" id="v-pills-settings" data-toggle="pill" href="#imagen" role="tab" aria-controls="v-pills-settings" aria-selected="false">
+            <div class="cuartoBoton nav-link a-color text-center" id="nav-paso4" data-toggle="pill" href="#imagen" role="tab" aria-controls="nav-paso4" aria-selected="false">
               <a id="a4"><img id="imgsubirfoto" src="iconos/Subir-foto6.png" alt="<?= buscarTexto("WEB", "personaliza-tu-producto", "alt-foto", "", $_SESSION['idioma']); ?>"></a>
               <p class="configurator-nav text-center">4. <?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_nav-items-4", "", $_SESSION['idioma']); ?></p>
             </div>
@@ -246,17 +246,13 @@ require_once('assets/_partials/idioma.php');
                       }
                       ?>
                       <div class="row">
-                        <?php foreach ($results as $result) : ?>
+                        <?php foreach ($results as $result) { ?>
                           <div class="cc-selector divCadaForma text-center col-3" id="forma<?= $result->id_formas ?>">
-                            <input type="radio" name="formas" value="<?= $result->id_formas ?>" />
-                            <label class="drinkcard-cc forma_<?= $result->id_formas ?>" for="formas"></label>
+                            <input type="radio" name="formas" value="<?= $result->id_formas ?>" id="forma_<?= $result->id_formas ?>" />
+                            <label class="drinkcard-cc mb-0  forma_<?= $result->id_formas ?>" for="forma_<?= $result->id_formas ?>"></label>
                             <p style="font-size:12px;color:#0075BE;"><?= $result->formas ?></p>
-
-                            <p class="fs-configurator-2"><br>
-                              <span class="m-t-10" id="errorForma"></span>
-                            </p>
                           </div>
-                        <?php endforeach ?>
+                        <?php } ?>
                       </div>
                     </div>
                   </div>
@@ -276,7 +272,7 @@ require_once('assets/_partials/idioma.php');
                     <!--COMPLEMENTO 1: Tope de pulsera-->
                     <div style="display: none;" id="topePulsera">
                       <!--¿Quiere topes?-->
-                      <p class="fs-configurator mb-0"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_añadir-tope", "", $_SESSION['idioma']); ?></p>
+                      <p class="fs-configurator mb-0 "><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_añadir-tope", "", $_SESSION['idioma']); ?></p>
                       <p>
                         <a href="pulseras" target="_blank" class="pregunta-formulario">
                           <span>➔</span>
@@ -288,14 +284,14 @@ require_once('assets/_partials/idioma.php');
                         <!--Sí-->
                         <div class="cc-selector col-3 text-center">
                           <input id="siTopePulsera" type="radio" name="tope" value="1" />
-                          <label class="drinkcard-cc contope" for="siTopePulsera"></label>
+                          <label class="drinkcard-cc mb-0 contope" for="siTopePulsera"></label>
                           <p style="color:#0075BE;">SÍ</p>
                         </div>
 
                         <!--No-->
                         <div id="divNoTopePulsera" class="cc-selector col-3 text-center seleccionado">
                           <input id="noTopePulsera" type="radio" name="tope" value="0" checked="checked" />
-                          <label class="drinkcard-cc sintope" for="noTopePulsera"></label>
+                          <label class="drinkcard-cc mb-0 sintope" for="noTopePulsera"></label>
                           <p style="color:#0075BE;">NO</p>
                         </div>
                       </div>
@@ -309,7 +305,7 @@ require_once('assets/_partials/idioma.php');
 
                     <!--COMPLEMENTO 2: Bases-->
                     <div id="selectBase" style="display: none;">
-                      <p class="fs-configurator mb-0">¿Quieres añadir base?</p>
+                      <p class="fs-configurator mb-0 ">¿Quieres añadir base?</p>
                       <p>
                         <a href="bases-tela-y-cierre" target="_blank" class="pregunta-formulario">
                           <span>➔</span>
@@ -320,28 +316,28 @@ require_once('assets/_partials/idioma.php');
                         <!--Base de tela-->
                         <div id="divTela" class="cc-selector col-3 text-center" style="display: none;">
                           <input id="sitela" type="radio" name="base" value="1" />
-                          <label class="drinkcard-cc base-tela" for="sitela"></label>
+                          <label class="drinkcard-cc mb-0 base-tela" for="sitela"></label>
                           <p style="font-size:12px; color:#0075BE;">BASE DE TELA</p>
                         </div>
 
                         <!--Base de cierre gancho-->
                         <div id="divGancho" class="cc-selector col-3 text-center" style="display: none;">
                           <input id="sigancho" type="radio" name="base" value="2" />
-                          <label class="drinkcard-cc base-gancho" for="sigancho"></label>
+                          <label class="drinkcard-cc mb-0 base-gancho" for="sigancho"></label>
                           <p style="font-size:12px; color:#0075BE;">BASE DE CIERRE GANCHO</p>
                         </div>
 
                         <!--Base de cierre gancho + pelo-->
                         <div id="divGanchoPelo" class="cc-selector col-3 text-center" style="display: none;">
                           <input id="siganchopelo" type="radio" name="base" value="3" />
-                          <label class="drinkcard-cc base-pelo" for="siganchopelo"></label>
+                          <label class="drinkcard-cc mb-0 base-pelo" for="siganchopelo"></label>
                           <p style="font-size:12px; color:#0075BE;">BASE DE CIERRE GANCHO + PELO</p>
                         </div>
 
                         <!--Sin base-->
                         <div id="divSinBase" class="cc-selector col-3 text-center seleccionado" style="display: none;">
                           <input id="sinbase" type="radio" name="base" value="sinbase" checked="checked" />
-                          <label class="drinkcard-cc singancho" for="sinbase"></label>
+                          <label class="drinkcard-cc mb-0 singancho" for="sinbase"></label>
                           <p style="font-size:12px; color:#0075BE;">SIN BASE</p>
                         </div>
                       </div>
@@ -353,8 +349,8 @@ require_once('assets/_partials/idioma.php');
                         <input name="anchoBaseInput" type="number" id="anchoBaseInput" class="nice-select-p ancho-40">
                         <p style="display:none" class="p-tb-20 fs-configurator-2" id="errorAnchoBase">El ancho de la base debe ser igual o mayor que el ancho del diseño</p>
                         <!--Alto-->
-                        <label for="anchoBaseInput" class="m-t-20 fs-configurator">Alto (en milímetros)</label>
-                        <input name="anchoBaseInput" type="number" id="anchoBaseInput" class="nice-select-p ancho-40">
+                        <label for="altoBaseInput" class="m-t-20 fs-configurator">Alto (en milímetros)</label>
+                        <input name="altoBaseInput" type="number" id="altoBaseInput" class="nice-select-p ancho-40">
                         <p style="display:none" class="p-tb-20 fs-configurator-2" id="errorAnchoBase">El alto de la base debe ser igual o mayor que el alto del diseño</p>
                       </div>
 
@@ -408,10 +404,13 @@ require_once('assets/_partials/idioma.php');
           </div>
 
           <div class="nav  nav-pills" id="h-pills-tab" role="tablist" style="float:right">
-            <a class="btn mb-5" id="v-pills-next-tab" data-toggle="pill" href="#" role="tab" aria-controls="v-pills-profile" aria-selected="false"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_btn-sig-diseno", "", $_SESSION['idioma']); ?></a>
+            <!--ORDENADOR-->
+            <a class="btn mb-5" id="v-pills-next-tab" data-toggle="pill" href="#" role="tab" aria-controls="v-pills-profile" aria-selected="false" disabled>FALTAN CAMPOS POR COMPLETAR</a>
+            <button style="display:none" id="encargarDiseno" type="button" data-toggle="modal" data-target="#encargarModal" class="btn mb5" disabled>FALTAN CAMPOS POR COMPLETAR</button>
+
+            <!--MOVIL-->
             <a class="btn mb-5" id="v-pills-next-tabmv" data-toggle="pill" href="#" role="tab" aria-controls="v-pills-profile" aria-selected="false"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_btn-sig", "", $_SESSION['idioma']); ?></a>
-            <button style="display:none" id="anadirCarrito" type="button" data-toggle="modal" data-target="#encargarModal" class="btn mb5" disabled>FALTAN CAMPOS POR COMPLETAR</button>
-            <button class="btn mb-5" style="display:none" id="anadirCarritoMV" type="button" data-toggle="modal" data-target="#encargarModal"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_confirma-añadir", "", $_SESSION['idioma']); ?></button>
+            <button class="btn mb-5" style="display:none" id="encargarDisenoMV" type="button" data-toggle="modal" data-target="#encargarModal"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_confirma-añadir", "", $_SESSION['idioma']); ?></button>
           </div>
       </div>
 
@@ -443,7 +442,7 @@ require_once('assets/_partials/idioma.php');
                 <tr>
                   <th rowspan="3" id="paso1_rowspan">Paso 1<br>
                     <div class="paso1 paso-incompleto">INCOMPLETO</div>
-                  </th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
+                  </th>
                   <td>Técnica: <span style="font-weight: bold;" id="resumenTecnica"></span></td>
                   <td></td>
                 </tr>
@@ -471,7 +470,7 @@ require_once('assets/_partials/idioma.php');
                 <!-- PASO 2 DIEÑO-->
                 <tr>
                   <th id="paso2_rowspan" rowspan="1">Paso 2<div class="paso2 paso-incompleto">INCOMPLETO</div>
-                  </th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
+                  </th>
                   <td>Precio del producto (<span style="font-weight: bold;" id="resumenPPU">0</span>€/ud)</td>
                   <td><span style="font-weight: bold;" id="resumenPrecioProducto"></span></td>
                 </tr>
@@ -495,7 +494,7 @@ require_once('assets/_partials/idioma.php');
                 <!-- PASO 3 COMPLEMENTOS-->
                 <tr>
                   <th id="paso3_rowspan" rowspan="">Paso 3<div class="paso3 paso-completo">COMPLETO</div>
-                  </th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
+                  </th>
                   <td id="tdPrecioComplemento" style="display: none;">Precio del complemento (<span style="font-weight: bold;" id="resumenPPUComplemento">0</span>€/ud)</td>
                   <td><span style="font-weight: bold;" id="resumenPrecioComplemento"></span></td>
                 </tr>
@@ -531,7 +530,7 @@ require_once('assets/_partials/idioma.php');
                 <!-- PASO 5-->
                 <tr></tr>
                 <th rowspan="">Paso 5<div class="paso-incompleto">INCOMPLETO</div>
-                </th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
+                </th>
                 <td>Imagen: <span style="font-weight: bold;" id="resumenImagen"></span></td>
                 <td></td>
                 </tr>
@@ -539,7 +538,7 @@ require_once('assets/_partials/idioma.php');
                 <!-- SUBTOTAL -->
                 <tfoot>
                   <tr>
-                    <th colspan="2" style="text-align: right;">SUBTOTAL</th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
+                    <th colspan="2" style="text-align: right;">SUBTOTAL</th>
                     <th><span style="font-weight: bold;" id="resumenSubtotal"></span></th>
                   </tr>
                 </tfoot>
@@ -578,6 +577,10 @@ require_once('assets/_partials/idioma.php');
 
 
     <script>
+      /*
+      Funcion para que al cambiar de paso, suba el scroll al inicio del fieldset correspondiente.
+      Esto evita que al pasar de paso quede el scroll muy abajo y no se aprecie bien donde inicia el siguiente paso (generaba confusión)
+       */
       function subir() {
         $("html, body").animate({
           scrollTop: 0
@@ -589,32 +592,44 @@ require_once('assets/_partials/idioma.php');
 
       var i = 0;
       window.addEventListener("load", function() {
-        // $('#modalPrincipal').modal('show');
         let tabs = document.querySelectorAll(".divpills a");
         let tabsMovil = document.querySelectorAll(".divpills2 a");
         let nextTab = document.getElementById("v-pills-next-tab");
         let nextTabMovil = document.getElementById("v-pills-next-tabmv");
-        let tab1 = document.getElementById("a1");
-        let tab2 = document.getElementById("a2");
-        let tab3 = document.getElementById("a3");
-        let tab4 = document.getElementById("a4");
         nextTab.addEventListener("click", function() {
+          v-pills-next-tab
+          //Primero veo en que NAV/TAB estoy, y verifico si el paso de dicho tab esta COMPLETO, para habilitar el botón de SIGUIENTE PASO
+          var idDelElementoActivo = document.querySelector(".paso1").getAttribute("id");
+          switch (idDelElementoActivo) {
+            case "nav-paso1":
+              if (document.querySelector(".paso1").classList.contains("paso-completo")) {
+                nextTab.removeAttribute("disabled"); // Habilita el botón
+                nextTab.textContent = "SIGUIENTE PASO"; // Cambia el texto del botón
+              }
+              break;
+
+            case "nav-paso2":
+              if (document.querySelector(".paso2").classList.contains("paso-completo")) {
+                nextTab.removeAttribute("disabled"); // Habilita el botón
+                nextTab.textContent = "SIGUIENTE PASO"; // Cambia el texto del botón
+              }
+              break;
+
+            case "nav-paso3":
+              if (document.querySelector(".paso3").classList.contains("paso-completo")) {
+                nextTab.removeAttribute("disabled"); // Habilita el botón
+                nextTab.textContent = "SIGUIENTE PASO"; // Cambia el texto del botón
+              }
+              break;
+            default:
+              nextTab.setAttribute("disabled", "true"); // Deshabilita el botón
+              nextTab.textContent = "FALTAN CAMPOS POR COMPLETAR"; // Cambia el texto del botón
+              break;
+          }
+
           i = (i == (tabs.length - 1)) ? 0 : i + 1;
           tabs[i].click();
-          //imprimir ventana modal principal
-          $('#printButton').on('click', function() {
-            if ($('.modal').is(':visible')) {
-              var modalId = $(event.target).closest('.modal').attr('id');
-              $('body').css('visibility', 'hidden');
-              $("#" + modalId).css('visibility', 'visible');
-              $('#' + modalId).removeClass('modal');
-              window.print();
-              $('body').css('visibility', 'visible');
-              $('#' + modalId).addClass('modal');
-            } else {
-              window.print();
-            }
-          });
+
 
           switch ($('.nav-link[aria-selected="true"]').eq(1).attr("href")) {
             case "#tecnicas":
@@ -642,99 +657,127 @@ require_once('assets/_partials/idioma.php');
         ////////////////////iconos tabs//////////////////////
         $('.primerBoton').on('click', function() {
           i = 0;
-          // $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica3.png");
-          // $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno6.png");
-          // $('#imgcolores')[0].setAttribute("src", "iconos/Colores6.png");
-          // $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto6.png");
+          $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica3.png");
+          $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno6.png");
+          $('#imgcomplementos')[0].setAttribute("src", "iconos/Diseno6.png");
+          $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto6.png");
 
-          nextTab.textContent = $('#ptp_btn-sig').text() + " -> " + "Diseño"; //$('#nav2').text();
           $('#v-pills-next-tab').show();
-          $('#anadirCarrito').hide();
+          $('#encargarDiseno').hide();
           subir();
+
+          if (document.querySelector(".paso1").classList.contains("paso-completo")) {
+            nextTab.removeAttribute("disabled"); // Habilita el botón
+            nextTab.textContent = "SIGUIENTE PASO"; // Cambia el texto del botón
+          } else {
+            nextTab.setAttribute("disabled", "true"); // Deshabilita el botón
+            nextTab.textContent = "FALTAN CAMPOS POR COMPLETAR"; // Cambia el texto del botón
+          }
         });
         $('.segundoBoton').on('click', function() {
           i = 1;
-          // $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica6.png");
-          // $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno3.png");
-          // $('#imgcolores')[0].setAttribute("src", "iconos/Colores6.png");
-          // $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto6.png");
+          $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica6.png");
+          $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno3.png");
+          $('#imgcomplementos')[0].setAttribute("src", "iconos/Diseno6.png");
+          $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto6.png");
 
-          nextTab.textContent = $('#ptp_btn-sig').text() + " -> " + "Complementos"; //$('#nav3').text();
           $('#v-pills-next-tab').show();
-          $('#anadirCarrito').hide();
+          $('#encargarDiseno').hide();
           subir();
+
+          if (document.querySelector(".paso2").classList.contains("paso-completo")) {
+            nextTab.removeAttribute("disabled"); // Habilita el botón
+            nextTab.textContent = "SIGUIENTE PASO"; // Cambia el texto del botón
+          } else {
+            nextTab.setAttribute("disabled", "true"); // Deshabilita el botón
+            nextTab.textContent = "FALTAN CAMPOS POR COMPLETAR"; // Cambia el texto del botón
+          }
         });
         $('.tercerBoton').on('click', function() {
           i = 2;
-          // $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica6.png");
-          // $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno6.png");
-          // $('#imgcolores')[0].setAttribute("src", "iconos/Colores3.png");
-          // $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto6.png");
+          $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica6.png");
+          $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno6.png");
+          $('#imgcomplementos')[0].setAttribute("src", "iconos/Diseno3.png");
+          $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto6.png");
 
-          nextTab.textContent = $('#ptp_btn-sig').text() + " -> " + "Imagen"; //$('#nav4').text();
           $('#v-pills-next-tab').show();
-          $('#anadirCarrito').hide();
+          $('#encargarDiseno').hide();
           subir();
+
+          if (document.querySelector(".paso3").classList.contains("paso-completo")) {
+            nextTab.removeAttribute("disabled"); // Habilita el botón
+            nextTab.textContent = "SIGUIENTE PASO"; // Cambia el texto del botón
+          } else {
+            nextTab.setAttribute("disabled", "true"); // Deshabilita el botón
+            nextTab.textContent = "FALTAN CAMPOS POR COMPLETAR"; // Cambia el texto del botón
+          }
         });
         $('.cuartoBoton').on('click', function() {
           i = 3;
-          // $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica6.png");
-          // $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno6.png");
-          // $('#imgcolores')[0].setAttribute("src", "iconos/Colores6.png");
-          // $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto3.png");
+          $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica6.png");
+          $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno6.png");
+          $('#imgcomplementos')[0].setAttribute("src", "iconos/Diseno6.png");
+          $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto3.png");
 
           $('#v-pills-next-tab').hide();
-          $('#anadirCarrito').show();
+          $('#encargarDiseno').show();
           subir();
+
+          if (document.querySelector(".paso4").classList.contains("paso-completo")) {
+            document.getElementById("encargarDiseno").removeAttribute("disabled"); // Habilita el botón
+            document.getElementById("encargarDiseno").textContent = "ENCARGAR DISEÑO"; // Cambia el texto del botón
+          } else {
+            document.getElementById("encargarDiseno").setAttribute("disabled", "true"); // Deshabilita el botón
+            document.getElementById("encargarDiseno").textContent = "FALTAN CAMPOS POR COMPLETAR"; // Cambia el texto del botón
+          }
         });
 
+        // //movil
+        // // $('.primerBotonM').on('click', function() {
+        // //   i = 0;
+        // //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica3.png");
+        // //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno6.png");
+        // //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores6.png");
+        // //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto6.png");
 
-        //movil
-        // $('.primerBotonM').on('click', function() {
-        //   i = 0;
-        //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica3.png");
-        //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno6.png");
-        //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores6.png");
-        //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto6.png");
+        // //   $('#v-pills-next-tabmv').show();
+        // //   $('#encargarDisenoMV').hide();
+        // // });
+        // // $('.segundoBotonM').on('click', function() {
+        // //   i = 1;
+        // //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica6.png");
+        // //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno3.png");
+        // //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores6.png");
+        // //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto6.png");
 
-        //   $('#v-pills-next-tabmv').show();
-        //   $('#anadirCarritoMV').hide();
+        // //   $('#v-pills-next-tabmv').show();
+        // //   $('#encargarDisenoMV').hide();
+        // // });
+        // // $('.tercerBotonM').on('click', function() {
+        // //   i = 2;
+        // //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica6.png");
+        // //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno6.png");
+        // //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores3.png");
+        // //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto6.png");
+
+        // //   $('#v-pills-next-tabmv').show();
+        // //   $('#encargarDisenoMV').hide();
+        // // });
+        // // $('.cuartoBotonM').on('click', function() {
+        // //   i = 3;
+        // //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica6.png");
+        // //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno6.png");
+        // //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores6.png");
+        // //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto3.png");
+
+        // //   $('#v-pills-next-tabmv').hide();
+        // //   $('#encargarDisenoMV').show();
+        // // });
+
+        // $(document).on('click', '#btnPedidoNuevo', function() {
+        //   $('#btnPedidoNuevo').addClass("button--loading");
+        //   $('#btnPedidoNuevo').prop("disabled", true);
         // });
-        // $('.segundoBotonM').on('click', function() {
-        //   i = 1;
-        //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica6.png");
-        //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno3.png");
-        //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores6.png");
-        //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto6.png");
-
-        //   $('#v-pills-next-tabmv').show();
-        //   $('#anadirCarritoMV').hide();
-        // });
-        // $('.tercerBotonM').on('click', function() {
-        //   i = 2;
-        //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica6.png");
-        //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno6.png");
-        //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores3.png");
-        //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto6.png");
-
-        //   $('#v-pills-next-tabmv').show();
-        //   $('#anadirCarritoMV').hide();
-        // });
-        // $('.cuartoBotonM').on('click', function() {
-        //   i = 3;
-        //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica6.png");
-        //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno6.png");
-        //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores6.png");
-        //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto3.png");
-
-        //   $('#v-pills-next-tabmv').hide();
-        //   $('#anadirCarritoMV').show();
-        // });
-
-        $(document).on('click', '#btnPedidoNuevo', function() {
-          $('#btnPedidoNuevo').addClass("button--loading");
-          $('#btnPedidoNuevo').prop("disabled", true);
-        });
       }, false);
 
       function submitDelForm(id) {
@@ -765,22 +808,54 @@ require_once('assets/_partials/idioma.php');
     <script src="./assets/js/cookies.js"></script>
     <script src="./assets/js/encargar-diseno.js"></script>
     <script src="./assets/js/main.js"></script>
-    <script src="./assets/js/historial-pedidos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pselect.js@4.0.1/dist/pselect.min.js"></script>
-
     <script>
-      $('input[name="base"]').change(function() {
-        // Quitar la clase 'seleccionado' de todos los elementos 'input' con 'name="base"'
-        $('input[name="base"]').parent().removeClass('seleccionado');
-        // Agregar la clase 'seleccionado' solo al elemento actual
-        $(this).parent().addClass('seleccionado');
+      $(document).ready(function() {
+
+        /*ESTE SCRIPT GESTIONA LOS INPUT TYPE RADIO DEL FORMULARIO*/
+        //Bases
+        $('input[name="base"]').change(function() {
+          // Quitar la clase 'seleccionado' de todos los elementos 'input' con 'name="base"'
+          $('input[name="base"]').parent().removeClass('seleccionado');
+          // Agregar la clase 'seleccionado' solo al elemento actual
+          $(this).parent().addClass('seleccionado');
+        });
+
+        //Topes
+        $('input[name="tope"]').change(function() {
+          // Quitar la clase 'seleccionado' de todos los elementos 'input' con 'name="tope"'
+          $('input[name="tope"]').parent().removeClass('seleccionado');
+          // Agregar la clase 'seleccionado' solo al elemento actual
+          $(this).parent().addClass('seleccionado');
+        });
+
+        //Formas
+        $('input[name="formas"]').change(function() {
+          // Quitar la clase 'seleccionado' de todos los elementos 'input' con 'name="formas"'
+          $('input[name="formas"]').parent().removeClass('seleccionado');
+          // Agregar la clase 'seleccionado' solo al elemento actual
+          $(this).parent().addClass('seleccionado');
+        });
+      });
+    </script>
+    <script>
+      /* CONTROL DE BOTONES SIGUIENTE Y ENCARGAR*/
+      const formulario = document.getElementById('formularioPersonalizar');
+      const botonEnviar = document.getElementById('encargarDiseno');
+
+      formulario.addEventListener('submit', function(event) {
+        event.preventDefault(); // Evitar el envío del formulario al presionar Enter
       });
 
-      $('input[name="tope"]').change(function() {
-        // Quitar la clase 'seleccionado' de todos los elementos 'input' con 'name="tope"'
-        $('input[name="tope"]').parent().removeClass('seleccionado');
-        // Agregar la clase 'seleccionado' solo al elemento actual
-        $(this).parent().addClass('seleccionado');
+      botonEnviar.addEventListener('click', function() {
+        formulario.submit(); // Enviar el formulario cuando se hace clic en el botón
+      });
+
+      const enlace = document.getElementById('v-pills-next-tab');
+      enlace.addEventListener('click', function(event) {
+        if (enlace.getAttribute('disabled') === 'true') {
+          event.preventDefault(); // Evitar la acción predeterminada del enlace
+        }
       });
     </script>
 </body>

@@ -418,3 +418,30 @@ if (isset($_POST['buscarPiel'])) {
     // Envía la respuesta JSON
     echo $jsonData;
 }
+
+if (isset($_POST['buscarColorBase'])) {
+    require "../includes/config.php";
+    $id = $_POST['idbase'];
+    $coloresData = []; // Un array para almacenar los datos de colores
+
+    //obtengo los id color
+    $sql = "SELECT idColor FROM complementos_has_colores WHERE id_complementos=?";
+    $query = $conn->prepare($sql);
+    $query->bindParam(1, $id, PDO::PARAM_INT);
+    $query->execute();
+    $results_colores = $query->fetchAll(PDO::FETCH_OBJ);
+
+    foreach ($results_colores as $idcolor) {
+        //busco los colores 
+        $sql = "SELECT rgb_R, rgb_G, rgb_B, nombre
+        FROM colores WHERE idColor=?";
+        $query = $conn_prgborman->prepare($sql);
+        $query->bindParam(1, $idcolor->idColor, PDO::PARAM_INT);
+        $query->execute();
+        // Agregar los resultados al array
+        $coloresData[] = $query->fetchAll(PDO::FETCH_OBJ);
+    }
+    $jsonData = json_encode($coloresData);
+    // Envía la respuesta JSON
+    echo $jsonData;
+}

@@ -6,15 +6,23 @@ const elementosColorMetal = document.getElementsByName('colormetal');
 const elementosColorPiel = document.getElementsByName('colorpiel');
 const elementosColores = document.getElementsByName('colores');
 const elementosBase = document.getElementsByName('base');
+const elementosTope = document.getElementsByName('tope');
 const anchoProductoInput = document.getElementById('anchoProductoInput');
 const altoProducto = document.getElementById('altoProducto');
 const anchoProductoSelect = document.getElementById('anchoProductoSelect');
 var coloresSeleccionados = [];
 var colorMetalSeleccionado = [];
 var colorPielSeleccionado = [];
+var colorBaseSeleccionado = [];
 var maximoColores = 0;
 var anchoInt = 0;
 var altoInt = 0;
+
+var paso1_rowspan = document.getElementById('paso1_rowspan');
+var paso2_rowspan = document.getElementById('paso2_rowspan');
+var paso3_rowspan = document.getElementById('paso3_rowspan');
+var paso4_rowspan = document.getElementById('paso4_rowspan');
+
 
 // Listener de los campos y dinamismo del formulario
 (function ($) {
@@ -91,6 +99,7 @@ var altoInt = 0;
       document.getElementById('resumenColores').innerText = coloresSeleccionados;
 
     }
+    verificarPaso1();
   });
 
   /*
@@ -122,6 +131,7 @@ var altoInt = 0;
       document.getElementById('resumenColorPiel').innerText = colorPielSeleccionado;
 
     }
+    verificarPaso1();
   });
 
   /*
@@ -153,6 +163,7 @@ var altoInt = 0;
       document.getElementById('resumenColorMetal').innerText = colorMetalSeleccionado;
 
     }
+    verificarPaso1();
   });
   // FIN PASO 1 ------------------------------------------------------------------------------------------//
 
@@ -177,7 +188,7 @@ var altoInt = 0;
       $('#errorAnchoProducto').hide();
 
       //Si altoInt y anchoInt > 0, calculo superficie y precio
-      if (altoInt != "" && anchoInt != "" && altoInt > 0 && altoInt > 0) {
+      if (altoInt != "" && anchoInt != "" && altoInt > 0 && altoInt > 0 && document.getElementById('resumenCantidad').innerText != "") {
         calcularSuperficieProducto();
       } else {
         limpiarPaso2Medidas();
@@ -193,7 +204,25 @@ var altoInt = 0;
 
   //Detecta cuando seleccionan en el select ancho
   anchoProductoSelect.addEventListener('change', function () {
+    anchoInt = parseInt(anchoProductoSelect.value);
+    if (anchoInt != "") {
+      //Ha seleccionado un ancho del select
+      anchoProductoSelect.classList.remove('input-error');
+      $('#errorAnchoProducto').hide();
 
+      //Si altoInt y anchoInt > 0, calculo superficie y precio
+      if (altoInt != "" && anchoInt != "" && altoInt > 0 && altoInt > 0 && document.getElementById('resumenCantidad').innerText != "") {
+        calcularSuperficieProducto();
+      } else {
+        limpiarPaso2Medidas();
+      }
+    } else {
+      limpiarPaso2Medidas();
+      //El ancho del input está fuera del mínimo y máximo de la técnica. Saco mensaje de error.
+      anchoProductoSelect.classList.add('input-error');
+      $('#errorAnchoProducto').text("Selecciona el ancho.");
+      $('#errorAnchoProducto').show();
+    }
   });
 
   //Detecta cuando escriban en el input alto
@@ -216,7 +245,7 @@ var altoInt = 0;
       $('#errorAltoProducto').hide();
 
       //Si altoInt y anchoInt > 0, calculo superficie y precio
-      if (altoInt != "" && anchoInt != "" && altoInt > 0 && altoInt > 0) {
+      if (altoInt != "" && anchoInt != "" && altoInt > 0 && altoInt > 0 && document.getElementById('resumenCantidad').innerText != "") {
         calcularSuperficieProducto();
       } else {
         limpiarPaso2Medidas();
@@ -234,48 +263,117 @@ var altoInt = 0;
   // FIN PASO 2: medidas--------------------------------------------------------------------------------//
 
   // PASO 3: complementos (bases y topes)--------------------------------------------------------------//
-  //Detecta cuando seleccionen una base en el paso 3
+  // Detecta cuando seleccionen una base en el paso 3
   // Itera a través de la colección y agrega un evento a cada elemento
   for (var i = 0; i < elementosBase.length; i++) {
     elementosBase[i].addEventListener('input', function () {
-      // Tu código de manejo de evento aquí
-      // Obtén una referencia al elemento con el id 'paso3_rowspan'
-      var thElement = document.getElementById('paso3_rowspan');
+      // Referencia al elemento con el id 'paso3_rowspan'
       // Cambia el valor de rowspan a un nuevo valor deseado
-      thElement.rowSpan = "";
+      paso3_rowspan.rowSpan = "";
 
       //Oculto y vacío los campos primero
-      $('#tdTipoBase').hide();
-      $('#tdAnchoBase').hide();
-      $('#tdAltoBase').hide();
-      $('#tdSuperficieBase').hide();
-      $('#tdColorBase').hide();
+      $('#tdTipoBase').hide();// Tipo de base (resumen)
+      $('#tdAnchoBase').hide();// Ancho base de tela (resumen)
+      $('#tdAltoBase').hide();// Alto base de tela (resumen)
+      $('#tdSuperficieBase').hide(); // Superficie base de tela (resumen)
+      $('#tdColorBase').hide();//Color base (resumen)
+      $('#tdMoldeBase').hide();// Molde de la base(resumen)
+      $('#tdPrecioBase').hide();// Precio de la base(resumen)
+      $('#divColoresBase').hide();//Div colores
       document.getElementById('resumenTipoBase').innerText = "";
-      thElement.rowSpan = "1";
+      paso3_rowspan.rowSpan = "1";
+
+      //Busco los colores de la base elegida y relleno el div
+      $.ajax({
+        method: "POST",
+        url: "funciones/functions.php",
+        dataType: 'json',
+        data: {
+          buscarColorBase: "", idbase: this.value
+        }
+      }).done(function (response) {
+        // Obtén el contenedor donde deseas mostrar los colores
+        const colorContainer = document.getElementById("coloresBase");
+        colorContainer.innerHTML = "";
+        // Recorre el arreglo de colores y crea elementos <div>
+        response.forEach((color, index) => {
+          // Accede a las propiedades RGB de cada objeto de color
+          const rgb_R = color[0].rgb_R;
+          const rgb_G = color[0].rgb_G;
+          const rgb_B = color[0].rgb_B;
+          const nombre = color[0].nombre;
+
+          // Crea un nuevo elemento div
+          const colorDiv = document.createElement('div');
+          colorDiv.className = `colores col-lg-color col-md-4 col-sm-6`;
+
+          // Crea un elemento label
+          const label = document.createElement('label');
+          label.className = 'cuadrado';
+          label.setAttribute('data-title', `${nombre}`);
+
+          // Crea un elemento input (checkbox)
+          const checkbox = document.createElement('input');
+          checkbox.name = 'colores';
+          checkbox.id = `${nombre}`;
+          checkbox.value = `${nombre}`;
+          checkbox.type = 'checkbox';
+
+          // Crea un elemento span para el checkmark
+          const checkmark = document.createElement('span');
+          checkmark.className = 'checkmark';
+          // Establece el color de fondo del elemento <div> utilizando los valores RGB
+          const rgbColor = `rgb(${rgb_R}, ${rgb_G}, ${rgb_B})`;
+          checkmark.style.backgroundColor = rgbColor;
+
+          // Agrega el checkbox y el checkmark al label
+          label.appendChild(checkbox);
+          label.appendChild(checkmark);
+
+          // Agrega el label al div de color
+          colorDiv.appendChild(label);
+          // Agrega el elemento <div> al contenedor
+          colorContainer.appendChild(colorDiv);
+        });
+      })
+      $('#tdColorBase').show();
 
       //Relleno el resumen depende la base elegida
       switch (this.value) {
-        case "tela":
+        case "1":
+          $('#divColoresBase').show();
+          $('#divMedidasTela').show();
           $('#tdTipoBase').show();
           $('#tdAnchoBase').show();
           $('#tdAltoBase').show();
           $('#tdSuperficieBase').show();
           $('#tdColorBase').show();
+          $('#tdMoldeBase').show();
+          $('#tdPrecioBase').show();
           document.getElementById('resumenTipoBase').innerText = "Tela";
-          thElement.rowSpan = "5";
+          paso3_rowspan.rowSpan = "5";
+          pasoIncompleto(document.querySelector('.paso3'));
           verificarBaseTela();
           break;
-        case "gancho":
+        case "2":
+          $('#divColoresBase').show();
           $('#tdTipoBase').show();
           $('#tdColorBase').show();
+          $('#tdMoldeBase').show();
+          $('#tdPrecioBase').show();
           document.getElementById('resumenTipoBase').innerText = "Cierre gancho";
-          thElement.rowSpan = "2";
+          paso3_rowspan.rowSpan = "2";
+          pasoIncompleto(document.querySelector('.paso3'));
           break;
-        case "ganchopelo":
+        case "3":
+          $('#divColoresBase').show();
           $('#tdTipoBase').show();
           $('#tdColorBase').show();
+          $('#tdMoldeBase').show();
+          $('#tdPrecioBase').show();
           document.getElementById('resumenTipoBase').innerText = "Cierre gancho + pelo";
-          thElement.rowSpan = "2";
+          paso3_rowspan.rowSpan = "2";
+          pasoIncompleto(document.querySelector('.paso3'));
           break;
 
       }
@@ -284,6 +382,29 @@ var altoInt = 0;
       //Calculo el precio si elige una base
       // calcularPrecios();
       sumaSubtotal();
+    });
+  }
+
+  // Detecta cuando marquen si quiere base o no
+  // Itera a través de la colección y agrega un evento a cada elemento
+  for (var i = 0; i < elementosTope.length; i++) {
+    elementosTope[i].addEventListener('input', function () {
+      switch (this.value) {
+        case "1":// Sí quiere topes
+          $('#divCantidadTopes').show();
+          $('#tdCantidadTopes').show();
+          $('#tdPrecioComplemento').show();
+          paso3_rowspan.rowSpan = "2";
+          pasoIncompleto(document.querySelector('.paso3'));
+          break;
+        case "0":// No quiere topes
+          $('#divCantidadTopes').hide();
+          $('#tdCantidadTopes').hide();
+          $('#tdPrecioComplemento').hide();
+          paso3_rowspan.rowSpan = "1";
+          pasoCompleto(document.querySelector('.paso3'));
+          break;
+      }
     });
   }
   // FIN PASO 3-----------------------------------------------------------------------------------------------//
@@ -303,13 +424,14 @@ var altoInt = 0;
 function cargarCamposSegunTecnica() {
   // --------------------Para el PASO 1---------------------------
   //Oculto los campos y vacío primero
-  document.getElementById("paso1_rowspan").rowSpan = 3;
-  coloresSeleccionados.length = 0;
-  document.getElementById('resumenColores').innerText = coloresSeleccionados;
-  colorMetalSeleccionado.length = 0;
-  document.getElementById('resumenColorMetal').innerText = coloresSeleccionados;
-  colorPielSeleccionado.length = 0;
-  document.getElementById('resumenColorPiel').innerText = coloresSeleccionados;
+  paso1_rowspan.rowSpan = 3;// El rowspan lo pongo a 3
+  coloresSeleccionados.length = 0; // Vacio la lista de colores 
+  document.getElementById('resumenColores').innerText = coloresSeleccionados; // Asigno la lista vacia
+  colorMetalSeleccionado.length = 0; //Vacio la lista de color metal
+  document.getElementById('resumenColorMetal').innerText = colorMetalSeleccionado;// Asigno la lista vacia
+  colorPielSeleccionado.length = 0;//Vacio la lista de color piel
+  document.getElementById('resumenColorPiel').innerText = colorPielSeleccionado;// Asigno la lista vacia
+
   $('#divColores').hide(); //Div de colores limitados
   $('#divColoresMetal').hide(); // Div de colores metalicos
   $('#divColoresPiel').hide(); // Div de colores pieles
@@ -317,7 +439,42 @@ function cargarCamposSegunTecnica() {
   $('#tdColorPiel').hide(); // Div color piel (resumen)
   $('#tdColorMetal').hide(); // Div color metal (resumen)
 
+  $('#textoCMYK').hide();// Div con texto para tecnicas que se basan en CMYK
+  $('#textoPantone').hide();// Div con texto para tecnicas que se basan en PANTONE
+  $('#txtImagen1').show(); // Div texto imagenes en formato png o jpg
+  $('#txtPaletaColores').hide(); // Span texto de creacion de paleta a partir de la imagen
+  $('#txtImagen2').show(); // Div texto pdf
+  $('#txtImagen3').show(); // Div texto diseño vectorizado
+  $('#divTxtAdvertenciaColores').hide(); // Div advertencia de no elegir color
+  $('#textoCodigosColor').hide(); // Div texto que pueden escribir codigos de color
+
   //[2] cmyk
+  //Si es colores cmyk elige imagen
+  if ($('select[name="tecnica"] :selected').attr('class').split(' ')[2] == 1) {
+    $('#textoCMYK').show();// Div con texto para tecnicas que se basan en CMYK
+    $('#textoPantone').hide();// Div con texto para tecnicas que se basan en PANTONE
+    $('#txtImagen1').show(); // Div texto imagenes en formato png o jpg
+    $('#txtPaletaColores').hide(); // Span texto de creacion de paleta a partir de la imagen
+    $('#txtImagen2').show(); // Div texto pdf
+    $('#txtImagen3').show(); // Div texto diseño vectorizado
+    $('#divTxtAdvertenciaColores').hide(); // Div advertencia de no elegir color
+    $('#textoCodigosColor').show(); // Div texto que pueden escribir codigos de color
+  }
+
+  //[9] colores_pantone
+  //Si es colores pantone puede subir imagen y elegir colores de la paleta generada, 
+  //escribir los codigos deseados o ninguno (los definira el diseñador con el archivo adjunto)
+  if ($('select[name="tecnica"] :selected').attr('class').split(' ')[9] == 1) {
+    $('#textoCMYK').hide();// Div con texto para tecnicas que se basan en CMYK
+    $('#textoPantone').show();// Div con texto para tecnicas que se basan en PANTONE
+    $('#txtImagen1').show(); // Div texto imagenes en formato png o jpg
+    $('#txtPaletaColores').show(); // Span texto de creacion de paleta a partir de la imagen
+    $('#txtImagen2').show(); // Div texto pdf
+    $('#txtImagen3').show(); // Div texto diseño vectorizado
+    $('#divTxtAdvertenciaColores').show(); // Div advertencia de no elegir color
+    $('#textoCodigosColor').show(); // Div texto que pueden escribir codigos de color
+  }
+
   //[3] colores_limitados
   //Si es colores a 1 saco los colores a elegir
   if ($('select[name="tecnica"] :selected').attr('class').split(' ')[3] == 1) {
@@ -382,9 +539,18 @@ function cargarCamposSegunTecnica() {
         colorContainer.appendChild(colorDiv);
       });
     })
-    document.getElementById("paso1_rowspan").rowSpan = document.getElementById("paso1_rowspan").rowSpan + 1;
+    paso1_rowspan.rowSpan = paso1_rowspan.rowSpan + 1;
     $('#tdColores').show();
     $('#divColores').show();
+
+    $('#textoCMYK').hide();// Div con texto para tecnicas que se basan en CMYK
+    $('#textoPantone').hide();// Div con texto para tecnicas que se basan en PANTONE
+    $('#txtImagen1').show(); // Div texto imagenes en formato png o jpg
+    $('#txtPaletaColores').hide(); // Span texto de creacion de paleta a partir de la imagen
+    $('#txtImagen2').show(); // Div texto pdf
+    $('#txtImagen3').show(); // Div texto diseño vectorizado
+    $('#divTxtAdvertenciaColores').hide(); // Div advertencia de no elegir color
+    $('#textoCodigosColor').show(); // Div texto que pueden escribir codigos de color
   }
 
   //Busco si tiene modulo de metal
@@ -442,7 +608,7 @@ function cargarCamposSegunTecnica() {
         // Agrega el elemento <div> al contenedor
         colorContainer.appendChild(colorDiv);
       });
-      document.getElementById("paso1_rowspan").rowSpan = document.getElementById("paso1_rowspan").rowSpan + 1;
+      paso1_rowspan.rowSpan = paso1_rowspan.rowSpan + 1;
       $('#tdColorMetal').show();
       $('#divColoresMetal').show();
     }
@@ -503,12 +669,12 @@ function cargarCamposSegunTecnica() {
         // Agrega el elemento <div> al contenedor
         colorContainer.appendChild(colorDiv);
       });
-      document.getElementById("paso1_rowspan").rowSpan = document.getElementById("paso1_rowspan").rowSpan + 1;
+      paso1_rowspan.rowSpan = paso1_rowspan.rowSpan + 1;
       $('#tdColorPiel').show();
       $('#divColoresPiel').show();
     }
   });
-
+  
   // --------------------Para el PASO 2 diseño---------------------------
   //Oculto todos los campos primero
   $('#anchoPorAlto').hide(); //Div de medidas
@@ -517,30 +683,41 @@ function cargarCamposSegunTecnica() {
   $('#tdAnchoProducto').hide(); // Div de ancho (resumen)
   $('#tdAltoProducto').hide(); // Div de alto (resumen)
   $('#tdSuperficieProducto').hide(); // Div de superficie (resumen)
+  $('#divFormas').hide(); // Div de formas
+  $('#tdFormaProducto').hide(); // Div de formas (resumen)
+  // Recorre la lista de elementos y oculto todos
+  document.querySelectorAll(".divCadaForma").forEach(function (elemento) {
+    elemento.style.display = "none";
+  });
 
-  var thElement = document.getElementById('paso2_rowspan');
+  //Vacío las medidas
+  anchoProductoInput.value = "";
+  altoProducto.value = "";
+  anchoProductoSelect.selectedIndex = 0;
+
+
   // ¿La técnica seleccionada tiene ancho y alto (mínimos y máximos)? Sí = habilitar div medidas, No = deshabilito div medidas
-  // [9] alto máximo = "" = sin medidas
-  if ($('select[name="tecnica"] :selected').attr('class').split(' ')[9] == "") {
+  // [8] alto máximo = "" = sin medidas
+  if ($('select[name="tecnica"] :selected').attr('class').split(' ')[8] == "") {
     $('#anchoPorAlto').hide();
     $('#tdAnchoProducto').hide();
     $('#tdAltoProducto').hide();
     $('#tdSuperficieProducto').hide();
-    thElement.rowSpan = "1";
+    paso2_rowspan.rowSpan = "1";
   } else {
-    thElement.rowSpan = "4";
+    paso2_rowspan.rowSpan = "4";
 
     $('#anchoPorAlto').show();
     $('#tdAnchoProducto').show();
     $('#tdAltoProducto').show();
     $('#tdSuperficieProducto').show();
 
-    if ($('select[name="tecnica"] :selected').attr('class').split(' ')[6] == "") {
-      // [9] ancho mínimo = "" = el ancho se selecciona
+    if ($('select[name="tecnica"] :selected').attr('class').split(' ')[5] == "") {
+      // [5] ancho mínimo = "" = el ancho se selecciona
       $('#divInputAncho').hide();
       $('#divSelectAncho').show();
     } else {
-      // [9] ancho mínimo != "" = el ancho se escribe
+      // [5] ancho mínimo != "" = el ancho se escribe
       $('#divInputAncho').show();
       $('#divSelectAncho').hide();
     }
@@ -555,34 +732,20 @@ function cargarCamposSegunTecnica() {
       buscarFormas: "", idproducto: $('select[name="tecnica"] :selected').val()
     }
   }).done(function (response) {
-    // if (response.length > 0) {
-    //   for (var i = 0; i < response.length; i++) {
-    //     //Muestro el div para la base
-    //     $('#selectBase').show();
-
-    //     //Muestro el o los div correspondientes segun la tecnica elgida
-    //     switch (response[i]["id_complementos"].toString()) {
-    //       case '1':
-    //         $('#divTela').show();
-    //         break;
-    //       case '2':
-    //         $('#divGancho').show();
-    //         break;
-    //       case '3':
-    //         $('#divGanchoPelo').show();
-    //         break;
-    //     }
-    //     $('#divSinBase').show();
-    //   }
-
-    // } else {
-    //   $('#sincomplemento').show();
-    // }
-
+    if (response.length > 0) {// Si tiene formas
+      //Muestro el div para las formas
+      $('#divFormas').show();
+      
+      console.log(response);
+      for (var i = 0; i < response.length; i++) {
+        document.getElementById("forma"+response[i].id_formas.toString()).style.display = "block";
+      }
+    } 
   });
 
 
   // --------------------Para el PASO 3 complementos---------------------------
+  pasoCompleto(document.querySelector('.paso3'));
   //Oculto todos los campos primero
   // Recorre la lista de elementos y quita la clase "seleccionado"
   document.querySelectorAll(".seleccionado").forEach(function (elemento) {
@@ -590,6 +753,8 @@ function cargarCamposSegunTecnica() {
   });
   document.getElementById("sinbase").checked = true;
   document.getElementById("divSinBase").classList.add("seleccionado");// Agrega la clase "seleccionado" al div
+  document.getElementById("noTopePulsera").checked = true;
+  document.getElementById("divNoTopePulsera").classList.add("seleccionado");// Agrega la clase "seleccionado" al div
   $('#topePulsera').hide(); //Div de topes
   $('#selectBase').hide(); // Div de bases
   $('#divTela').hide(); // Div base de tela
@@ -606,7 +771,7 @@ function cargarCamposSegunTecnica() {
   $('#tdPrecioBase').hide(); // Div precio base (resumen)
   $('#tdCantidadTopes').hide(); // Div cantidad topes (resumen)
   $('#tdPrecioTopes').hide(); // Div precio topes (resumen)
-  document.getElementById("paso3_rowspan").rowSpan = 1;
+  paso3_rowspan.rowSpan = 1;
 
   //¿Puede tener topes?
   //  [5] Tope == 1 = Sí
@@ -648,6 +813,13 @@ function cargarCamposSegunTecnica() {
 
     });
   }
+
+  // --------------------Para el PASO 4---------------------------
+
+
+  verificarPaso1();
+  verificarPaso2();
+  verificarPaso3();
 }
 
 /**
@@ -672,6 +844,9 @@ function verificarCantidad() {
       // Relleno los campos de la tabla resumen
       // La cantidad introducida 
       document.getElementById('resumenCantidad').innerText = inputCantidad.value;
+      if (altoInt != "" && anchoInt != "" && altoInt > 0 && altoInt > 0) {
+        calcularSuperficieProducto();
+      }
     } else {
       inputCantidad.classList.add('input-error');
       //Limpio el campo de la tabla resumen
@@ -711,9 +886,9 @@ function verificarPaso1() {
   }
 
   //Sin color piel
-  if (document.getElementById("tdColorPiel").style.display === "none") {
+  if (document.getElementById("tdColorPiel").style.display == "none") {
   } else {
-    //Si debe elegir colores
+    //Si debe elegir color
     if (document.getElementById('resumenColorPiel').innerText != "") {
     } else {
       bool = false;
@@ -721,9 +896,9 @@ function verificarPaso1() {
   }
 
   //Sin color metal
-  if (document.getElementById("tdColorMetal").style.display === "none") {
+  if (document.getElementById("tdColorMetal").style.display == "none") {
   } else {
-    //Si debe elegir colores
+    //Si debe elegir color
     if (document.getElementById('resumenColorMetal').innerText != "") {
     } else {
       bool = false;
@@ -781,8 +956,10 @@ function verificarPaso2() {
  * Si no hay complemento = COMPLETO
  * Si elige base de tela, las medidas son correctar y ha elegido color = COMPLETO
  * Si elige base de cierre gancho o cirre gancho + pelo y ha elegido color = COMPLETO
+ * Si elige tope e indica la cantidad = COMPLETO
  */
 function verificarPaso3() {
+  var bool = true;
   // Encuentra el elemento por su clase
   const elemento = document.querySelector('.paso3');
 
@@ -791,18 +968,23 @@ function verificarPaso3() {
   if (document.getElementById('resumenTipoBase').innerText == "Tela" &&
     document.getElementById('resumenSuperficieBase').innerText != "" &&
     document.getElementById('resumenColorBase').innerText != "") {
-    pasoCompleto(elemento);
   } else if ((document.getElementById('resumenTipoBase').innerText == "Cierre gancho" &&
     document.getElementById('resumenColorBase').innerText != "") || (
       document.getElementById('resumenTipoBase').innerText == "Cierre gancho + pelo" &&
       document.getElementById('resumenColorBase').innerText != "")) {
     //Si ha elegido gancho o gancho pelo
     //Verifico que haya elegido el color
-    pasoCompleto(elemento);
   } else if (document.getElementById('resumenCantidadTopes').innerText != "") {
-    pasoCompleto(elemento);
   } else if (document.getElementById('resumenTipoBase').innerText == "") {
+  } else {
+    bool = false;
+  }
+
+  if (bool === true) {
     pasoCompleto(elemento);
+    sumaSubtotal();
+  } else {
+    pasoIncompleto(elemento);
   }
 }
 
@@ -811,8 +993,7 @@ function sumaSubtotal() {
   var moldeProducto = parseFloat(document.getElementById('resumenMoldeProducto').innerText.replace('€', '').replace(',', '.').trim());
   var precioProducto = parseFloat(document.getElementById('resumenPrecioProducto').innerText.replace('€', '').replace(',', '.').trim());
   var moldeBase = parseFloat(document.getElementById('resumenMoldeBase').innerText.replace('€', '').replace(',', '.').trim());
-  var precioBase = parseFloat(document.getElementById('resumenPrecioBase').innerText.replace('€', '').replace(',', '.').trim());
-  var precioTopes = parseFloat(document.getElementById('resumenPrecioTopes').innerText.replace('€', '').replace(',', '.').trim());
+  var precioComplemento = parseFloat(document.getElementById('resumenPrecioComplemento').innerText.replace('€', '').replace(',', '.').trim());
 
   var suma = 0;
   if (!isNaN(moldeProducto)) {
@@ -827,12 +1008,8 @@ function sumaSubtotal() {
     suma += moldeBase;
   }
 
-  if (!isNaN(precioBase)) {
-    suma += precioBase;
-  }
-
-  if (!isNaN(precioTopes)) {
-    suma += precioTopes;
+  if (!isNaN(precioComplemento)) {
+    suma += precioComplemento;
   }
 
   // Relleno el campo del subtotal de la tabla

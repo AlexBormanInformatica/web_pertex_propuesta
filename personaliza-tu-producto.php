@@ -124,7 +124,7 @@ require_once('assets/_partials/idioma.php');
                             <optgroup label="<?= buscarTexto("PRG", "categorias", $result, "categoriaNombre", $_SESSION['idioma']); ?>">
                               <?php foreach ($productos as $producto) :
                               ?>
-                                <option class="<?= $producto['max_colores']  ?> <?= $producto['molde']  ?> <?= $producto['cmyk']  ?> <?= $producto['colores_limitados']  ?> <?= $producto['tope']  ?> <?= $producto['ancho_min']  ?> <?= $producto['alto_min']  ?> <?= $producto['ancho_max']  ?> <?= $producto['alto_max']  ?>" value="<?= $producto['idproductos']  ?> <?= $producto['colores_pantone']  ?>">
+                                <option class="<?= $producto['max_colores']  ?> <?= $producto['molde']  ?> <?= $producto['cmyk']  ?> <?= $producto['colores_limitados']  ?> <?= $producto['tope']  ?> <?= $producto['ancho_min']  ?> <?= $producto['alto_min']  ?> <?= $producto['ancho_max']  ?> <?= $producto['alto_max']  ?> <?= $producto['colores_pantone']  ?>" value="<?= $producto['idproductos']  ?>">
                                   <!--
                                     class:[0] maximo de colores -> máximo de colores a elegir 
                                           [1] molde -> es el precio del molde del producto
@@ -212,8 +212,8 @@ require_once('assets/_partials/idioma.php');
                         <!--Select ancho-->
                         <div id="divSelectAncho" style="display: none;">
                           <label for="anchoProductoInput" class="m-t-20 fs-configurator">Elige el ancho (en milímetros)</label>
-                          <select name="anchoProductoSelect" id="anchoProductoSelect" class="nice-select-p">
-                            <option value=""><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_2_ancho-select", "", $_SESSION['idioma']); ?>...</option>
+                          <select name="anchoProductoSelect" id="anchoProductoSelect" class="nice-select-p ancho-40">
+                            <option value="0"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_2_ancho-select", "", $_SESSION['idioma']); ?>...</option>
                             <option value="15">15</option>
                             <option value="20">20</option>
                             <option value="25">25</option>
@@ -232,64 +232,29 @@ require_once('assets/_partials/idioma.php');
                       </div>
                     </div>
 
-
-                    <div class="col-md-7" id="divMedidas" style="display: none;">
-                      <?php //Formas fijas = tiene para escoger la forma y tienen unas medidas fijas
+                    <!--Formas-->
+                    <div id="divFormas" style="display: none;">
+                      <p>Selecciona la forma que mejor se adapte a tu diseño</p>
+                      <p class='p-b-20 fs-configurator'>Formas disponibles:</p>
+                      <?php
                       try {
-                        $sql1 = "SELECT f.id_formas, f.formas, f.imagen, p.idproductos FROM formas f 
-                        INNER JOIN formas_has_productos fp ON f.id_formas = fp.formas_id_formas
-                        INNER JOIN productos p ON fp.productos_idproductos = p.idproductos";
+                        $sql1 = "SELECT * FROM pertex.formas;";
                         $query = $conn->query($sql1);
                         $results = $query->fetchAll(PDO::FETCH_OBJ);
                       } catch (Exception $e) {
                         // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
                       }
                       ?>
-
-                      <!--Diseño fijo-->
-                      <div class="diseno_fijo cc-selector" id="disenoFijo" style="display: none;">
-                        <p class='p-b-20 fs-configurator' id="mensajeDisenoFijo2"></p>
+                      <div class="row">
                         <?php foreach ($results as $result) : ?>
-                          <input id="formas_fijas_<?= $result->idproductos ?>_<?= $result->id_formas ?>" class="<?= $result->id_formas ?> <?= buscarTexto("PRG", "formas", $result->id_formas, "formas", $_SESSION['idioma']); ?>" type="radio" name="formas_fijas" value="formas_fijas" />
-                          <label class="radios rdbtn_<?= $result->idproductos ?> drinkcard-cc forma_<?= $result->id_formas ?>" for="formas_fijas_<?= $result->idproductos ?>_<?= $result->id_formas ?>" data-title="<?= buscarTexto("PRG", "formas", $result->id_formas, "formas", $_SESSION['idioma']); ?>"></label>
-                        <?php endforeach ?>
-                        <p class="fs-configurator-2"><br>
-                          <span class="m-t-10" id="errorForma"></span>
-                        </p>
-                      </div>
+                          <div class="cc-selector divCadaForma text-center col-3" id="forma<?= $result->id_formas ?>">
+                            <input type="radio" name="formas" value="<?= $result->id_formas ?>" />
+                            <label class="drinkcard-cc forma_<?= $result->id_formas ?>" for="formas"></label>
+                            <p style="font-size:12px;color:#0075BE;"><?= $result->formas ?></p>
 
-
-                    </div>
-
-                    <div class="col-md-5">
-                      <!--Medidas de la base de tela-->
-                      <div style="display: none;" id="divMedidasTela" class="form-group">
-                        <p class="fs-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_2_sup-base", "", $_SESSION['idioma']); ?></p>
-                        <label for="num1" class="m-t-20"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_2_ancho-base", "", $_SESSION['idioma']); ?></label>
-                        <input type="number" id="cant1" class="nice-select-p ancho-40">
-                        <label for="num2" class="m-t-20"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_2_largo-base", "", $_SESSION['idioma']); ?></label>
-                        <input type="number" id="cant2" class="nice-select-p ancho-40">
-                        <p class="fs-configurator-2"><br>
-                          <span class="m-t-10" id="superficieBaseTela"></span>
-                        </p>
-                      </div>
-
-                      <!--Formas-->
-                      <?php
-                      try {
-                        $sql_formas = "SELECT f.fijo, fp.ancho_forma, fp.alto_forma, fp.productos_idproductos, f.formas 
-                        FROM formas f INNER JOIN formas_has_productos fp 
-                        ON f.id_formas = fp.formas_id_formas";
-                        $query_formas = $conn->query($sql_formas);
-                        $results_formas = $query_formas->fetchAll(PDO::FETCH_ASSOC);
-                      } catch (Exception $e) {
-                        // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
-                      }
-                      ?>
-                      <div style="display: none;" class="form-group">
-                        <?php foreach ($results_formas as $result) : ?>
-                          <div style="display: none;" class="fijo_<?= $result['fijo']; ?> ancho_<?= $result['ancho_forma']; ?> alto_<?= $result['alto_forma']; ?>" id="idF_<?= $result['productos_idproductos']; ?>">
-                            <?= $result['formas']; ?>
+                            <p class="fs-configurator-2"><br>
+                              <span class="m-t-10" id="errorForma"></span>
+                            </p>
                           </div>
                         <?php endforeach ?>
                       </div>
@@ -310,19 +275,35 @@ require_once('assets/_partials/idioma.php');
                   <div class="p-tb-20">
                     <!--COMPLEMENTO 1: Tope de pulsera-->
                     <div style="display: none;" id="topePulsera">
-                      <p class="fs-configurator "><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_añadir-tope", "", $_SESSION['idioma']); ?></p>
+                      <!--¿Quiere topes?-->
+                      <p class="fs-configurator mb-0"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_añadir-tope", "", $_SESSION['idioma']); ?></p>
+                      <p>
+                        <a href="pulseras" target="_blank" class="pregunta-formulario">
+                          <span>➔</span>
+                          <span>Obtén más información sobre Condint.</span>
+                        </a>
+                      </p>
 
-                      <!--Quiere topes sí/no-->
-                      <div class="cc-selector">
-                        <input id="siTopePulsera" type="radio" name="tope" value="1" />
-                        <?= buscarTexto("WEB", "generico", "si", "", $_SESSION['idioma']); ?><label class="drinkcard-cc contope" for="siTopePulsera"></label>
-                        <input id="noTopePulsera" type="radio" name="tope" value="0" checked="checked" />
-                        <?= buscarTexto("WEB", "generico", "no", "", $_SESSION['idioma']); ?><label class="drinkcard-cc sintope" for="noTopePulsera"></label>
+                      <div class="row">
+                        <!--Sí-->
+                        <div class="cc-selector col-3 text-center">
+                          <input id="siTopePulsera" type="radio" name="tope" value="1" />
+                          <label class="drinkcard-cc contope" for="siTopePulsera"></label>
+                          <p style="color:#0075BE;">SÍ</p>
+                        </div>
+
+                        <!--No-->
+                        <div id="divNoTopePulsera" class="cc-selector col-3 text-center seleccionado">
+                          <input id="noTopePulsera" type="radio" name="tope" value="0" checked="checked" />
+                          <label class="drinkcard-cc sintope" for="noTopePulsera"></label>
+                          <p style="color:#0075BE;">NO</p>
+                        </div>
                       </div>
+
                       <!--Cantidad de topes-->
-                      <div style="display: none;" id="divCantidadTopes" class="form-group">
-                        <label for="cantidad" class="m-t-20"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_cant-topes", "", $_SESSION['idioma']); ?></label>
-                        <input type="number" id="cantidadTopes" class="nice-select m-b-30 ancho-40" name="cantidadTopes">
+                      <div style="display: none;" id="divCantidadTopes" class="form-group mt-10">
+                        <label for="cantidadTopes" class="fs-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_1_cant-topes", "", $_SESSION['idioma']); ?></label>
+                        <input type="number" id="cantidadTopes" class="nice-select-p ancho-40" name="cantidadTopes">
                       </div>
                     </div>
 
@@ -338,21 +319,21 @@ require_once('assets/_partials/idioma.php');
                       <div class="row">
                         <!--Base de tela-->
                         <div id="divTela" class="cc-selector col-3 text-center" style="display: none;">
-                          <input id="sitela" type="radio" name="base" value="tela" />
+                          <input id="sitela" type="radio" name="base" value="1" />
                           <label class="drinkcard-cc base-tela" for="sitela"></label>
                           <p style="font-size:12px; color:#0075BE;">BASE DE TELA</p>
                         </div>
 
                         <!--Base de cierre gancho-->
                         <div id="divGancho" class="cc-selector col-3 text-center" style="display: none;">
-                          <input id="sigancho" type="radio" name="base" value="gancho" />
+                          <input id="sigancho" type="radio" name="base" value="2" />
                           <label class="drinkcard-cc base-gancho" for="sigancho"></label>
                           <p style="font-size:12px; color:#0075BE;">BASE DE CIERRE GANCHO</p>
                         </div>
 
                         <!--Base de cierre gancho + pelo-->
                         <div id="divGanchoPelo" class="cc-selector col-3 text-center" style="display: none;">
-                          <input id="siganchopelo" type="radio" name="base" value="ganchopelo" />
+                          <input id="siganchopelo" type="radio" name="base" value="3" />
                           <label class="drinkcard-cc base-pelo" for="siganchopelo"></label>
                           <p style="font-size:12px; color:#0075BE;">BASE DE CIERRE GANCHO + PELO</p>
                         </div>
@@ -362,6 +343,25 @@ require_once('assets/_partials/idioma.php');
                           <input id="sinbase" type="radio" name="base" value="sinbase" checked="checked" />
                           <label class="drinkcard-cc singancho" for="sinbase"></label>
                           <p style="font-size:12px; color:#0075BE;">SIN BASE</p>
+                        </div>
+                      </div>
+
+                      <!--Medidas de la base de tela-->
+                      <div style="display: none;" id="divMedidasTela" class="form-group">
+                        <!--Ancho-->
+                        <label for="anchoBaseInput" class="m-t-20 fs-configurator">Ancho (en milímetros)</label>
+                        <input name="anchoBaseInput" type="number" id="anchoBaseInput" class="nice-select-p ancho-40">
+                        <p style="display:none" class="p-tb-20 fs-configurator-2" id="errorAnchoBase">El ancho de la base debe ser igual o mayor que el ancho del diseño</p>
+                        <!--Alto-->
+                        <label for="anchoBaseInput" class="m-t-20 fs-configurator">Alto (en milímetros)</label>
+                        <input name="anchoBaseInput" type="number" id="anchoBaseInput" class="nice-select-p ancho-40">
+                        <p style="display:none" class="p-tb-20 fs-configurator-2" id="errorAnchoBase">El alto de la base debe ser igual o mayor que el alto del diseño</p>
+                      </div>
+
+                      <!--Colores de la base-->
+                      <div class="row col-12 p-all-10" id="divColoresBase" style="display: none;">
+                        <p class="fs-configurator">Colores disponibles para la base:</p>
+                        <div id="coloresBase" class="row">
                         </div>
                       </div>
                     </div>
@@ -380,12 +380,12 @@ require_once('assets/_partials/idioma.php');
                     <p class="p-tb-10 fs-18 mayus title-paso-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_paso_4_tit", "", $_SESSION['idioma']); ?></p>
                     <p>Carga tu diseño en la <b>mayor calidad y resolución</b> disponible.</p>
 
-                    <p id="textoPantone" style="display: none;">Para la técnica seleccionada, especifica tus colores de una de las siguientes formas:</p>
-                    <p id="textoCMYK" style="display: none;">Para la técnica seleccionada se definirán los colores por el contenido del archivo, o puedes indicarnos los códigos CMYK:</p>
+                    <p id="textoPantone" style="display: none;">Para la técnica seleccionada, especifica los colores de una de las siguientes maneras:</p>
+                    <p id="textoCMYK" style="display: none;">Para la técnica seleccionada se definirán los colores en CMYK por el contenido del archivo subido de una de las siguientes maneras:</p>
 
-                    <p class="fs-configurator"><i class="ti-hand-point-right" aria-hidden="true"></i> Imagen en formato .png o .jpg. <span>Se generará una paleta de colores donde puedes seleccionar hasta <span class="maximoColores"></span> colores.</span></p>
-                    <p class="fs-configurator"><i class="ti-hand-point-right" aria-hidden="true"></i> PDF con las imágenes necesarias. Puede incluir instruccies adicionales.</p>
-                    <p class="fs-configurator"><i class="ti-hand-point-right" aria-hidden="true"></i> Diseño vectorizado en formato ai, eps o svg.</p>
+                    <p id="txtImagen1" class="fs-configurator"><i class="ti-hand-point-right" aria-hidden="true"></i> Imagen en formato png o jpg. <span id="txtPaletaColores">Se generará una paleta de colores donde puedes seleccionar hasta <span class="maximoColores"></span> colores.</span></p>
+                    <p id="txtImagen2" class="fs-configurator"><i class="ti-hand-point-right" aria-hidden="true"></i> PDF con las imágenes necesarias. Puede incluir instruccies adicionales.</p>
+                    <p id="txtImagen3" class="fs-configurator"><i class="ti-hand-point-right" aria-hidden="true"></i> Diseño vectorizado en formato ai, eps o svg.</p>
 
                     <label for="archivo" class="btn mt-2 mb-5">Selecciona</label>
                     <input style="visibility:hidden;" name="archivo" id="archivo" type="file" /><br>
@@ -393,12 +393,12 @@ require_once('assets/_partials/idioma.php');
                       <img id="imagenPrevisualizacion">
                     </div>
 
-                    <div class="color-alert p-2" style="font-size: 16px;">
-                      <i class="ti-alert" aria-hidden="true"></i> De no especificar los colores, nuestros diseñadores elegiran según la imagen proporcionada.
+                    <div id="divTxtAdvertenciaColores" class="color-alert p-2" style="font-size: 16px;">
+                      <i class="ti-alert" aria-hidden="true"></i> De no especificar los colores, nuestros diseñadores los elegirán basados en la imagen proporcionada.
                     </div>
 
                     <div class="mt-3 mb-3">
-                      <label for="comentariosDiseno" class="form-label">Ingresa códigos de color, instrucciones específicas o comentarios adicionales:</label>
+                      <label for="comentariosDiseno" class="form-label">Instrucciones detalladas o comentarios adicionales<span id="textoCodigosColor">. Puedes indicar códigos de color específicos (CMYK, PANTONE, etc.)</span>:</label>
                       <textarea class="form-control" id="comentariosDiseno" name="comentariosDiseno" rows=5 cols=50></textarea>
                     </div>
                   </div>
@@ -438,7 +438,7 @@ require_once('assets/_partials/idioma.php');
 
           <fieldset>
             <div class="" style="overflow-x: auto;">
-              <table class="table table-striped table-bordered" style="font-size: 14px;">
+              <table class="table table-bordered" style="font-size: 14px;">
                 <!-- PASO 1 TECNICA-->
                 <tr>
                   <th rowspan="3" id="paso1_rowspan">Paso 1<br>
@@ -496,7 +496,15 @@ require_once('assets/_partials/idioma.php');
                 <tr>
                   <th id="paso3_rowspan" rowspan="">Paso 3<div class="paso3 paso-completo">COMPLETO</div>
                   </th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
-                  <td id="tdTipoBase" style="display: none;">Tipo de base: <span style="font-weight: bold;" id="resumenTipoBase"></span></td>
+                  <td id="tdPrecioComplemento" style="display: none;">Precio del complemento (<span style="font-weight: bold;" id="resumenPPUComplemento">0</span>€/ud)</td>
+                  <td><span style="font-weight: bold;" id="resumenPrecioComplemento"></span></td>
+                </tr>
+                <tr id="tdTipoBase" style="display: none;">
+                  <td>Tipo de base: <span style="font-weight: bold;" id="resumenTipoBase"></span></td>
+                  <td></td>
+                </tr>
+                <tr id="tdMoldeBase" style="display: none;">
+                  <td>Molde de la base: <span style="font-weight: bold;" id="resumenMoldeBase"></span></td>
                   <td></td>
                 </tr>
                 <tr id="tdAnchoBase" style="display: none;">
@@ -515,29 +523,17 @@ require_once('assets/_partials/idioma.php');
                   <td>Color de la base: <span style="font-weight: bold;" id="resumenColorBase"></span></td>
                   <td></td>
                 </tr>
-                <tr id="tdMoldeBase" style="display: none;">
-                  <td>Molde de la base: <span style="font-weight: bold;" id="resumenMoldeBase"></span></td>
-                  <td></td>
-                </tr>
-                <tr id="tdPrecioBase" style="display: none;">
-                  <td>Precio de la base (<span style="font-weight: bold;" id="resumenPPUbase">0</span>€/ud)</td>
-                  <td><span style="font-weight: bold;" id="resumenPrecioBase"></span></td>
-                </tr>
                 <tr id="tdCantidadTopes" style="display: none;">
                   <td>Cantidad de topes: <span style="font-weight: bold;" id="resumenCantidadTopes"></span></td>
                   <td></td>
                 </tr>
-                <tr id="tdPrecioTopes" style="display: none;">
-                  <td>Precio topes (<span style="font-weight: bold;" id="resumenPPUtopes">0</span>€/ud)</td>
-                  <td><span style="font-weight: bold;" id="resumenPrecioTopes"></span></td>
-                </tr>
 
                 <!-- PASO 5-->
                 <tr></tr>
-                  <th rowspan="">Paso 5<div class="paso-incompleto">INCOMPLETO</div>
-                  </th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
-                  <td>Imagen: <span style="font-weight: bold;" id="resumenImagen"></span></td>
-                  <td></td>
+                <th rowspan="">Paso 5<div class="paso-incompleto">INCOMPLETO</div>
+                </th> <!-- rowspan="3" indica que esta celda abarca 3 filas -->
+                <td>Imagen: <span style="font-weight: bold;" id="resumenImagen"></span></td>
+                <td></td>
                 </tr>
 
                 <!-- SUBTOTAL -->
@@ -651,7 +647,7 @@ require_once('assets/_partials/idioma.php');
           // $('#imgcolores')[0].setAttribute("src", "iconos/Colores6.png");
           // $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto6.png");
 
-          nextTab.textContent = $('#ptp_btn-sig').text() + " -> " + $('#nav2').text();
+          nextTab.textContent = $('#ptp_btn-sig').text() + " -> " + "Diseño"; //$('#nav2').text();
           $('#v-pills-next-tab').show();
           $('#anadirCarrito').hide();
           subir();
@@ -663,7 +659,7 @@ require_once('assets/_partials/idioma.php');
           // $('#imgcolores')[0].setAttribute("src", "iconos/Colores6.png");
           // $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto6.png");
 
-          nextTab.textContent = $('#ptp_btn-sig').text() + " -> " + $('#nav3').text();
+          nextTab.textContent = $('#ptp_btn-sig').text() + " -> " + "Complementos"; //$('#nav3').text();
           $('#v-pills-next-tab').show();
           $('#anadirCarrito').hide();
           subir();
@@ -675,7 +671,7 @@ require_once('assets/_partials/idioma.php');
           // $('#imgcolores')[0].setAttribute("src", "iconos/Colores3.png");
           // $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto6.png");
 
-          nextTab.textContent = $('#ptp_btn-sig').text() + " -> " + $('#nav4').text();
+          nextTab.textContent = $('#ptp_btn-sig').text() + " -> " + "Imagen"; //$('#nav4').text();
           $('#v-pills-next-tab').show();
           $('#anadirCarrito').hide();
           subir();
@@ -776,6 +772,13 @@ require_once('assets/_partials/idioma.php');
       $('input[name="base"]').change(function() {
         // Quitar la clase 'seleccionado' de todos los elementos 'input' con 'name="base"'
         $('input[name="base"]').parent().removeClass('seleccionado');
+        // Agregar la clase 'seleccionado' solo al elemento actual
+        $(this).parent().addClass('seleccionado');
+      });
+
+      $('input[name="tope"]').change(function() {
+        // Quitar la clase 'seleccionado' de todos los elementos 'input' con 'name="tope"'
+        $('input[name="tope"]').parent().removeClass('seleccionado');
         // Agregar la clase 'seleccionado' solo al elemento actual
         $(this).parent().addClass('seleccionado');
       });

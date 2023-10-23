@@ -3339,25 +3339,25 @@ h3.tit-form {
 }
 
 @media (max-width: 1120px) {
-  a#v-pills-next-tab {
+  #v-pills-next-tab {
     display: none;
   }
 }
 
 @media (min-width: 1120px) {
-  a#v-pills-next-tabmv {
+  #v-pills-next-tabmv {
     display: none;
   }
 }
 
 @media (max-width: 1120px) {
-  a#anadirCarrito {
+  #anadirCarrito {
     display: none;
   }
 }
 
 @media (min-width: 1120px) {
-  a#anadirCarritoMV {
+  #anadirCarritoMV {
     display: none;
   }
 }
@@ -4052,5 +4052,18 @@ input[type="number"] {
   background-color: #ccc; /* Cambia el color de fondo cuando está deshabilitado */
   color: #888; /* Cambia el color del texto cuando está deshabilitado */
   cursor: not-allowed; /* Cambia el cursor a "no permitido" cuando está deshabilitado */
-  /* Otros estilos específicos para el botón deshabilitado */
+}
+
+.imagen-buena {
+  background-color: #C7E1C6;
+  border-radius: 5px;
+  margin: 5px;
+  color: green;
+}
+
+.imagen-error {
+  background-color: #EAAFAF;
+  border-radius: 5px;
+  margin: 5px;
+  color: #872727;
 }

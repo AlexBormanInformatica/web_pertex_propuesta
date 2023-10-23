@@ -196,7 +196,9 @@ if (isset($_POST['precio'])) {
     $sqlCantidad = 0;
     $cantidad = $_POST['cantidad'];
     $superficie = $_POST['superficie'];
-    $idproducto = $_POST['idproducto'];
+
+    $idproducto = isset($_POST['idproducto']) ? $_POST['idproducto'] : 0;
+    $id_complementos = isset($_POST['id_complementos']) ? $_POST['id_complementos'] : 0;
 
     if ($cantidad == 1) { // Asignamos valor a variable que servira para la consulta SQL
         $sqlCantidad = 1;
@@ -239,15 +241,29 @@ if (isset($_POST['precio'])) {
     } else if ($cantidad > 9999) {
         $sqlCantidad = 10000;
     }
-    try {
-        $sql = "SELECT `" . $sqlCantidad . "` FROM `precios`  WHERE `productos_idproductos`= ? AND superficie > ? ORDER BY superficie ASC LIMIT 1;";
-        $query = $conn->prepare($sql);
-        $query->bindParam(1, $idproducto, PDO::PARAM_INT);
-        $query->bindParam(2, $superficie, PDO::PARAM_STR);
-        $query->execute();
-        echo $query->fetchColumn();
-    } catch (Exception $e) {
-        echo $e->getMessage();
+
+    if ($idproducto != 0) {
+        try {
+            $sql = "SELECT `" . $sqlCantidad . "` FROM `precios`  WHERE `productos_idproductos`= ? AND superficie > ? ORDER BY superficie ASC LIMIT 1;";
+            $query = $conn->prepare($sql);
+            $query->bindParam(1, $idproducto, PDO::PARAM_INT);
+            $query->bindParam(2, $superficie, PDO::PARAM_STR);
+            $query->execute();
+            echo $query->fetchColumn();
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    } else if ($id_complementos != 0) {
+        try {
+            $sql = "SELECT `" . $sqlCantidad . "` FROM `precios`  WHERE `id_complementos`= ? AND superficie > ? ORDER BY superficie ASC LIMIT 1;";
+            $query = $conn->prepare($sql);
+            $query->bindParam(1, $id_complementos, PDO::PARAM_INT);
+            $query->bindParam(2, $superficie, PDO::PARAM_STR);
+            $query->execute();
+            echo $query->fetchColumn();
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
     }
 }
 
@@ -507,4 +523,15 @@ if (isset($_POST['buscarColorBase'])) {
     $jsonData = json_encode($coloresData);
     // Envía la respuesta JSON
     echo $jsonData;
+}
+
+if (isset($_POST['buscarMoldeBase'])) {
+    require "../includes/config.php";
+    $id = $_POST['idbase'];
+
+    $sql = "SELECT molde FROM complementos WHERE id_complementos=?";
+    $query = $conn->prepare($sql);
+    $query->bindParam(1, $id, PDO::PARAM_INT);
+    $query->execute();
+    echo $query->fetchColumn();
 }

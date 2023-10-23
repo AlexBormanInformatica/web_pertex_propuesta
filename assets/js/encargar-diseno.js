@@ -17,6 +17,8 @@ var colorBaseSeleccionado = [];
 var maximoColores = 0;
 var anchoInt = 0;
 var altoInt = 0;
+var superficie = 0;
+var superficieBase = 0;
 //Tabla resumen
 var paso1_rowspan = document.getElementById('paso1_rowspan');
 var paso2_rowspan = document.getElementById('paso2_rowspan');
@@ -94,7 +96,6 @@ var cantidadTopes = false;
         } else {
           //Si la lista está llena saco un mensaje "No puedes seleccioanr más de X colores"
           event.target.checked = false;
-          alert("No puedes seleccionar más de " + maximoColores + " colores.");
         }
       } else {
         //Si no es seleccion, lo elimino de la lista
@@ -126,7 +127,6 @@ var cantidadTopes = false;
         } else {
           //Si la lista está llena saco un mensaje "No puedes seleccioanr más de X colores"
           event.target.checked = false;
-          alert("No puedes seleccionar más de " + 1 + " color.");
         }
       } else {
         //Si no es seleccion, lo elimino de la lista
@@ -158,7 +158,6 @@ var cantidadTopes = false;
         } else {
           //Si la lista está llena saco un mensaje "No puedes seleccioanr más de X colores"
           event.target.checked = false;
-          alert("No puedes seleccionar más de " + 1 + " color.");
         }
       } else {
         //Si no es seleccion, lo elimino de la lista
@@ -268,7 +267,8 @@ var cantidadTopes = false;
     }
   });
 
-
+  // Detecta cuando seleccionen una forma
+  // Itera a través de la colección y agrega un evento a cada elemento
   for (var i = 0; i < elementosFormas.length; i++) {
     elementosFormas[i].addEventListener('input', function () {
       if (this.checked) {
@@ -306,6 +306,8 @@ var cantidadTopes = false;
     elementosBase[i].addEventListener('input', function () {
       // Referencia al elemento con el id 'paso3_rowspan'
       // Cambia el valor de rowspan a un nuevo valor deseado
+      colorBaseSeleccionado.length = 0; // Vacio la lista de colores 
+      document.getElementById('resumenColorBase').innerText = colorBaseSeleccionado; // Asigno la lista vacia
       paso3_rowspan.rowSpan = "";
       medidasBase = false;
       colorBase = false;
@@ -376,6 +378,19 @@ var cantidadTopes = false;
       })
       $('#tdColorBase').show();
 
+      //Busco el molde de la base elegida y relleno el campo + suma del subtotal
+      $.ajax({
+        method: "POST",
+        url: "funciones/functions.php",
+        dataType: 'json',
+        data: {
+          buscarMoldeBase: "", idbase: this.value
+        }
+      }).done(function (response) {
+        document.getElementById("resumenMoldeBase").innerText = response.toString().trim() + " €";
+        sumaSubtotal();
+      });
+
       //Relleno el resumen depende la base elegida
       switch (this.value) {
         case "1":
@@ -396,6 +411,7 @@ var cantidadTopes = false;
           verificarBaseTela();
           break;
         case "2":
+          superficieBase = superficie;
           colorBase = true;
           $('#divColoresBase').show();
           $('#tdTipoBase').show();
@@ -403,10 +419,11 @@ var cantidadTopes = false;
           $('#tdMoldeBase').show();
           $('#tdPrecioComplemento').show();
           document.getElementById('resumenTipoBase').innerText = "Cierre gancho";
-          paso3_rowspan.rowSpan = "3";
+          paso3_rowspan.rowSpan = "4";
           pasoIncompleto(document.querySelector('.paso3'));
           break;
         case "3":
+          superficieBase = superficie;
           colorBase = true;
           $('#divColoresBase').show();
           $('#tdTipoBase').show();
@@ -414,11 +431,32 @@ var cantidadTopes = false;
           $('#tdMoldeBase').show();
           $('#tdPrecioComplemento').show();
           document.getElementById('resumenTipoBase').innerText = "Cierre gancho + pelo";
-          paso3_rowspan.rowSpan = "3";
+          paso3_rowspan.rowSpan = "4";
           pasoIncompleto(document.querySelector('.paso3'));
           break;
-
       }
+
+      // Busco el precio según la cantidad de producto y superficie dada en caso de ser tela o la superficie del producto en caso de ver cierre gancho 
+      $.ajax({
+        method: "POST",
+        url: "funciones/functions.php",
+        data: {
+          precio: "", id_complementos: this.value, cantidad: inputCantidad.value, superficie: superficieBase
+        }
+      }).done(function (response) {
+        response = response.trim();
+
+        //Relleno los campos
+        if (response != "") {
+          document.getElementById('resumenPPUComplemento').innerText = response.replace(".", ",");
+          document.getElementById('resumenPrecioComplemento').innerText = (parseFloat(response) * parseInt(inputCantidad.value)).toFixed(2).replace(".", ",") + " €";
+        } else {
+          limpiarPaso2Medidas();
+        }
+
+        //Por último verifico todo el paso 2
+        verificarPaso2();
+      });
 
       verificarPaso3();
       //Calculo el precio si elige una base
@@ -442,7 +480,6 @@ var cantidadTopes = false;
         } else {
           //Si la lista está llena saco un mensaje "No puedes seleccioanr más de X colores"
           event.target.checked = false;
-          alert("No puedes seleccionar más de " + 1 + " color.");
         }
       } else {
         //Si no es seleccion, lo elimino de la lista
@@ -456,7 +493,7 @@ var cantidadTopes = false;
       document.getElementById('resumenColorBase').innerText = colorBaseSeleccionado;
 
     }
-    verificarPaso1();
+    verificarPaso3();
   });
 
   // Detecta cuando marquen si quiere tope o no
@@ -483,6 +520,60 @@ var cantidadTopes = false;
     });
   }
   // FIN PASO 3-----------------------------------------------------------------------------------------------//
+
+  // PASO 4: imagen -----------------------------------------------------------------------------------------//
+  //Verifica el archivo subido
+  const archivoInput = document.getElementById("archivo");
+  archivoInput.addEventListener("change", function () {
+    $('#tamano-incorrecto').hide();
+    $('#extension-incorrecta').hide();
+    $('#imagen-correcta').hide();
+    var error = false;
+    var fileName = archivoInput.files[0].name;
+    var fileSize = archivoInput.files[0].size;
+    var ext = fileName.split('.').pop();
+
+    /* filesize es dado en Byte
+        Tamaño máximo del archivo 100Megabyte = 1e+8 Byte
+    */
+
+    if (fileSize > 1e+8) {//Tamaño del archivo
+      $('#tamano-incorrecto').show();
+      archivoInput.files[0].name = '';
+      archivoInput.value = '';
+      error = true;
+    } else {
+      // Convertimos en minúscula porque la extensión del archivo puede estar en mayúscula
+      ext = ext.toLowerCase();
+
+      switch (ext) {//Extensiones permitidas
+        case 'ai':
+        case 'pdf':
+        case 'eps':
+        case 'svg':
+        case 'psd':
+        case 'jpg':
+        case 'png':
+        case 'tif':
+        case 'bmp': break;
+        default:
+          $('#extension-incorrecta').show();
+          archivoInput.files[0].name = '';
+          archivoInput.value = '';
+          error = true;
+      }
+    }
+    if (error == false) {
+      $('#imagen-correcta').show();
+      document.getElementById("resumenImagen").innerText = archivoInput.files[0].name;
+      pasoCompleto(document.querySelector('.paso4'));
+    } else {
+      document.getElementById("resumenImagen").innerText = "";
+      pasoIncompleto(document.querySelector('.paso4'));
+    }
+    verificar4Completos();
+  });
+  // FIN PASO 4-----------------------------------------------------------------------------------------------//
 
   // Agrega un manejador de eventos para detectar cuando el botón se deshabilita
   const miBoton = document.getElementById('encargarDiseno');
@@ -521,7 +612,6 @@ function cargarCamposSegunTecnica() {
   $('#textoCMYK').hide();// Div con texto para tecnicas que se basan en CMYK
   $('#textoPantone').hide();// Div con texto para tecnicas que se basan en PANTONE
   $('#txtImagen1').show(); // Div texto imagenes en formato png o jpg
-  $('#txtPaletaColores').hide(); // Span texto de creacion de paleta a partir de la imagen
   $('#txtImagen2').show(); // Div texto pdf
   $('#txtImagen3').show(); // Div texto diseño vectorizado
   $('#divTxtAdvertenciaColores').hide(); // Div advertencia de no elegir color
@@ -533,7 +623,6 @@ function cargarCamposSegunTecnica() {
     $('#textoCMYK').show();// Div con texto para tecnicas que se basan en CMYK
     $('#textoPantone').hide();// Div con texto para tecnicas que se basan en PANTONE
     $('#txtImagen1').show(); // Div texto imagenes en formato png o jpg
-    $('#txtPaletaColores').hide(); // Span texto de creacion de paleta a partir de la imagen
     $('#txtImagen2').show(); // Div texto pdf
     $('#txtImagen3').show(); // Div texto diseño vectorizado
     $('#divTxtAdvertenciaColores').hide(); // Div advertencia de no elegir color
@@ -547,7 +636,6 @@ function cargarCamposSegunTecnica() {
     $('#textoCMYK').hide();// Div con texto para tecnicas que se basan en CMYK
     $('#textoPantone').show();// Div con texto para tecnicas que se basan en PANTONE
     $('#txtImagen1').show(); // Div texto imagenes en formato png o jpg
-    $('#txtPaletaColores').show(); // Span texto de creacion de paleta a partir de la imagen
     $('#txtImagen2').show(); // Div texto pdf
     $('#txtImagen3').show(); // Div texto diseño vectorizado
     $('#divTxtAdvertenciaColores').show(); // Div advertencia de no elegir color
@@ -626,7 +714,6 @@ function cargarCamposSegunTecnica() {
     $('#textoCMYK').hide();// Div con texto para tecnicas que se basan en CMYK
     $('#textoPantone').hide();// Div con texto para tecnicas que se basan en PANTONE
     $('#txtImagen1').show(); // Div texto imagenes en formato png o jpg
-    $('#txtPaletaColores').hide(); // Span texto de creacion de paleta a partir de la imagen
     $('#txtImagen2').show(); // Div texto pdf
     $('#txtImagen3').show(); // Div texto diseño vectorizado
     $('#divTxtAdvertenciaColores').hide(); // Div advertencia de no elegir color
@@ -778,12 +865,10 @@ function cargarCamposSegunTecnica() {
   anchoProductoInput.value = "";
   altoProducto.value = "";
   anchoProductoSelect.selectedIndex = 0;
+  anchoInt = 0;
+  altoInt = 0;
   //Vacío los campos y los marco incompleto
-  document.getElementById("resumenPPU").innerText = "";
-  document.getElementById("resumenPrecioProducto").innerText = "";
-  document.getElementById("resumenAnchoProducto").innerText = "";
-  document.getElementById("resumenAltoProducto").innerText = "";
-  document.getElementById("resumenSuperficieProducto").innerText = "";
+  limpiarPaso2Medidas();
   document.getElementById("resumenFormaProducto").innerText = "";
   pasoIncompleto(document.querySelector('.paso2'));
 
@@ -840,6 +925,11 @@ function cargarCamposSegunTecnica() {
 
 
   // --------------------Para el PASO 3 complementos---------------------------
+  colorBaseSeleccionado.length = 0; // Vacio la lista de colores 
+  document.getElementById('resumenPPUComplemento').innerText = "";
+  document.getElementById('resumenPrecioComplemento').innerText = "";
+  document.getElementById('resumenMoldeBase').innerText = "";
+  document.getElementById('resumenColorBase').innerText = colorBaseSeleccionado; // Asigno la lista vacia
   medidasBase = false;
   colorBase = false;
   cantidadTopes = false;
@@ -913,11 +1003,9 @@ function cargarCamposSegunTecnica() {
   }
 
   // --------------------Para el PASO 4---------------------------
-
-
-  verificarPaso1();
-  verificarPaso2();
-  verificarPaso3();
+  $('#tamano-incorrecto').hide();
+  $('#extension-incorrecta').hide();
+  $('#imagen-correcta').hide();
 }
 
 /**
@@ -1045,6 +1133,34 @@ function verificarPaso2() {
 }
 
 /**
+ * Compruebo que los 4 pasos estén COMPLETO para habilitar el boton de encargar diseño
+ */
+function verificar4Completos() {
+  var bool = true;
+
+  if (document.querySelector(".paso1").classList.contains("paso-incompleto")) {
+    bool = false;
+  }
+  if (document.querySelector(".paso2").classList.contains("paso-incompleto")) {
+    bool = false;
+  }
+  if (document.querySelector(".paso3").classList.contains("paso-incompleto")) {
+    bool = false;
+  }
+  if (document.querySelector(".paso4").classList.contains("paso-incompleto")) {
+    bool = false;
+  }
+
+  if (bool === true) {
+    document.getElementById("encargarDiseno").removeAttribute("disabled"); // Habilita el botón
+    document.getElementById("encargarDiseno").textContent = "ENCARGAR DISEÑO"; // Cambia el texto del botón
+  } else {
+    document.getElementById("encargarDiseno").setAttribute("disabled", "true"); // Deshabilita el botón
+    document.getElementById("encargarDiseno").textContent = "FALTAN CAMPOS POR COMPLETAR"; // Cambia el texto del botón
+  }
+}
+
+/**
  * Si no hay complemento = COMPLETO
  * Si elige base de tela, las medidas son correctar y ha elegido color = COMPLETO
  * Si elige base de cierre gancho o cirre gancho + pelo y ha elegido color = COMPLETO
@@ -1080,7 +1196,6 @@ function verificarPaso3() {
   }
 }
 
-
 function sumaSubtotal() {
   var moldeProducto = parseFloat(document.getElementById('resumenMoldeProducto').innerText.replace('€', '').replace(',', '.').trim());
   var precioProducto = parseFloat(document.getElementById('resumenPrecioProducto').innerText.replace('€', '').replace(',', '.').trim());
@@ -1105,7 +1220,7 @@ function sumaSubtotal() {
   }
 
   // Relleno el campo del subtotal de la tabla
-  document.getElementById('resumenSubtotal').innerText = suma.toString().replace('.', ',') + " €";
+  document.getElementById('resumenSubtotal').innerText = suma.toFixed(2).toString().replace('.', ',') + " €";
 }
 
 function verificarBaseTela() {
@@ -1223,12 +1338,8 @@ function limpiarPaso2Medidas() {
   verificarPaso2();
 }
 
-function calcularPrecios() {
-
-}
-
 function calcularSuperficieProducto() {
-  var superficie = ((anchoInt / 10) * (altoInt / 10)).toFixed(2); // Lo divido entre 10 para pasarlo a centimetros
+  superficie = ((anchoInt / 10) * (altoInt / 10)).toFixed(2); // Lo divido entre 10 para pasarlo a centimetros
 
   // Busco la superficie y la cantidad en la tabla de precios y si es correcto, lo reflejo a la tabla de resumen-presupuesto
   $.ajax({
@@ -1254,6 +1365,4 @@ function calcularSuperficieProducto() {
     //Por último verifico todo el paso 2
     verificarPaso2();
   });
-
-
 }

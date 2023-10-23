@@ -379,24 +379,32 @@ require_once('assets/_partials/idioma.php');
                     <p id="textoPantone" style="display: none;">Para la técnica seleccionada, especifica los colores de una de las siguientes maneras:</p>
                     <p id="textoCMYK" style="display: none;">Para la técnica seleccionada se definirán los colores en CMYK por el contenido del archivo subido de una de las siguientes maneras:</p>
 
-                    <p id="txtImagen1" class="fs-configurator"><i class="ti-hand-point-right" aria-hidden="true"></i> Imagen en formato png o jpg. <span id="txtPaletaColores">Se generará una paleta de colores donde puedes seleccionar hasta <span class="maximoColores"></span> colores.</span></p>
+                    <p id="txtImagen1" class="fs-configurator"><i class="ti-hand-point-right" aria-hidden="true"></i> Imagen en formato png o jpg.</p>
                     <p id="txtImagen2" class="fs-configurator"><i class="ti-hand-point-right" aria-hidden="true"></i> PDF con las imágenes necesarias. Puede incluir instruccies adicionales.</p>
                     <p id="txtImagen3" class="fs-configurator"><i class="ti-hand-point-right" aria-hidden="true"></i> Diseño vectorizado en formato ai, eps o svg.</p>
 
-                    <label for="archivo" class="btn mt-2 mb-5">Selecciona</label>
+                    <label for="archivo" class="btn mt-2">Selecciona</label>
                     <input style="visibility:hidden;" name="archivo" id="archivo" type="file" /><br>
-                    <div class="limit-w m-tb-50" style="display: none;">
-                      <img id="imagenPrevisualizacion">
+                    
+                    <div style="display:none;" id="extension-incorrecta" class="p-2 imagen-error" style="font-size: 16px;">
+                      <i class="mr-10 ti-face-sad" aria-hidden="true"></i>Ha ocurrido un error. Extensión incorrecta
                     </div>
-
-                    <div id="divTxtAdvertenciaColores" class="color-alert p-2" style="font-size: 16px;">
-                      <i class="ti-alert" aria-hidden="true"></i> De no especificar los colores, nuestros diseñadores los elegirán basados en la imagen proporcionada.
+                    <div style="display:none;" id="tamano-incorrecto" class="p-2 imagen-error" style="font-size: 16px;">
+                      <i class="mr-10 ti-face-sad" aria-hidden="true"></i>Ha ocurrido un error. Tamaño máximo 100MB
+                    </div>
+                    <div style="display:none;" id="imagen-correcta" class="p-2 imagen-buena" style="font-size: 16px;">
+                      <i class="mr-10 ti-face-smile" aria-hidden="true"></i>Imagen subida correctamente
                     </div>
 
                     <div class="mt-3 mb-3">
                       <label for="comentariosDiseno" class="form-label">Instrucciones detalladas o comentarios adicionales<span id="textoCodigosColor">. Puedes indicar códigos de color específicos (CMYK, PANTONE, etc.)</span>:</label>
                       <textarea class="form-control" id="comentariosDiseno" name="comentariosDiseno" rows=5 cols=50></textarea>
                     </div>
+
+                    <div id="divTxtAdvertenciaColores" class="color-alert p-2" style="font-size: 16px;">
+                      <i class="ti-alert" aria-hidden="true"></i> De no especificar los colores, nuestros diseñadores los elegirán basados en la imagen proporcionada y se utilizará el hilo más similar.
+                    </div>
+
                   </div>
                 </fieldset>
               </div>
@@ -405,11 +413,11 @@ require_once('assets/_partials/idioma.php');
 
           <div class="nav  nav-pills" id="h-pills-tab" role="tablist" style="float:right">
             <!--ORDENADOR-->
-            <a class="btn mb-5" id="v-pills-next-tab" data-toggle="pill" href="#" role="tab" aria-controls="v-pills-profile" aria-selected="false" disabled>FALTAN CAMPOS POR COMPLETAR</a>
-            <button style="display:none" id="encargarDiseno" type="button" data-toggle="modal" data-target="#encargarModal" class="btn mb5" disabled>FALTAN CAMPOS POR COMPLETAR</button>
+            <button class="btn mb-5" id="v-pills-next-tab" type="button" disabled>FALTAN CAMPOS POR COMPLETAR</button>
+            <button style="display:none" id="encargarDiseno" type="button" data-toggle="modal" data-target="#encargarModal" class="btn mt-5" disabled>FALTAN CAMPOS POR COMPLETAR</button>
 
             <!--MOVIL-->
-            <a class="btn mb-5" id="v-pills-next-tabmv" data-toggle="pill" href="#" role="tab" aria-controls="v-pills-profile" aria-selected="false"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_btn-sig", "", $_SESSION['idioma']); ?></a>
+            <button class="btn mb-5" id="v-pills-next-tabmv" type="button" disabled>FALTAN CAMPOS POR COMPLETAR</button>
             <button class="btn mb-5" style="display:none" id="encargarDisenoMV" type="button" data-toggle="modal" data-target="#encargarModal"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_confirma-añadir", "", $_SESSION['idioma']); ?></button>
           </div>
       </div>
@@ -503,8 +511,8 @@ require_once('assets/_partials/idioma.php');
                   <td></td>
                 </tr>
                 <tr id="tdMoldeBase" style="display: none;">
-                  <td>Molde de la base: <span style="font-weight: bold;" id="resumenMoldeBase"></span></td>
-                  <td></td>
+                  <td>Molde de la base</td>
+                  <td><span style="font-weight: bold;" id="resumenMoldeBase"></span></td>
                 </tr>
                 <tr id="tdAnchoBase" style="display: none;">
                   <td>Ancho de la base: <span style="font-weight: bold;" id="resumenAnchoBase"></span></td>
@@ -527,12 +535,12 @@ require_once('assets/_partials/idioma.php');
                   <td></td>
                 </tr>
 
-                <!-- PASO 5-->
-                <tr></tr>
-                <th rowspan="">Paso 5<div class="paso-incompleto">INCOMPLETO</div>
-                </th>
-                <td>Imagen: <span style="font-weight: bold;" id="resumenImagen"></span></td>
-                <td></td>
+                <!-- PASO 4-->
+                <tr>
+                  <th>Paso 4<div class="paso4 paso-incompleto">COMPLETO</div>
+                  </th>
+                  <td>Imagen: <span style="font-weight: bold;" id="resumenImagen"></span></td>
+                  <td></td>
                 </tr>
 
                 <!-- SUBTOTAL -->
@@ -575,7 +583,6 @@ require_once('assets/_partials/idioma.php');
       </div> <!-- row-principal -->
     </div><!-- fin-container -->
 
-
     <script>
       /*
       Funcion para que al cambiar de paso, suba el scroll al inicio del fieldset correspondiente.
@@ -589,217 +596,13 @@ require_once('assets/_partials/idioma.php');
           scrollTop: 0
         }, "slow");
       }
-
-      var i = 0;
-      window.addEventListener("load", function() {
-        let tabs = document.querySelectorAll(".divpills a");
-        let tabsMovil = document.querySelectorAll(".divpills2 a");
-        let nextTab = document.getElementById("v-pills-next-tab");
-        let nextTabMovil = document.getElementById("v-pills-next-tabmv");
-        nextTab.addEventListener("click", function() {
-          v-pills-next-tab
-          //Primero veo en que NAV/TAB estoy, y verifico si el paso de dicho tab esta COMPLETO, para habilitar el botón de SIGUIENTE PASO
-          var idDelElementoActivo = document.querySelector(".paso1").getAttribute("id");
-          switch (idDelElementoActivo) {
-            case "nav-paso1":
-              if (document.querySelector(".paso1").classList.contains("paso-completo")) {
-                nextTab.removeAttribute("disabled"); // Habilita el botón
-                nextTab.textContent = "SIGUIENTE PASO"; // Cambia el texto del botón
-              }
-              break;
-
-            case "nav-paso2":
-              if (document.querySelector(".paso2").classList.contains("paso-completo")) {
-                nextTab.removeAttribute("disabled"); // Habilita el botón
-                nextTab.textContent = "SIGUIENTE PASO"; // Cambia el texto del botón
-              }
-              break;
-
-            case "nav-paso3":
-              if (document.querySelector(".paso3").classList.contains("paso-completo")) {
-                nextTab.removeAttribute("disabled"); // Habilita el botón
-                nextTab.textContent = "SIGUIENTE PASO"; // Cambia el texto del botón
-              }
-              break;
-            default:
-              nextTab.setAttribute("disabled", "true"); // Deshabilita el botón
-              nextTab.textContent = "FALTAN CAMPOS POR COMPLETAR"; // Cambia el texto del botón
-              break;
-          }
-
-          i = (i == (tabs.length - 1)) ? 0 : i + 1;
-          tabs[i].click();
-
-
-          switch ($('.nav-link[aria-selected="true"]').eq(1).attr("href")) {
-            case "#tecnicas":
-              i = 0;
-              break;
-            case "#diseno":
-              i = 1;
-              break;
-            case "#complementos":
-              i = 2;
-              break;
-            case "#imagen":
-              i = 3;
-              break;
-          }
-          subir();
-        }, false);
-
-        nextTabMovil.addEventListener("click", function() {
-          i = (i == (tabsMovil.length - 1)) ? 0 : i + 1;
-          tabsMovil[i].click();
-          subir();
-        }, false);
-
-        ////////////////////iconos tabs//////////////////////
-        $('.primerBoton').on('click', function() {
-          i = 0;
-          $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica3.png");
-          $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno6.png");
-          $('#imgcomplementos')[0].setAttribute("src", "iconos/Diseno6.png");
-          $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto6.png");
-
-          $('#v-pills-next-tab').show();
-          $('#encargarDiseno').hide();
-          subir();
-
-          if (document.querySelector(".paso1").classList.contains("paso-completo")) {
-            nextTab.removeAttribute("disabled"); // Habilita el botón
-            nextTab.textContent = "SIGUIENTE PASO"; // Cambia el texto del botón
-          } else {
-            nextTab.setAttribute("disabled", "true"); // Deshabilita el botón
-            nextTab.textContent = "FALTAN CAMPOS POR COMPLETAR"; // Cambia el texto del botón
-          }
-        });
-        $('.segundoBoton').on('click', function() {
-          i = 1;
-          $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica6.png");
-          $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno3.png");
-          $('#imgcomplementos')[0].setAttribute("src", "iconos/Diseno6.png");
-          $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto6.png");
-
-          $('#v-pills-next-tab').show();
-          $('#encargarDiseno').hide();
-          subir();
-
-          if (document.querySelector(".paso2").classList.contains("paso-completo")) {
-            nextTab.removeAttribute("disabled"); // Habilita el botón
-            nextTab.textContent = "SIGUIENTE PASO"; // Cambia el texto del botón
-          } else {
-            nextTab.setAttribute("disabled", "true"); // Deshabilita el botón
-            nextTab.textContent = "FALTAN CAMPOS POR COMPLETAR"; // Cambia el texto del botón
-          }
-        });
-        $('.tercerBoton').on('click', function() {
-          i = 2;
-          $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica6.png");
-          $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno6.png");
-          $('#imgcomplementos')[0].setAttribute("src", "iconos/Diseno3.png");
-          $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto6.png");
-
-          $('#v-pills-next-tab').show();
-          $('#encargarDiseno').hide();
-          subir();
-
-          if (document.querySelector(".paso3").classList.contains("paso-completo")) {
-            nextTab.removeAttribute("disabled"); // Habilita el botón
-            nextTab.textContent = "SIGUIENTE PASO"; // Cambia el texto del botón
-          } else {
-            nextTab.setAttribute("disabled", "true"); // Deshabilita el botón
-            nextTab.textContent = "FALTAN CAMPOS POR COMPLETAR"; // Cambia el texto del botón
-          }
-        });
-        $('.cuartoBoton').on('click', function() {
-          i = 3;
-          $('#imgtecnica')[0].setAttribute("src", "iconos/Tecnica6.png");
-          $('#imgdiseno')[0].setAttribute("src", "iconos/Diseno6.png");
-          $('#imgcomplementos')[0].setAttribute("src", "iconos/Diseno6.png");
-          $('#imgsubirfoto')[0].setAttribute("src", "iconos/Subir-foto3.png");
-
-          $('#v-pills-next-tab').hide();
-          $('#encargarDiseno').show();
-          subir();
-
-          if (document.querySelector(".paso4").classList.contains("paso-completo")) {
-            document.getElementById("encargarDiseno").removeAttribute("disabled"); // Habilita el botón
-            document.getElementById("encargarDiseno").textContent = "ENCARGAR DISEÑO"; // Cambia el texto del botón
-          } else {
-            document.getElementById("encargarDiseno").setAttribute("disabled", "true"); // Deshabilita el botón
-            document.getElementById("encargarDiseno").textContent = "FALTAN CAMPOS POR COMPLETAR"; // Cambia el texto del botón
-          }
-        });
-
-        // //movil
-        // // $('.primerBotonM').on('click', function() {
-        // //   i = 0;
-        // //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica3.png");
-        // //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno6.png");
-        // //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores6.png");
-        // //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto6.png");
-
-        // //   $('#v-pills-next-tabmv').show();
-        // //   $('#encargarDisenoMV').hide();
-        // // });
-        // // $('.segundoBotonM').on('click', function() {
-        // //   i = 1;
-        // //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica6.png");
-        // //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno3.png");
-        // //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores6.png");
-        // //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto6.png");
-
-        // //   $('#v-pills-next-tabmv').show();
-        // //   $('#encargarDisenoMV').hide();
-        // // });
-        // // $('.tercerBotonM').on('click', function() {
-        // //   i = 2;
-        // //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica6.png");
-        // //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno6.png");
-        // //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores3.png");
-        // //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto6.png");
-
-        // //   $('#v-pills-next-tabmv').show();
-        // //   $('#encargarDisenoMV').hide();
-        // // });
-        // // $('.cuartoBotonM').on('click', function() {
-        // //   i = 3;
-        // //   $('#imgtecnicam')[0].setAttribute("src", "iconos/Tecnica6.png");
-        // //   $('#imgdisenom')[0].setAttribute("src", "iconos/Diseno6.png");
-        // //   $('#imgcoloresm')[0].setAttribute("src", "iconos/Colores6.png");
-        // //   $('#imgsubirfotom')[0].setAttribute("src", "iconos/Subir-foto3.png");
-
-        // //   $('#v-pills-next-tabmv').hide();
-        // //   $('#encargarDisenoMV').show();
-        // // });
-
-        // $(document).on('click', '#btnPedidoNuevo', function() {
-        //   $('#btnPedidoNuevo').addClass("button--loading");
-        //   $('#btnPedidoNuevo').prop("disabled", true);
-        // });
-      }, false);
-
-      function submitDelForm(id) {
-        $('#ulLinkAddPedido').hide();
-        $('#pstIdPedido').val(id);
-
-        $('#formularioPersonalizar').submit();
-      }
-
-      function countChars(obj) {
-        document.getElementById("contador1").innerHTML = obj.value.length + ' / 45';
-      }
-
-      function countChars2(obj) {
-        document.getElementById("contador2").innerHTML = obj.value.length + ' / 45';
-      }
     </script>
 
     <script src="./assets/js/vendor/modernizr-3.5.0.min.js"></script>
     <script src="./assets/js/vendor/jquery-1.12.4.min.js"></script>
     <script src="./assets/js/popper.min.js"></script>
     <script src="./assets/js/bootstrap.min.js"></script>
+    <script src="dist/color-thief.umd.js"></script>
     <script src="./assets/js/jquery.slicknav.min.js"></script>
     <script src="./assets/js/jquery.scrollUp.min.js"></script>
     <script src="./assets/js/jquery.form.js"></script>
@@ -807,11 +610,11 @@ require_once('assets/_partials/idioma.php');
     <script src="./assets/js/jquery.ajaxchimp.min.js"></script>
     <script src="./assets/js/cookies.js"></script>
     <script src="./assets/js/encargar-diseno.js"></script>
+    <script src="./assets/js/manejo-tabs.js"></script>
     <script src="./assets/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pselect.js@4.0.1/dist/pselect.min.js"></script>
     <script>
       $(document).ready(function() {
-
         /*ESTE SCRIPT GESTIONA LOS INPUT TYPE RADIO DEL FORMULARIO*/
         //Bases
         $('input[name="base"]').change(function() {

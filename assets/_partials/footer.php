@@ -100,7 +100,8 @@
  <script type="text/javascript" src="https://mottie.github.io/tablesorter/js/jquery.tablesorter.widgets.js"></script>
  <script type="text/javascript" src="https://mottie.github.io/tablesorter/addons/pager/jquery.tablesorter.pager.js"></script>
  <script src="https://www.google.com/recaptcha/api.js?render=reCAPTCHA_site_key"></script>
- <script src="./assets/js/personalizar.js"></script>
+ <script src="./assets/js/table-sorter.js"></script>
+ <script src="./assets/js/historial-disenos.js"></script>
  </body>
  
  <div class="bigCookieContainer" style="display: block;">

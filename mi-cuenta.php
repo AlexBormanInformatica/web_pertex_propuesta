@@ -31,7 +31,7 @@ if (!$user->is_logged_in()) {
             <div class="single-slider  d-flex align-items-center">
                 <div class=" container">
                     <div class="row">
-                        <div class="col-xl-12">
+                        <div class="col-xl-12 banner-alex">
                             <div class=" p-tb-30 text-center">
                                 <h2><?= buscarTexto("WEB", "mi-cuenta", "cuenta_li-1", "", $_SESSION['idioma']); ?></h2>
                             </div>
@@ -43,15 +43,9 @@ if (!$user->is_logged_in()) {
 
         <div class="container">
             <div class="row">
-                <div class="col-lg-3 col-md-3 ">
-                    <div class="card m-b-50 mx-auto">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item p-l-30"> <img alt="<?= buscarTexto("WEB", "mi-cuenta", "alt-mi-cuenta", "", $_SESSION['idioma']); ?>" src="iconos/Mi_cuenta_2.png"><span class="m-l-10"><a class="text-black" href="<?= buscarTexto("WEB", "paginas", "cuenta", "", $_SESSION['idioma']); ?>"><?= buscarTexto("WEB", "mi-cuenta", "cuenta_li-1", "", $_SESSION['idioma']); ?></a></span></li>
-                            <li class="list-group-item p-l-30"><img alt="<?= buscarTexto("WEB", "mi-cuenta", "alt-historial", "", $_SESSION['idioma']); ?>" src="iconos/Historial_pedidos_2.png"><span class="m-l-10"><a class="text-black" href="<?= buscarTexto("WEB", "paginas", "historial-pedidos", "", $_SESSION['idioma']); ?>"><?= buscarTexto("WEB", "mi-cuenta", "cuenta_li-3", "", $_SESSION['idioma']); ?></a></span></li>
-                            <li class="list-group-item p-l-30"><img alt="<?= buscarTexto("WEB", "mi-cuenta", "alt-cerrar-sesion", "", $_SESSION['idioma']); ?>" src="iconos/Cerrar_sesion_2.png"><span class="m-l-10"><a class="text-black" href="logout.php"><?= buscarTexto("WEB", "mi-cuenta", "cuenta_li-5", "", $_SESSION['idioma']); ?></a></span></li>
-                        </ul>
-                    </div>
-                </div>
+                <?php
+                include("assets/_partials/menu-cuenta.php");
+                ?>
 
                 <div class="col-lg-6 col-md-6">
                     <div class="accordion" id="accordionExample">
@@ -141,9 +135,9 @@ if (!$user->is_logged_in()) {
                                                 <p class="help-block"><?= $error; ?></p><br>
                                             <?php } ?>
                                             <label><?= buscarTexto("WEB", "mi-cuenta", "cuenta_pass-nueva", "", $_SESSION['idioma']); ?></label><br />
-                                            <input type="password" class="single-input" name="password"/><br />
+                                            <input type="password" class="single-input" name="password" /><br />
                                             <label><?= buscarTexto("WEB", "mi-cuenta", "cuenta_pass-conf", "", $_SESSION['idioma']); ?></label><br />
-                                            <input type="password" class="single-input" name="usuario_clave_conf"/><br />
+                                            <input type="password" class="single-input" name="usuario_clave_conf" /><br />
                                             <input class="btn" type="submit" name="enviar" value="<?= buscarTexto("WEB", "generico", "btn-enviar", "", $_SESSION['idioma']); ?>" />
                                         </form>
                                     </div>

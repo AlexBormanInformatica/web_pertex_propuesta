@@ -32,9 +32,7 @@ if (!$user->is_logged_in()) {
         include("funciones/errores.php");
         $rep = false;
         ?>
-        <!-- slider Area Start-->
         <div class="slider-area m-b-20">
-            <!-- Mobile Menu -->
             <div class="single-slider  d-flex align-items-center">
                 <div class=" container text-center">
                     <div class="row ">

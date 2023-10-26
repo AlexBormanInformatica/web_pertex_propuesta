@@ -3,27 +3,25 @@ require_once('includes/config.php');
 require_once('funciones/functions.php');
 require_once('assets/_partials/idioma.php');
 
-$fecha = date("Y-m-d H:i:s", time());
+$fecha = date("d/m/Y H:i", time());
 // Obtengo el id del pedido y sus datos
-try {
-    $sql = "SELECT e.id_encargo, e.subtotal, e.nota, e.ancho_cm, e.alto_cm, 
-    e.cantidad, e.ancho_cm_base, e.alto_cm_base, e.cantidad_topes, p.nombre as producto, p.colores_limitados, f.formas, c.nombre as complemento,
-    id_color_complemento, id_color_metal, id_color_piel
-    FROM encargos e
-    INNER JOIN productos p ON p.idproductos = e.idproductos
-    LEFT JOIN formas f ON e.id_formas = f.id_formas
-    LEFT JOIN complementos c ON e.id_complemento = c.id_complemento
-    WHERE id_encargo = ?";
-    $query = $conn->query($sql);
-    $query->bindParam(1, $_POST['idencargo'], PDO::PARAM_STR);
-    $results = $query->fetchAll(PDO::FETCH_OBJ);
-} catch (Exception $e) {
-}
+
+$sql = "SELECT e.id_encargo, e.subtotal, e.nota, e.ancho_cm, e.alto_cm, 
+e.cantidad, e.ancho_cm_base, e.alto_cm_base, e.cantidad_topes, p.nombre as producto, p.colores_limitados, f.formas, c.nombre as complemento,
+id_color_complemento, id_color_metal, id_color_piel
+FROM encargos e
+INNER JOIN productos p ON p.idproductos = e.idproductos
+LEFT JOIN formas f ON e.id_formas = f.id_formas
+LEFT JOIN complementos c ON e.id_complemento = c.id_complemento
+WHERE id_encargo = ?";
+$query = $conn->prepare($sql);
+$query->bindParam(1, $_SESSION['id_ultimo_encargo'], PDO::PARAM_INT);
+$query->execute();
+$results = $query->fetchAll(PDO::FETCH_OBJ);
 
 $id = $producto = $comentarios = $ancho = $alto = $forma = $subtotal = $cantidad = $anchoBase = $altoBase = $cantidadTopes = $complemento = "";
 $id_color_complemento = $id_color_metal = $id_color_piel = null;
 $colores_limitados = 0;
-
 foreach ($results as $result) {
     $id = $result->id_encargo;
     $producto = $result->producto;
@@ -128,10 +126,9 @@ $pdf->AddPage();
 // Define el contenido del PDF
 $content = "";
 
+$content .= '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">';
+$content .= '<link rel="stylesheet" href="assets/css/bootstrap.min.css">';
 $content .= '<style>';
-$content .= 'body {';
-$content .= 'font-family: Arial, sans-serif;';
-$content .= '}';
 $content .= '.container {';
 $content .= 'width: 100%;';
 $content .= '}';
@@ -154,6 +151,7 @@ $content .= '}';
 $content .= '.styled-table td {';
 $content .= 'border: 1px solid #dee2e6;';
 $content .= 'border-spacing: 30px;';
+$content .= 'vertical-align: center;';
 $content .= '}';
 $content .= '.styled-table .table-heading {';
 $content .= 'font-weight: bold;';
@@ -167,20 +165,21 @@ $content .= 'margin: 0 auto;';
 $content .= '}';
 $content .= '.tabla-cabecera {';
 $content .= 'margin-bottom: 100px;';
-$content .= 'font-size: 8px;';
+$content .= 'font-size: 7px;';
 $content .= '}';
 $content .= '.tabla-cabecera td td {';
 $content .= 'border: 1px solid transparent;';
+$content .= 'vertical-align: center;';
 $content .= '}';
 $content .= '</style>';
 $content .= '<div class="container">';
 $content .= '<table class="tabla-cabecera">';
 $content .= '<tbody>';
 $content .= '<tr>';
-$content .= '<td><img src="assets/img/logo/logo.png" alt=""></td>';
+$content .= '<td><img width="100px" height="60px" src="assets/img/logo/logo.png" alt=""></td>';
 $content .= '<td>BORMAN INDUSTRIA TEXTIL, S.L.<br>C.I.F - B99117996<br>c/ Burtina, nº12 - Pol. Ind. Plaza<br>50197 - Zaragoza (España)</td>';
 $content .= '<td>Tel. (34) 976 125 159<br>ventas@personalizacionestextiles.com<br>www.personalizacionestextiles.com</td>';
-$content .= '<td style="vertical-align: middle; text-align: right;">24-10-2023 14:13</td>';
+$content .= '<td style="text-align: right;">' . $fecha . '</td>';
 $content .= '</tr>';
 $content .= '</tbody>';
 $content .= '</table>';
@@ -293,38 +292,35 @@ if ($cantidadTopes != "") {
     $content .= '</tr>';
 }
 
-$content .= '<tr>';
-$content .= '<td colspan="2" style="text-align: center;">Boceto</td>';
-$content .= '</tr>';
-$content .= '<tr>';
-$content .= '<td colspan="2">';
-
 $imagePath = "imagenes_bocetos/D$id.jpg";
-$defaultImagePath = "imagenes/no-image.jpg";
-// Verificar si la imagen existe
 if (file_exists($imagePath)) {
+    // Verificar si la imagen existe
+    $content .= '<tr>';
+    $content .= '<td colspan="2" style="text-align: center;">Boceto</td>';
+    $content .= '</tr>';
+    $content .= '<tr>';
+    $content .= '<td colspan="2">';
     // La imagen existe, muestra la imagen real
     $content .= '<img class="img-fluid" src="' . $imagePath . '" alt="">';
-} else {
-    // La imagen no existe, muestra la imagen predeterminada
-    $content .= '<img class="img-fluid" src="' . $defaultImagePath . '" alt="">';
+    // $content .= '<img class="img-fluid" src="imagenes_bocetos/D' . $id . '.jpg" alt="">';
+    $content .= '</td>';
+    $content .= '</tr>';
 }
-// $content .= '<img class="img-fluid" src="imagenes_bocetos/D' . $id . '.jpg" alt="">';
-$content .= '</td>';
-$content .= '</tr>';
 $content .= '</tbody>';
 $content .= '</table>';
 $content .= '</div>';
+$content .= '<script src="./assets/js/bootstrap.min.js"></script>';
 
+// echo $content;
 // Agrega el contenido al PDF
 $pdf->writeHTML($content, true, false, true, false, '');
 
 // Genera el PDF en memoria
 $pdfData = $pdf->Output('', 'S'); // 'S' indica que se generará en memoria
 
-// Envía el PDF al navegador
+// Envía el PDF al navegador para descargar
 header('Content-Type: application/pdf');
-header('Content-Disposition: inline; filename="encargo_PERTEX.pdf"');
+header('Content-Disposition: attachment; filename="encargo_PERTEX.pdf"');
 header('Cache-Control: private, max-age=0, must-revalidate');
 header('Pragma: public');
 echo $pdfData;

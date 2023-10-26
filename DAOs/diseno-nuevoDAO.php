@@ -1,5 +1,5 @@
 <?php
-require_once('includes/config.php');
+require_once('../includes/config.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //Variables para cada campo del formulario
@@ -111,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // INSERT EN LA TABLA ENCARGOS
     try {
         $sql = "INSERT INTO encargos (tipo, fecha_encargo, precio_moldes, subtotal, id_usuario, estado, nota, nombre_encargo, 
-        id_producto, ancho_cm, alto_cm, cantidad, id_forma, id_complemento, id_color_complemento, id_color_metal, id_color_piel, 
+        idproductos, ancho_cm, alto_cm, cantidad, id_formas, id_complemento, id_color_complemento, id_color_metal, id_color_piel, 
         ancho_cm_base, alto_cm_base, cantidad_topes, num_referencia, num_fabricacion, id_pedido_envio) 
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
@@ -143,6 +143,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         //Id del encargo agregado
         $id_encargo_nuevo = $conn->lastInsertId();
+        $_SESSION['id_ultimo_encargo'] = $id_encargo_nuevo;
 
         //Ahora guardo la imagen
         // Si hay algun archivo que subir
@@ -157,14 +158,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // movemos el archivo
                 if (@move_uploaded_file($origen, $destino)) {
                     // Renombrar el archivo con el id del encargo y una C de prefijo que nos indica que es del Cliente
-                    $oldname = "imagenes_bocetos/" . $_FILES["archivo"]["name"];
-                    $newname = "imagenes_bocetos/C" . $id_encargo_nuevo . "." . $ext;
+                    $oldname = "../imagenes_bocetos/" . $_FILES["archivo"]["name"];
+                    $newname = "../imagenes_bocetos/C" . $id_encargo_nuevo . "." . $ext;
                     rename($oldname, $newname);
                 }
             }
         }
+        header("location: ../gracias-por-tu-encargo");
     } catch (Exception $e) {
-        // header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
+       echo $e->getMessage();
     }
-    header("location: historial-pedidos");
 }

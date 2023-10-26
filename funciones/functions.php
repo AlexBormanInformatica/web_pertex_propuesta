@@ -5,7 +5,7 @@
  */
 function  llamadoInicial($idiomaselect)
 {
-    require "includes/config.php";
+    require "../includes/config.php";
     //  $_SESSION['idioma'] = $idiomaselect;
     try {
         global $conn;

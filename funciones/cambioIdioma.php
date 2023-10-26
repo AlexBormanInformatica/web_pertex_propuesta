@@ -1,6 +1,6 @@
 <?php
-require_once('includes/config.php');
-include("funciones/functions.php");
+require_once('../includes/config.php');
+include("functions.php");
 
 if (isset($_GET['idioma'])) {
     $_SESSION['resultadoTraduccionPertex'] = llamadoInicial($_SESSION['idioma']);
@@ -21,7 +21,7 @@ if (
     $_GET["name"] == "" ||
     !isset($_GET["name"])
 ) {
-    $pagina = ".";
+    $pagina = "../";
     $paginaTraducida = $pagina;
 } else {
     $pagina = $_GET['name'];

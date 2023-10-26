@@ -2900,7 +2900,6 @@ input:focus {
   outline: solid 2px #00953e;
 }
 
-
 /* Show the checkmark when checked */
 .cuadrado input:checked ~ .checkmark:after {
   display: block;
@@ -2936,7 +2935,6 @@ input:focus {
   list-style: none;
   justify-content: space-around;
 }
-
 
 .col-lg-color {
   -ms-flex: 0 0 15%;
@@ -4055,15 +4053,21 @@ input[type="number"] {
 }
 
 .imagen-buena {
-  background-color: #C7E1C6;
+  background-color: #c7e1c6;
   border-radius: 5px;
   margin: 5px;
   color: green;
 }
 
 .imagen-error {
-  background-color: #EAAFAF;
+  background-color: #eaafaf;
   border-radius: 5px;
   margin: 5px;
   color: #872727;
+}
+
+.banner-alex {
+  background-image: url('../../imagenes/banner-mis-disenos.png'); /* Ruta de tu imagen */
+  background-size: cover; /* Escala la imagen para cubrir todo el div */
+  background-repeat: no-repeat; /* Evita que la imagen se repita */
 }

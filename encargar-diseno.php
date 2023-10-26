@@ -88,7 +88,7 @@ require_once('assets/_partials/idioma.php');
 
       <div class="col-lg-7 este pad-mv" id="inicioScroll">
         <!--Formulario-->
-        <form id="formularioPersonalizar" action="DAOs/diseno-nuevoDAO.php?pag=<?= buscarTextoConReturn("WEB", "paginas", "historial-pedidos", "", $_SESSION['idioma']); ?>" method="POST" enctype="multipart/form-data">
+        <form id="formularioPersonalizar" action="DAOs/diseno-nuevoDAO.php" method="POST" enctype="multipart/form-data">
           <div class="tab-content p-0">
             <!--Paso 1: Tecnica------------------------------------------------>
             <div id="tecnicas" class="container tab-pane active "><br>

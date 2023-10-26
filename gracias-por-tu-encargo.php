@@ -79,7 +79,7 @@ require_once('assets/_partials/idioma.php');
                 <main>
                     <section class="mb-5">
                         <h2 class="text-center">¡Apreciamos tu confianza en nosotros!</h2>
-                        <p>Te agradecemos por tu encargo. Puedes ver el siguiente PDF con tu encargo, si deseas guardar o imprimir.
+                        <p>Te agradecemos por tu encargo. Puedes descargar el siguiente PDF con tu encargo.
                             Lo tendrás disponible siempre en el historial de encargos.</p>
                         <button id="generarPDF" class="btn">PDF del encargo</button>
                     </section>
@@ -106,8 +106,8 @@ require_once('assets/_partials/idioma.php');
                     <section class="mb-5">
                         <h2 class="text-center">Preguntas frecuentes</h2>
                         <ul>
-                            <li><a class="links" href="entrega-y-gastos-de-envio">¿Cuáles son los gastos de envío?</a></li>
-                            <li><a class="links" href="entrega-y-gastos-de-envio">¿Cuáles son los plazos de envío?</a></li>
+                            <li><a class="links" href="entrega-y-gastos-de-envio">¿Cuáles son los gastos y plazos de envío?</a></li>
+                            <li><a class="links" href="infografía">¿Qué sigue? ¿Cómo es el proceso?</a></li>
                         </ul>
                     </section>
                 </main>
@@ -118,20 +118,16 @@ require_once('assets/_partials/idioma.php');
     <script src="./assets/js/vendor/jquery-1.12.4.min.js"></script>
     <script src="./assets/js/popper.min.js"></script>
     <script src="./assets/js/bootstrap.min.js"></script>
-    <script src="dist/color-thief.umd.js"></script>
     <script src="./assets/js/jquery.slicknav.min.js"></script>
     <script src="./assets/js/jquery.scrollUp.min.js"></script>
     <script src="./assets/js/jquery.form.js"></script>
     <script src="./assets/js/jquery.validate.min.js"></script>
     <script src="./assets/js/jquery.ajaxchimp.min.js"></script>
     <script src="./assets/js/cookies.js"></script>
-    <script src="./assets/js/encargar-diseno.js"></script>
-    <script src="./assets/js/manejo-tabs.js"></script>
     <script src="./assets/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pselect.js@4.0.1/dist/pselect.min.js"></script>
     <script>
         document.getElementById("generarPDF").addEventListener("click", function() {
-            var id = 1;
 
             // Crea un formulario oculto
             var form = document.createElement("form");
@@ -143,7 +139,6 @@ require_once('assets/_partials/idioma.php');
             var input = document.createElement("input");
             input.type = "hidden";
             input.name = "id";
-            input.value = id;
 
             // Agrega el campo de entrada al formulario
             form.appendChild(input);

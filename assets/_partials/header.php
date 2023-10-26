@@ -1,6 +1,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
-<link rel="icon" type="image/png" sizes="16x16"  href="assets/favicons/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicons/favicon-16x16.png">
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="theme-color" content="#ffffff">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -25,11 +25,14 @@
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-SECVFXMNWB"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'G-SECVFXMNWB');
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'G-SECVFXMNWB');
 </script>
 </head>
 
@@ -61,6 +64,7 @@
 
                                 <div class="header-info-right">
                                     <ul class="text-white">
+
                                         <?php if ((isset($_SESSION['email'])) && ($_SESSION['email'] != "")) { ?>
                                             <li>
                                                 <a href="<?= buscarTexto("WEB", "paginas", "cuenta", "", $_SESSION['idioma']); ?>"><?= buscarTexto("WEB", "header", "header_top-4", "", $_SESSION['idioma']); ?></a>

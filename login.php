@@ -48,14 +48,9 @@ if (!$user->is_logged_in()) {
                     //Verifica el formulario
                     else if (isset($_POST['submit'])) {
                         $email = $_POST['email'];
-                        if (!isset($_POST['password'])) {
-                            $error[] = buscarTexto("WEB", "login", "log-err-ingresar", "", $_SESSION['idioma']);
-                        }
                         $password = $_POST['password'];
-                        if ($user->login($email, $password)) {
+                        if ($user->login($email, $password, $conn)) {
                             header('Location:' . buscarTextoConReturn("WEB", "paginas", "cuenta", "", $_SESSION['idioma']));
-                        } else {
-                            $error[] = buscarTexto("WEB", "login", "log-err-incorr", "", $_SESSION['idioma']);
                         }
                     } //end if submit
                     ?>
@@ -179,5 +174,5 @@ if (!$user->is_logged_in()) {
             });
         </script>
     <?php } else {
-    header("Location: 404");
+    header("Location: .");
 } ?>

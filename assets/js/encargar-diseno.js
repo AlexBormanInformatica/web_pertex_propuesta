@@ -9,6 +9,9 @@ const elementosFormas = document.getElementsByName('formas');
 const anchoProductoInput = document.getElementById('anchoProductoInput');
 const altoProducto = document.getElementById('altoProducto');
 const anchoProductoSelect = document.getElementById('anchoProductoSelect');
+const anchoBaseInput = document.getElementById('anchoBaseInput');
+const altoBaseInput = document.getElementById('altoBaseInput');
+const inputCantidadTopes = document.getElementById('cantidadTopes');
 //Valores
 var coloresSeleccionados = [];
 var colorMetalSeleccionado = [];
@@ -18,6 +21,8 @@ var maximoColores = 0;
 var anchoInt = 0;
 var altoInt = 0;
 var superficie = 0;
+var anchoBaseInt = 0;
+var altoBaseInt = 0;
 var superficieBase = 0;
 //Tabla resumen
 var paso1_rowspan = document.getElementById('paso1_rowspan');
@@ -77,7 +82,6 @@ var cantidadTopes = false;
 
     //Como de la cantidad depende el precio del producto (y bases, si desea el usuario), recalculo
     //los precios con la nueva cantidad
-    calcularPrecios();
     sumaSubtotal();
   });
 
@@ -342,6 +346,7 @@ var cantidadTopes = false;
           const rgb_G = color[0].rgb_G;
           const rgb_B = color[0].rgb_B;
           const nombre = color[0].nombre;
+          const id = color[0].id;
 
           // Crea un nuevo elemento div
           const colorDiv = document.createElement('div');
@@ -394,6 +399,7 @@ var cantidadTopes = false;
       //Relleno el resumen depende la base elegida
       switch (this.value) {
         case "1":
+          superficieBase = 0;
           medidasBase = true;
           colorBase = true;
           $('#divColoresBase').show();
@@ -408,7 +414,7 @@ var cantidadTopes = false;
           document.getElementById('resumenTipoBase').innerText = "Tela";
           paso3_rowspan.rowSpan = "7";
           pasoIncompleto(document.querySelector('.paso3'));
-          verificarBaseTela();
+          calcularSuperficieTela();
           break;
         case "2":
           superficieBase = superficie;
@@ -441,7 +447,7 @@ var cantidadTopes = false;
         method: "POST",
         url: "funciones/functions.php",
         data: {
-          precio: "", id_complementos: this.value, cantidad: inputCantidad.value, superficie: superficieBase
+          precio: "", id_complemento: this.value, cantidad: inputCantidad.value, superficie: superficieBase
         }
       }).done(function (response) {
         response = response.trim();
@@ -460,10 +466,58 @@ var cantidadTopes = false;
 
       verificarPaso3();
       //Calculo el precio si elige una base
-      // calcularPrecios();
       sumaSubtotal();
     });
   }
+
+  //Detecto cuando escriben en el ancho de la base y la verifico
+  anchoBaseInput.addEventListener('input', function () {
+    anchoBaseInt = parseInt(anchoBaseInput.value);
+
+    //El ancho de la base debe ser igual o mayor que le ancho del producto
+    if (anchoBaseInt >= anchoInt) {
+      anchoBaseInput.classList.remove('input-error');
+      $('#errorAnchoBase').hide();
+
+      //Si altoInt y anchoBaseInt > 0, calculo superficie y precio
+      if (altoBaseInt != "" && anchoBaseInt != "" && altoBaseInt > 0 && altoBaseInt > 0 && document.getElementById('resumenCantidad').innerText != "") {
+        calcularSuperficieTela();
+      } else {
+        limpiarBaseTelaMedidas();
+      }
+    } else {
+      limpiarBaseTelaMedidas();
+      //El ancho del input está fuera del mínimo y máximo de la técnica. Saco mensaje de error.
+      anchoBaseInput.classList.add('input-error');
+      $('#errorAnchoBase').text("El ancho de la base debe ser igual o mayor que el ancho del diseño.");
+      $('#errorAnchoBase').show();
+    }
+  });
+
+  //Detecto cuando escriben en el alto de la base y la verifico
+  altoBaseInput.addEventListener('input', function () {
+    altoBaseInt = parseInt(altoBaseInput.value);
+
+    //El alto de la base debe ser igual o mayor que le alto del producto
+    if (altoBaseInt >= altoInt) {
+      //El ancho del input está dentro del mínimo y máximo de la técnica.
+      altoBaseInput.classList.remove('input-error');
+      $('#errorAltoBase').hide();
+
+      //Si altoBaseInt y anchoBaseInt > 0, calculo superficie y precio
+      if (altoBaseInt != "" && anchoBaseInt != "" && altoBaseInt > 0 && altoBaseInt > 0 && document.getElementById('resumenCantidad').innerText != "") {
+        calcularSuperficieTela();
+      } else {
+        limpiarBaseTelaMedidas();
+      }
+    } else {
+      limpiarBaseTelaMedidas();
+      //El ancho del input está fuera del mínimo y máximo de la técnica. Saco mensaje de error.
+      altoBaseInput.classList.add('input-error');
+      $('#errorAltoBase').text("El alto de la base debe ser igual o mayor que el alto del diseño.");
+      $('#errorAltoBase').show();
+    }
+  });
 
   /*
   Detectar cambios en los colores a elegir para la base
@@ -510,6 +564,9 @@ var cantidadTopes = false;
           pasoIncompleto(document.querySelector('.paso3'));
           break;
         case "0":// No quiere topes
+          document.getElementById("resumenPPUComplemento").innerText = "";
+          document.getElementById("resumenPrecioComplemento").innerText = "";
+          document.getElementById("cantidadTopes").value = "";
           $('#divCantidadTopes').hide();
           $('#tdCantidadTopes').hide();
           $('#tdPrecioComplemento').hide();
@@ -519,6 +576,17 @@ var cantidadTopes = false;
       }
     });
   }
+
+  // Detecta cuando escriban en el <input> cantidadTopes
+  inputCantidadTopes.addEventListener('input', function () {
+    //Verifico la cantidad(si existe) según la técnica
+    //Verifico si los campos de la parte 1 están completos
+    verificarCantidadTopes();
+
+    //Como de la cantidad depende el precio del producto (y bases, si desea el usuario), recalculo
+    //los precios con la nueva cantidad
+    sumaSubtotal();
+  });
   // FIN PASO 3-----------------------------------------------------------------------------------------------//
 
   // PASO 4: imagen -----------------------------------------------------------------------------------------//
@@ -529,8 +597,8 @@ var cantidadTopes = false;
     $('#extension-incorrecta').hide();
     $('#imagen-correcta').hide();
     var error = false;
-    var fileName = archivoInput.files[0].name;
     var fileSize = archivoInput.files[0].size;
+    var fileName = archivoInput.files[0].name;
     var ext = fileName.split('.').pop();
 
     /* filesize es dado en Byte
@@ -539,7 +607,6 @@ var cantidadTopes = false;
 
     if (fileSize > 1e+8) {//Tamaño del archivo
       $('#tamano-incorrecto').show();
-      archivoInput.files[0].name = '';
       archivoInput.value = '';
       error = true;
     } else {
@@ -558,7 +625,6 @@ var cantidadTopes = false;
         case 'bmp': break;
         default:
           $('#extension-incorrecta').show();
-          archivoInput.files[0].name = '';
           archivoInput.value = '';
           error = true;
       }
@@ -847,6 +913,8 @@ function cargarCamposSegunTecnica() {
   // --------------------Para el PASO 2 diseño---------------------------
   medidas = false;
   forma = false;
+  anchoBaseInt = 0;
+  altoBaseInt = 0;
   //Oculto todos los campos primero
   $('#anchoPorAlto').hide(); //Div de medidas
   $('#divInputAncho').hide(); // Div de ancho (input)
@@ -928,6 +996,7 @@ function cargarCamposSegunTecnica() {
   colorBaseSeleccionado.length = 0; // Vacio la lista de colores 
   document.getElementById('resumenPPUComplemento').innerText = "";
   document.getElementById('resumenPrecioComplemento').innerText = "";
+  document.getElementById("cantidadTopes").value = "";
   document.getElementById('resumenMoldeBase').innerText = "";
   document.getElementById('resumenColorBase').innerText = colorBaseSeleccionado; // Asigno la lista vacia
   medidasBase = false;
@@ -981,7 +1050,7 @@ function cargarCamposSegunTecnica() {
           $('#selectBase').show();
 
           //Muestro el o los div correspondientes segun la tecnica elgida
-          switch (response[i]["id_complementos"].toString()) {
+          switch (response[i]["id_complemento"].toString()) {
             case '1':
               $('#divTela').show();
               break;
@@ -994,7 +1063,6 @@ function cargarCamposSegunTecnica() {
           }
           $('#divSinBase').show();
         }
-
       } else {
         $('#sincomplemento').show();
       }
@@ -1006,6 +1074,9 @@ function cargarCamposSegunTecnica() {
   $('#tamano-incorrecto').hide();
   $('#extension-incorrecta').hide();
   $('#imagen-correcta').hide();
+  document.getElementById("resumenImagen").innerText = "";
+  document.getElementById("archivo").value = '';
+  pasoIncompleto(document.querySelector('.paso4'));
 }
 
 /**
@@ -1033,6 +1104,33 @@ function verificarCantidad() {
       if (altoInt != "" && anchoInt != "" && altoInt > 0 && altoInt > 0) {
         calcularSuperficieProducto();
       }
+
+      if (medidas == false && forma == false) {
+        $('#divMensajeDiseno').show();
+
+        // Busco la superficie y la cantidad en la tabla de precios y si es correcto, lo reflejo a la tabla de resumen-presupuesto
+        $.ajax({
+          method: "POST",
+          url: "funciones/functions.php",
+          data: {
+            precio: "", idproducto: $('select[name="tecnica"] :selected').val(), cantidad: inputCantidad.value, superficie: null
+          }
+        }).done(function (response) {
+          console.log("response=" + response);
+          response = response.trim();
+
+          //Relleno los campos
+          if (response != "") {
+            document.getElementById('resumenPPU').innerText = response.replace(".", ",");
+            document.getElementById('resumenPrecioProducto').innerText = (parseFloat(response) * parseInt(inputCantidad.value)).toFixed(2).replace(".", ",") + " €";
+          }
+          const elemento = document.querySelector('.paso2');
+          pasoCompleto(elemento);
+          sumaSubtotal();
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+          console.error("Error en la solicitud AJAX: " + errorThrown);
+        });
+      }
     } else {
       inputCantidad.classList.add('input-error');
       //Limpio el campo de la tabla resumen
@@ -1045,6 +1143,7 @@ function verificarCantidad() {
     //Por último verifico todo el paso 1
     verificarPaso1();
   });
+
 }
 
 /**
@@ -1203,8 +1302,10 @@ function sumaSubtotal() {
   var precioComplemento = parseFloat(document.getElementById('resumenPrecioComplemento').innerText.replace('€', '').replace(',', '.').trim());
 
   var suma = 0;
+  var sumaMoldes = 0;
   if (!isNaN(moldeProducto)) {
     suma += moldeProducto;
+    sumaMoldes += moldeProducto;
   }
 
   if (!isNaN(precioProducto)) {
@@ -1213,6 +1314,7 @@ function sumaSubtotal() {
 
   if (!isNaN(moldeBase)) {
     suma += moldeBase;
+    sumaMoldes += moldeBase;
   }
 
   if (!isNaN(precioComplemento)) {
@@ -1221,11 +1323,39 @@ function sumaSubtotal() {
 
   // Relleno el campo del subtotal de la tabla
   document.getElementById('resumenSubtotal').innerText = suma.toFixed(2).toString().replace('.', ',') + " €";
+
+  //Relleno los campos ocultos
+  document.getElementById('precioMoldes').innerText = suma.toFixed(2).toString().replace('.', ',') + " €";
+  document.getElementById('precioSubtotal').innerText = suma.toFixed(2).toString().replace('.', ',') + " €";
 }
 
-function verificarBaseTela() {
-  //En el caso de base de tela, se verifica primero las medidas:
-  //El mínimo 
+function calcularSuperficieTela() {
+  superficieBase = ((anchoBaseInt / 10) * (altoBaseInt / 10)).toFixed(2); // Lo divido entre 10 para pasarlo a centimetros
+
+  // Busco la superficieBase y la cantidad en la tabla de precios y si es correcto, lo reflejo a la tabla de resumen-presupuesto
+  $.ajax({
+    method: "POST",
+    url: "funciones/functions.php",
+    data: {
+      precio: "", idproducto: 0, id_complemento: 1, cantidad: inputCantidad.value, superficie: superficieBase
+    }
+  }).done(function (response) {
+    response = response.trim();
+
+    //Relleno los campos
+    if (response != "") {
+      document.getElementById('resumenAnchoBase').innerText = (anchoBaseInt / 10).toString().replace(".", ",") + "cm";
+      document.getElementById('resumenAltoBase').innerText = (altoBaseInt / 10).toString().replace(".", ",") + "cm";
+      document.getElementById('resumenSuperficieBase').innerHTML = superficieBase.toString().replace(".", ",") + "cm<sup>2</sup>";
+      document.getElementById('resumenPPUComplemento').innerText = response.replace(".", ",");
+      document.getElementById('resumenPrecioComplemento').innerText = (parseFloat(response) * parseInt(inputCantidad.value)).toFixed(2).replace(".", ",") + " €";
+    } else {
+      limpiarPaso2Medidas();
+    }
+
+    //Por último verifico todo el paso 2
+    verificarPaso2();
+  });
 }
 
 
@@ -1338,6 +1468,15 @@ function limpiarPaso2Medidas() {
   verificarPaso2();
 }
 
+function limpiarBaseTelaMedidas() {
+  document.getElementById('resumenAnchoBase').innerText = "";
+  document.getElementById('resumenAltoBase').innerText = "";
+  document.getElementById('resumenSuperficieBase').innerHTML = "";
+  document.getElementById('resumenPPUComplemento').innerText = "";
+  document.getElementById('resumenPrecioComplemento').innerText = "";
+  verificarPaso3();
+}
+
 function calcularSuperficieProducto() {
   superficie = ((anchoInt / 10) * (altoInt / 10)).toFixed(2); // Lo divido entre 10 para pasarlo a centimetros
 
@@ -1364,5 +1503,29 @@ function calcularSuperficieProducto() {
 
     //Por último verifico todo el paso 2
     verificarPaso2();
+  });
+}
+
+function verificarCantidadTopes() {
+  document.getElementById('resumenCantidadTopes').innerText = inputCantidadTopes.value;
+  // Realiza una solicitud AJAX al servidor para enviar el ID del producto y obtener la cantidad minima del producto
+  $.ajax({
+    method: "POST",
+    url: "funciones/functions.php",
+    data: {
+      precioTopes: ""
+    }
+  }).done(function (response) {
+    //Verifico que la cantidad introducida sea mayor que el mínimo de la técncia
+    response = response.trim();
+
+    //Relleno los campos
+    if (response != "") {
+      document.getElementById('resumenPPUComplemento').innerText = response.replace(".", ",");
+      document.getElementById('resumenPrecioComplemento').innerText = (parseFloat(response) * parseInt(inputCantidadTopes.value)).toFixed(2).replace(".", ",") + " €";
+    }
+    verificarPaso3();
+    //Calculo el precio si elige una base
+    sumaSubtotal();
   });
 }

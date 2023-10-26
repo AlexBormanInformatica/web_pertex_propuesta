@@ -112,7 +112,7 @@
                                             </li>
 
                                             <li><a href="https://www.clustertextilzgz.com/CatalogoPersonalizacionesTextiles/index.html" target="_blank"><?= buscarTexto("WEB", "nav", "nav_catalogo", "", $_SESSION['idioma']); ?></a></li>
-                                            <li><a href="<?= buscarTexto("WEB", "paginas", "ptp", "", $_SESSION['idioma']); ?>"><?= buscarTexto("WEB", "general", "btn-personalizar", "", $_SESSION['idioma']); ?></a></li>
+                                            <li><a href="encargar-diseno"><?= buscarTexto("WEB", "general", "btn-personalizar", "", $_SESSION['idioma']); ?></a></li>
                                             <?php if ($_SESSION['idioma'] == "ES") { ?>
                                                 <li><a class="pb-2" href='cambioIdioma.php?idioma=ES&name=<?php echo basename($_SERVER['REQUEST_URI']) ?>'><img src="imagenes/es.png" alt="<?= buscarTexto("WEB", "nav", "nav_altEspana", "", $_SESSION['idioma']); ?>" class="mr-3"></a>
                                                     <ul class="flag">

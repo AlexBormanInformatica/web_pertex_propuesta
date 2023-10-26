@@ -28,12 +28,12 @@ RewriteRule ^obrigado-por-comprar?(.*)$ gracias-por-comprar.php?$1 [L,QSA]
 ##Redirecciones
 ErrorDocument 404 /404.php
 
-redirectMatch 301 /personaliza-tu-producto/index /Proyecto-personalizar/index.php
+redirectMatch 301 /encargar-diseno/index /Proyecto-personalizar/index.php
 redirectMatch 301 /personnalisez-votre-produit/index /Proyecto-personalizar/index.php
 redirectMatch 301 /personalizza-il-tuo-prodotto/index /Proyecto-personalizar/index.php
 redirectMatch 301 /personalize-seu-produto/index /Proyecto-personalizar/index.php
 
-redirectMatch 301 /personaliza-tu-producto/login /login.php
+redirectMatch 301 /encargar-diseno/login /login.php
 redirectMatch 301 /personnalisez-votre-produit/login /login.php
 redirectMatch 301 /personalizza-il-tuo-prodotto/login /login.php
 redirectMatch 301 /personalize-seu-produto/login /login.php
@@ -60,7 +60,7 @@ RewriteRule ^modules$ /modulos.php?idioma=FR [L,QSA]
 RewriteRule ^echantillonneur$ /muestrario.php?idioma=FR [L,QSA]
 RewriteRule ^nous$ /nosotros.php?idioma=FR [L,QSA]
 RewriteRule ^commande-interne$ /pedido-interno.php?idioma=FR [L,QSA]
-RewriteRule ^personnalisez-votre-produit$ /personaliza-tu-producto.php?idioma=FR [L,QSA]
+RewriteRule ^personnalisez-votre-produit$ /encargar-diseno.php?idioma=FR [L,QSA]
 RewriteRule ^politique-cookies$ /politica-cookies.php?idioma=FR [L,QSA]
 RewriteRule ^politique-confidentialite$ /politica-privacidad.php?idioma=FR [L,QSA]
 RewriteRule ^bracelets$ /pulseras.php?idioma=FR [L,QSA]
@@ -85,7 +85,7 @@ RewriteRule ^moduli$ /modulos.php?idioma=IT [L,QSA]
 RewriteRule ^campionario$ /muestrario.php?idioma=IT [L,QSA]
 RewriteRule ^noi$ /nosotros.php?idioma=IT [L,QSA]
 RewriteRule ^ordine-interno$ /pedido-interno.php?idioma=IT [L,QSA]
-RewriteRule ^personalizza-il-tuo-prodotto$ /personaliza-tu-producto.php?idioma=IT [L,QSA]
+RewriteRule ^personalizza-il-tuo-prodotto$ /encargar-diseno.php?idioma=IT [L,QSA]
 RewriteRule ^politica-cookie$ /politica-cookies.php?idioma=IT [L,QSA]
 RewriteRule ^politica-riservatezza$ /politica-privacidad.php?idioma=IT [L,QSA]
 RewriteRule ^bracciali$ /pulseras.php?idioma=IT [L,QSA]
@@ -111,7 +111,7 @@ RewriteRule ^modulos$ /modulos.php?idioma=PT [L,QSA]
 RewriteRule ^amostrador$ /muestrario.php?idioma=PT [L,QSA]
 RewriteRule ^nos$ /nosotros.php?idioma=PT [L,QSA]
 RewriteRule ^ordem-interna$ /pedido-interno.php?idioma=PT [L,QSA]
-RewriteRule ^personalize-seu-produto$ /personaliza-tu-producto.php?idioma=PT [L,QSA]
+RewriteRule ^personalize-seu-produto$ /encargar-diseno.php?idioma=PT [L,QSA]
 RewriteRule ^politica-cookies$ /politica-cookies.php?idioma=PT [L,QSA]
 RewriteRule ^politica-privacidade$ /politica-privacidad.php?idioma=PT [L,QSA]
 RewriteRule ^pulseiras$ /pulseras.php?idioma=PT [L,QSA]

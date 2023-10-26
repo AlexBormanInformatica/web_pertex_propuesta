@@ -33,7 +33,7 @@ class User extends Password
                 $_SESSION['email'] = $row['email'];
                 $_SESSION['loggedin'] = true;
 
-                require_once('../includes/config.php');
+                require_once('includes/config.php');
                
                 $sql = "SELECT id FROM usuarios WHERE username='" . $_SESSION['email'] . "'";
                 $query = $conn->prepare($sql);

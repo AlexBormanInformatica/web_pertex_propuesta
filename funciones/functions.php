@@ -5,7 +5,6 @@
  */
 function  llamadoInicial($idiomaselect)
 {
-    require "../includes/config.php";
     //  $_SESSION['idioma'] = $idiomaselect;
     try {
         global $conn;
@@ -274,7 +273,7 @@ if (isset($_POST['precio'])) {
 }
 
 if (isset($_POST['precioTopes'])) {
-    require "../includes/config.php"; 
+    require "../includes/config.php";
 
     try {
         $sql = "SELECT `fijo` FROM `precios`  WHERE `id_complementos`= 4";
@@ -553,4 +552,206 @@ if (isset($_POST['buscarMoldeBase'])) {
     $query->bindParam(1, $id, PDO::PARAM_INT);
     $query->execute();
     echo $query->fetchColumn();
+}
+
+if (isset($_POST['detallesEncargoSeleccionado'])) {
+    require "../includes/config.php";
+    $id = $_POST['numDiseno'];
+
+    $sql = "SELECT e.nota, e.ancho_cm, e.alto_cm, e.ancho_cm_base, e.alto_cm_base, e.cantidad_topes, 
+    p.nombre as producto, p.colores_limitados, f.formas, c.nombre as complemento, nota
+    id_color_complemento, id_color_metal, id_color_piel
+    FROM encargos e
+    INNER JOIN productos p ON p.idproductos = e.idproductos
+    LEFT JOIN formas f ON e.id_formas = f.id_formas
+    LEFT JOIN complementos c ON e.id_complemento = c.id_complemento
+    WHERE id_encargo = ?";
+    $query = $conn->prepare($sql);
+    $query->bindParam(1, $id, PDO::PARAM_INT);
+    $query->execute();
+    $results = $query->fetchAll(PDO::FETCH_OBJ);
+
+    $producto = $comentarios = $ancho = $alto = $forma = $subtotal = $cantidad = $anchoBase = $altoBase = $cantidadTopes = $complemento = $nota = "";
+    $id_color_complemento = $id_color_metal = $id_color_piel = null;
+    $colores_limitados = 0;
+    foreach ($results as $result) {
+        $comentarios = $result->nota;
+        $ancho = $result->ancho_cm;
+        $alto = $result->alto_cm;
+        $forma = $result->formas;
+        $anchoBase = $result->ancho_cm_base;
+        $altoBase = $result->alto_cm_base;
+        $cantidadTopes = $result->cantidad_topes;
+        $complemento = $result->complemento;
+        $nota = $result->nota;
+        $id_color_complemento = $result->id_color_complemento;
+        $id_color_metal = $result->id_color_metal;
+        $id_color_piel = $result->id_color_piel;
+        $colores_limitados = $result->colores_limitados;
+    }
+
+    //Colores
+    $lista_colores = [];
+    if ($colores_limitados = 1) {
+        //obtengo los id color
+        $sql = "SELECT idColor FROM colores_has_encargos WHERE idencargo=?";
+        $query = $conn->prepare($sql);
+        $query->bindParam(1, $id, PDO::PARAM_INT);
+        $query->execute();
+        $results_colores = $query->fetchAll(PDO::FETCH_OBJ);
+
+        foreach ($results_colores as $idcolor) {
+            try {
+                //busco los colores 
+                $sql = "SELECT nombre
+                FROM colores WHERE idColor=?";
+                $query = $conn_prgborman->prepare($sql);
+                $query->bindParam(1, $idcolor->idColor, PDO::PARAM_INT);
+                $query->execute();
+                // Agregar los resultados al array
+                $lista_colores[] = $query->fetchAll(PDO::FETCH_OBJ);
+            } catch (Exception $e) {
+            }
+        }
+    }
+
+    $color_complemento = "";
+    $color_metal = "";
+    $color_piel = "";
+
+    //Color complemento
+    if ($id_color_complemento != null) {
+        try {
+            //busco los colores 
+            $sql = "SELECT nombre
+                FROM colores WHERE idColor=?";
+            $query = $conn_prgborman->prepare($sql);
+            $query->bindParam(1, $id_color_complemento, PDO::PARAM_INT);
+            $query->execute();
+            $color_complemento = $query->fetchColumn();
+        } catch (Exception $e) {
+        }
+    }
+
+    //Color piel
+    if ($id_color_piel != null) {
+        try {
+            //busco los colores 
+            $sql = "SELECT nombre
+                FROM colores WHERE idColor=?";
+            $query = $conn_prgborman->prepare($sql);
+            $query->bindParam(1, $id_color_piel, PDO::PARAM_INT);
+            $query->execute();
+            $color_piel = $query->fetchColumn();
+        } catch (Exception $e) {
+        }
+    }
+
+    //Color metal
+    if ($id_color_metal != null) {
+        //obtengo los id color
+        try {
+            //busco los colores 
+            $sql = "SELECT nombre
+                FROM colores WHERE idColor=?";
+            $query = $conn_prgborman->prepare($sql);
+            $query->bindParam(1, $id_color_metal, PDO::PARAM_INT);
+            $query->execute();
+            $color_metal = $query->fetchColumn();
+        } catch (Exception $e) {
+        }
+    }
+
+    $stringDetalles = "";
+    $stringDetalles .= '<h4 class="text-center m-0">Detalles</h4>';
+    //Colores (limitados)
+    if (count($lista_colores) > 0) {
+        $stringDetalles .= '<p class="m-0"><b>Colores elegidos: </b>';
+        foreach ($lista_colores as $color) {
+            $stringDetalles .= $color[0]->nombre . ', ';
+        }
+        $stringDetalles = rtrim($stringDetalles, ', '); // Elimina la última coma y el espacio en blanco
+        $stringDetalles .= '</p>';
+    }
+
+    if ($color_piel != "") {
+        //Color piel
+        $stringDetalles .= '<p class="m-0"><b>Color piel: </b>';
+        $stringDetalles .= $color_piel . '</p>';
+    }
+
+    if ($color_metal != "") {
+        //Color metal
+        $stringDetalles .= '<p class="m-0"><b>Color metal: </b>';
+        $stringDetalles .= $color_metal . '</p>';
+    }
+
+    if ($ancho != "") {
+        //Ancho
+        $stringDetalles .= '<p class="m-0"><b>Ancho: </b>';
+        $stringDetalles .= number_format($ancho, 2, ',', '') . 'cm</p>';
+    }
+
+    if ($alto != "") {
+        //Alto
+        $stringDetalles .= '<p class="m-0"><b>Alto: </b>';
+        $stringDetalles .= number_format($alto, 2, ',', '') . 'cm</p>';
+    }
+
+    if ($forma != "") {
+        //Forma
+        $stringDetalles .= '<p class="m-0"><b>Forma: </b>';
+        $stringDetalles .= $forma . '</p>';
+    }
+
+    if ($complemento != "") {
+        //Complemento
+        $stringDetalles .= '<p class="m-0"><b>Complemento: </b>';
+        $stringDetalles .= $complemento . '</p>';
+    }
+
+    if ($anchoBase != "") {
+        //Ancho cm base de tela
+        $stringDetalles .= '<tr>';
+        $stringDetalles .= '<p class="m-0"><b>Ancho base de tela: </b>';
+        $stringDetalles .= number_format($anchoBase, 2, ',', '') . 'cm</p>';
+        $stringDetalles .= '</tr>';
+    }
+
+    if ($altoBase != "") {
+        //Alto cm base de tela
+        $stringDetalles .= '<p class="m-0"><b>Alto base de tela: </b>';
+        $stringDetalles .= number_format($altoBase, 2, ',', '') . 'cm</p>';
+    }
+
+    if ($color_complemento != "") {
+        //Color complemento
+        $stringDetalles .= '<p class="m-0"><b>Color base: </b>';
+        $stringDetalles .= $color_complemento . '</p>';
+    }
+
+    if ($cantidadTopes != "") {
+        //Cantidad de topes
+        $stringDetalles .= '<p class="m-0"><b>Cantidad de topes: </b>';
+        $stringDetalles .= $cantidadTopes . '</p>';
+    }
+
+    if ($nota != "") {
+        //Comentarios
+        $stringDetalles .= '<p class="m-0"><b>Instrucciones detalladas o comentarios adicionales: </b>';
+        $stringDetalles .= $nota . '</p>';
+    }
+
+    $imagePath = "imagenes_bocetos/D$id.jpg";
+    if (file_exists($imagePath)) {
+        // Verificar si la imagen existe
+        $stringDetalles .= '<p class="m-0 text-center"><b>Boceto</b></p>';
+        $stringDetalles .= '<p class="m-0">';
+        // La imagen existe, muestra la imagen real
+        $stringDetalles .= '<img class="img-fluid" src="' . $imagePath . '" alt="">';
+        // $stringDetalles .= '<img class="img-fluid" src="imagenes_bocetos/D' . $id . '.jpg" alt="">';
+        $stringDetalles .= '</p>';
+    }
+
+    echo $stringDetalles;
 }

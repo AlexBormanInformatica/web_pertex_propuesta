@@ -15,7 +15,7 @@ $sql = "SELECT id_encargo, fecha_encargo, subtotal, estado, nombre, cantidad
 FROM encargos 
 INNER JOIN productos p ON p.idproductos = encargos.idproductos
 INNER JOIN usuarios ON usuarios.id = encargos.id_usuario 
-WHERE estado <> 'Anulado' AND usuarios.correo='" . $_SESSION['email'] . "' ORDER BY id_encargo DESC";
+WHERE estado <> 'Anulado' AND id_usuario=" . $_SESSION['ID'] . " ORDER BY fecha_encargo DESC";
 $query = $conn->prepare($sql);
 $query->execute();
 $results = $query->fetchAll(PDO::FETCH_OBJ);
@@ -61,17 +61,34 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
 
                 <div class="col-lg-9 col-md-9">
                     <!--BUSCADOR DE DISEÑOS-->
-                    <div class="text-center">
+                    <div class="search-container">
                         <form>
-                            <!-- <label class="fs-20"><?= buscarTexto("WEB", "historial-pedidos", "hp_busca2", "", $_SESSION['idioma']); ?></label> -->
-                            <input class="pl-20" type="text" id="q" placeholder="<?= buscarTexto("WEB", "historial-pedidos", "hp_busca", "", $_SESSION['idioma']); ?>">
+                            <input class="pl-20" type="text" id="busquedaEncargo" placeholder="Buscar número nº diseño...">
                         </form>
+                        <!--FILTRO POR PRODUCTO-->
+                        <select id="filtroProducto">
+                            <option value="">Todos los productos</option>
+                        </select>
                     </div>
 
                     <!--TABLA DE DISEÑOS-->
                     <div class="table-responsive-sm table-responsive-md table-responsive-lg">
-                        <p style="font-size:small;margin:auto;">Selecciona un diseño para ver los detalles</p> <!--Mensaje sobre la tabla-->
-                        <table class="tablesorter m-b-100" id="tablaEncargos">
+                        <!-- Controles de paginación -->
+                        <div id="paginationControls">
+                            <button id="prevPage"><i style="font-size: 14px;" class="ti-angle-left" aria-hidden="true"></i> </button>
+                            <span id="currentPage"></span>
+                            <button id="nextPage"> <i style="font-size: 14px;" class="ti-angle-right" aria-hidden="true"></i></button>
+                        </div>
+
+                        <p style="font-size:small;margin:auto;"><a href="infografia" target="_blank" class="pregunta-formulario">
+                                <span>➔ Información sobre el proceso y los estados</span>
+                            </a>
+                        </p>
+                        <p style="font-size:small;margin:auto;"><a href="#" target="_blank" class="pregunta-formulario">
+                                <span>➔ Información sobre las acciones</span>
+                            </a>
+                        </p>
+                        <table class="tablesorter-blackice" id="tablaEncargos">
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">Nº diseño</th>
@@ -80,32 +97,40 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
                                     <th scope="col">Subtotal</th>
                                     <th scope="col">Producto</th>
                                     <th scope="col">Cantidad</th>
+                                    <th scope="col">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody id="the_table_body">
                                 <?php foreach ($results as $result) { ?>
                                     <tr class="fila_hc">
-                                        <!--[0] Número de diseño-->
                                         <td><?= $result->id_encargo ?></td>
-
-                                        <!--[2] Estado-->
                                         <td><?= $result->estado ?></td>
-
-                                        <!--[3] Fecha-->
                                         <td><?= date('d/m/Y H:i', strtotime($result->fecha_encargo)) ?></td>
-
-                                        <!--[4] Subtotal-->
-                                        <td><?= $result->subtotal ?></td>
-
-                                        <!--[5] Producto-->
+                                        <td>€<?= number_format($result->subtotal, 2, ',', '') ?></td>
                                         <td><?= $result->nombre ?></td>
-
-                                        <!--[6] Cantidad-->
                                         <td><?= $result->cantidad ?></td>
+                                        <td>
+                                            <button class="mr-10 anular-encargo zoom" data-encargo-id="<?= $result->id_encargo ?>"><i style="color:black" class="ti-na" aria-hidden="true"></i></button>
+                                            <button class="mr-10 modificar-boceto-encargo zoom" data-encargo-id="<?= $result->id_encargo ?>"><i style="color:black" class="ti-ruler-pencil" aria-hidden="true"></i></button>
+                                            <button class="aceptar-boceto-encargo zoom" data-encargo-id="<?= $result->id_encargo ?>"><i style="color:black" class="ti-check" aria-hidden="true"></i></button>
+                                        </td>
+                                    </tr>
+                                    <!-- Fila de detalles oculta -->
+                                    <tr class="no-hover" style="display: none;vertical-align:top">
+                                        <td id="celdaDetalles<?= $result->id_encargo ?>" colspan="3">
+                                        </td>
+                                        <td id="" style="background-color:#F0F0F0" colspan="4">
+                                            <h4 class="text-center m-0">Mensajes del equipo PERTEX:</h4>
+                                            <p style="font-size:small"><b>27/10/2023</b> Se agrega 1cm más porque necesita un borde. No cambia el presupuesto.</p>
+                                            <p style="font-size:small"><b>27/10/2023</b> Se agrega 1cm más porque necesita un borde. No cambia el presupuesto.</p>
+                                            <p style="font-size:small"><b>27/10/2023</b> Se agrega 1cm más porque necesita un borde. No cambia el presupuesto.</p>
+                                            <p style="font-size:small"><b>27/10/2023</b> Se agrega 1cm más porque necesita un borde. No cambia el presupuesto.</p>
+                                        </td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
                         </table>
+                        <p style="font-size:small;margin:auto;">*Selecciona un diseño para ver los detalles</p> <!--Mensaje sobre la tabla-->
                     </div>
                 </div>
             </div>

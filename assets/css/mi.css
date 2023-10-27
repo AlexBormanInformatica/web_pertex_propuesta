@@ -3834,15 +3834,54 @@ input[type="number"] {
   cursor: pointer;
 }
 
-#q {
-  width: 500px;
+/* Estilos para el contenedor */
+.search-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+/* Estilos para el campo de búsqueda */
+#busquedaEncargo {
+  width: 300px;
   border-radius: 20px;
   height: 50px;
   border: 1px solid #aaa;
+  margin-right: 10px; 
+}
+
+/* Estilos para el select */
+#filtroProducto {
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 50px;
+  border-radius: 20px;
+  border: 1px solid #aaa;
+}
+
+/* Estilos para los botones de paginación */
+#prevPage,
+#nextPage {
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 40px;
+  border-radius: 20px;
+  border: 1px solid #aaa;
+  color: black; 
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+#prevPage:hover,
+#nextPage:hover {
+  background-color: #0075be; 
+  color: white;
+  border: 1px solid white;
 }
 
 @media (max-width: 570px) {
-  #q {
+  #busquedaEncargo {
     width: 250px;
     border-radius: 20px;
     height: 50px;
@@ -4067,7 +4106,7 @@ input[type="number"] {
 }
 
 .banner-alex {
-  background-image: url('../../imagenes/banner-mis-disenos.png'); /* Ruta de tu imagen */
+  background-image: url("../../imagenes/banner-mis-disenos.png"); /* Ruta de tu imagen */
   background-size: cover; /* Escala la imagen para cubrir todo el div */
   background-repeat: no-repeat; /* Evita que la imagen se repita */
 }

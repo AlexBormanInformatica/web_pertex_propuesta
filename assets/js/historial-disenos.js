@@ -154,12 +154,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /*_________________________________________________MANEJAR ACCIONES_________________________________________________*/
-    // Agrega un manejador de eventos para el botón de anulación
-    document.querySelectorAll('.anular-encargo').forEach(button => {
-        button.addEventListener('click', function () {
-            const encargoId = this.getAttribute('data-encargo-id');
-            
-        });
+    const enviarAnulado = document.getElementById('submitDelFormularioEncargo');
+    const formularioAnular = document.getElementById('formularioAnular');
+
+    enviarAnulado.addEventListener('click', function () {
+        formularioAnular.submit(); // Enviar el formulario cuando se hace clic en el botón
     });
 
 });
@@ -169,6 +168,7 @@ $(document).ready(function () {
     $(".fila_hc").click(function () {
         // Obtiene el valor de la primera columna (Nº diseño)
         var numDiseno = $(this).find("td:first").text();
+        document.getElementById('id_disenoAnular').value = numDiseno;
 
         // Solicitud AJAX
         $.ajax({
@@ -179,5 +179,27 @@ $(document).ready(function () {
                 $("#celdaDetalles" + numDiseno).html(response);
             }
         });
+    });
+
+    $('#cerrarDiv').click(function () {
+        $('#divOk').fadeOut(1000);
+    });
+
+    //JQUERY VALIDATOR
+    //ANULAR DISEÑO
+    $("#formularioAnular").validate({
+        rules: {
+            comentarioAnular: "required",
+        },
+        messages: {
+            comentarioAnular: "Campo obligatorio",
+        },
+        errorElement: "span",
+        errorPlacement: function (error, element) {
+            // Add the `help-block` class to the error element
+            error.addClass("help-block");
+            error.addClass("");
+            error.insertAfter(element);
+        }
     });
 });

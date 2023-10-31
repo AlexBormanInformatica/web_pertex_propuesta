@@ -2,6 +2,10 @@
   Black Ice Theme (by thezoggy)
  *************/
 /* overall */
+.tablesorter-blackice i {
+  color: black;
+}
+
 .tablesorter-blackice {
   text-align: center;
   width: 100%;
@@ -10,6 +14,7 @@
   border-collapse: collapse;
   border-spacing: 0;
   box-shadow: 5px 5px 15px lightgray;
+  color: black;
 }
 
 /* header */
@@ -26,7 +31,6 @@
 .tablesorter-blackice td {
   /* padding: 4px; */
   vertical-align: center;
-  border-top: 1px solid #dee2e6;
   height: 60px;
   padding-left: 10px;
 }
@@ -35,13 +39,17 @@
 .tablesorter-blackice tbody > tr.hover > td,
 .tablesorter-blackice tbody > tr:hover > td,
 .tablesorter-blackice tbody > tr.even:hover > td,
-.tablesorter-blackice tbody > tr.odd:hover > td {
+.tablesorter-blackice tbody > tr.odd:hover > td,
+.tablesorter-blackice tbody > tr.hover > td > button > i,
+.tablesorter-blackice tbody > tr:hover > td > button > i,
+.tablesorter-blackice tbody > tr.even:hover > td > button > i,
+.tablesorter-blackice tbody > tr.odd:hover > td > button > i {
   background-color: #e2e2e2;
   cursor: pointer;
   color: black;
 }
 
-.seleccionada {
+.seleccionada, .seleccionada i {
   background-color: #00953e;
   color: white;
 }
@@ -49,6 +57,12 @@
 /* Estilos específicos para las filas de detalles */
 .no-hover {
   background-color: #e1ebe5;
+  text-align: left;
+}
+
+/* Estilos específicos para las filas de mensajes */
+#mensajesEquipoPertex {
+  background-color: #f0f0f0;
   text-align: left;
 }
 

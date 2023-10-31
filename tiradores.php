@@ -26,7 +26,7 @@ require_once "assets/_partials/idioma.php";
     include("assets/_partials/header.php");
 
     try {
-        $sql = "SELECT * FROM productos p INNER JOIN consejoslavado co ON  co.idconsejoslavado = p.consejoslavado_idconsejoslavado WHERE categorias_idCategorias = 3";
+        $sql = "SELECT * FROM productos p INNER JOIN consejoslavado co ON  co.idconsejoslavado = p.consejoslavado_idconsejoslavado WHERE categorias_id_categoria = 3";
         $query = $conn->prepare($sql);
         $query->execute();
         $results = $query->fetchAll(PDO::FETCH_OBJ);
@@ -55,20 +55,20 @@ require_once "assets/_partials/idioma.php";
                         <div class="section-top-border">
                             <div class="row model-product p-lr-10">
                                 <div class="col-md-3 ">
-                                    <img alt="<?= buscarTexto("PRG", "productos", $result->idproductos, "nombre", $_SESSION['idioma']) ?>" class="img-fluid" src="data:image/png;base64,<?= base64_encode($result->imagen) ?>" />
+                                    <img alt="<?= buscarTexto("PRG", "productos", $result->id_producto, "nombre", $_SESSION['idioma']) ?>" class="img-fluid" src="data:image/png;base64,<?= base64_encode($result->imagen) ?>" />
                                 </div>
 
                                 <div class="col-md-8 mt-sm-20">
-                                    <h2 class="mb-30 overflow-hidden"><?php echo buscarTexto("PRG", "productos", $result->idproductos, "nombre", $_SESSION['idioma']); ?></h2>
-                                    <h4 class="card-text mb-3 overflow-hidden txt-alineado"><?php echo buscarTexto("PRG", "productos", $result->idproductos, "desc_corta", $_SESSION['idioma']); ?></h4>
-                                    <p class="card-text overflow-hidden txt-alineado"><?php echo buscarTexto("PRG", "productos", $result->idproductos, "desc_larga", $_SESSION['idioma']); ?></p>
+                                    <h2 class="mb-30 overflow-hidden"><?php echo buscarTexto("PRG", "productos", $result->id_producto, "nombre", $_SESSION['idioma']); ?></h2>
+                                    <h4 class="card-text mb-3 overflow-hidden txt-alineado"><?php echo buscarTexto("PRG", "productos", $result->id_producto, "descripcion_corta", $_SESSION['idioma']); ?></h4>
+                                    <p class="card-text overflow-hidden txt-alineado"><?php echo buscarTexto("PRG", "productos", $result->id_producto, "descripcion_larga", $_SESSION['idioma']); ?></p>
                                     <!-- Button trigger modal -->
-                                    <button type="button" class="mb-4 consejos" data-toggle="modal" data-target="#consejosLavado_<?= $result->idproductos ?>">
+                                    <button type="button" class="mb-4 consejos" data-toggle="modal" data-target="#consejosLavado_<?= $result->id_producto ?>">
                                         <?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_tit-consejos", "", $_SESSION['idioma']); ?>
                                     </button>
 
                                     <!-- Modal consejos de lavado -->
-                                    <div class="modal fade" id="consejosLavado_<?= $result->idproductos ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal fade" id="consejosLavado_<?= $result->id_producto ?>" tabindex="-1" role="dialog" aria-hidden="true">
                                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -83,11 +83,11 @@ require_once "assets/_partials/idioma.php";
                                                     <?php
                                                     if (existe("PRG", "consejoslavado", "$result->idconsejoslavado.1", "descripcion", $_SESSION['idioma']) != null) {
                                                     ?>
-                                                        <div class="titulo_consejos titulo_consejo_<?= $result->idproductos ?>">
+                                                        <div class="titulo_consejos titulo_consejo_<?= $result->id_producto ?>">
                                                             <p class="fs-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_titConsejos1", "", $_SESSION['idioma']); ?></p>
                                                         </div>
 
-                                                        <div class=" descripciones_consejos descripcionconsejos_<?= $result->idproductos ?> ">
+                                                        <div class=" descripciones_consejos descripcionconsejos_<?= $result->id_producto ?> ">
                                                             <p><?= buscarTexto("PRG", "consejoslavado", "$result->idconsejoslavado.1", "descripcion", $_SESSION['idioma']); ?></p>
                                                         </div>
                                                     <?php
@@ -97,11 +97,11 @@ require_once "assets/_partials/idioma.php";
                                                     <?php
                                                     if (existe("PRG", "consejoslavado", "$result->idconsejoslavado.2", "descripcion", $_SESSION['idioma']) != null) {
                                                     ?>
-                                                        <div class="titulo_consejos titulo_consejo_<?= $result->idproductos ?>">
+                                                        <div class="titulo_consejos titulo_consejo_<?= $result->id_producto ?>">
                                                             <p class="fs-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_titConsejos2", "", $_SESSION['idioma']); ?></p>
                                                         </div>
 
-                                                        <div class=" descripciones_consejos descripcionconsejos_<?= $result->idproductos ?> ">
+                                                        <div class=" descripciones_consejos descripcionconsejos_<?= $result->id_producto ?> ">
                                                             <p><?= buscarTexto("PRG", "consejoslavado", "$result->idconsejoslavado.2", "descripcion", $_SESSION['idioma']); ?></p>
                                                         </div>
                                                     <?php
@@ -111,11 +111,11 @@ require_once "assets/_partials/idioma.php";
                                                     <?php
                                                     if (existe("PRG", "consejoslavado", "$result->idconsejoslavado.3", "descripcion", $_SESSION['idioma']) != null) {
                                                     ?>
-                                                        <div class="titulo_consejos titulo_consejo_<?= $result->idproductos ?>">
+                                                        <div class="titulo_consejos titulo_consejo_<?= $result->id_producto ?>">
                                                             <p class="fs-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_titConsejos3", "", $_SESSION['idioma']); ?></p>
                                                         </div>
 
-                                                        <div class=" descripciones_consejos descripcionconsejos_<?= $result->idproductos ?> ">
+                                                        <div class=" descripciones_consejos descripcionconsejos_<?= $result->id_producto ?> ">
                                                             <p><?= buscarTexto("PRG", "consejoslavado", "$result->idconsejoslavado.3", "descripcion", $_SESSION['idioma']); ?></p>
                                                         </div>
                                                     <?php
@@ -125,11 +125,11 @@ require_once "assets/_partials/idioma.php";
                                                     <?php
                                                     if (existe("PRG", "consejoslavado", "$result->idconsejoslavado.4", "descripcion", $_SESSION['idioma']) != null) {
                                                     ?>
-                                                        <div class="titulo_consejos titulo_consejo_<?= $result->idproductos ?>">
+                                                        <div class="titulo_consejos titulo_consejo_<?= $result->id_producto ?>">
                                                             <p class="fs-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_titConsejos4", "", $_SESSION['idioma']); ?></p>
                                                         </div>
 
-                                                        <div class=" descripciones_consejos descripcionconsejos_<?= $result->idproductos ?> ">
+                                                        <div class=" descripciones_consejos descripcionconsejos_<?= $result->id_producto ?> ">
                                                             <p><?= buscarTexto("PRG", "consejoslavado", "$result->idconsejoslavado.4", "descripcion", $_SESSION['idioma']); ?></p>
                                                         </div>
                                                     <?php
@@ -139,11 +139,11 @@ require_once "assets/_partials/idioma.php";
                                                     <?php
                                                     if (existe("PRG", "consejoslavado", "$result->idconsejoslavado.5", "descripcion", $_SESSION['idioma']) != null) {
                                                     ?>
-                                                        <div class="titulo_consejos titulo_consejo_<?= $result->idproductos ?>">
+                                                        <div class="titulo_consejos titulo_consejo_<?= $result->id_producto ?>">
                                                             <p class="fs-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_titConsejos5", "", $_SESSION['idioma']); ?></p>
                                                         </div>
 
-                                                        <div class=" descripciones_consejos descripcionconsejos_<?= $result->idproductos ?> ">
+                                                        <div class=" descripciones_consejos descripcionconsejos_<?= $result->id_producto ?> ">
                                                             <p><?= buscarTexto("PRG", "consejoslavado", "$result->idconsejoslavado.5", "descripcion", $_SESSION['idioma']); ?></p>
                                                         </div>
                                                     <?php
@@ -153,11 +153,11 @@ require_once "assets/_partials/idioma.php";
                                                     <?php
                                                     if (existe("PRG", "consejoslavado", "$result->idconsejoslavado.6", "descripcion", $_SESSION['idioma']) != null) {
                                                     ?>
-                                                        <div class="titulo_consejos titulo_consejo_<?= $result->idproductos ?>">
+                                                        <div class="titulo_consejos titulo_consejo_<?= $result->id_producto ?>">
                                                             <p class="fs-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_titConsejos6", "", $_SESSION['idioma']); ?></p>
                                                         </div>
 
-                                                        <div class=" descripciones_consejos descripcionconsejos_<?= $result->idproductos ?> ">
+                                                        <div class=" descripciones_consejos descripcionconsejos_<?= $result->id_producto ?> ">
                                                             <p><?= buscarTexto("PRG", "consejoslavado", "$result->idconsejoslavado.6", "descripcion", $_SESSION['idioma']); ?></p>
                                                         </div>
                                                     <?php
@@ -167,11 +167,11 @@ require_once "assets/_partials/idioma.php";
                                                     <?php
                                                     if (existe("PRG", "consejoslavado", "$result->idconsejoslavado.7", "descripcion", $_SESSION['idioma']) != null) {
                                                     ?>
-                                                        <div class="titulo_consejos titulo_consejo_<?= $result->idproductos ?>">
+                                                        <div class="titulo_consejos titulo_consejo_<?= $result->id_producto ?>">
                                                             <p class="fs-configurator"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_titConsejos7", "", $_SESSION['idioma']); ?></p>
                                                         </div>
 
-                                                        <div class=" descripciones_consejos descripcionconsejos_<?= $result->idproductos ?> ">
+                                                        <div class=" descripciones_consejos descripcionconsejos_<?= $result->id_producto ?> ">
                                                             <p><?= buscarTexto("PRG", "consejoslavado", "$result->idconsejoslavado.7", "descripcion", $_SESSION['idioma']); ?></p>
                                                         </div>
                                                     <?php
@@ -187,7 +187,7 @@ require_once "assets/_partials/idioma.php";
                                     </div>
 
                                     <div>
-                                        <a href="<?= buscarTexto("WEB", "paginas", "ptp", "", $_SESSION['idioma']); ?>?prd=<?= $result->idproductos ?>" id="<?= $result->idproductos ?>" class="btnRedirigir genric-btn primary-border circle"><?= buscarTexto("WEB", "general", "btn-personalizar", "", $_SESSION['idioma']); ?> <?= buscarTexto("PRG", "productos", $result->idproductos, "nombre", $_SESSION['idioma']); ?></a>
+                                        <a href="<?= buscarTexto("WEB", "paginas", "ptp", "", $_SESSION['idioma']); ?>?prd=<?= $result->id_producto ?>" id="<?= $result->id_producto ?>" class="btnRedirigir genric-btn primary-border circle"><?= buscarTexto("WEB", "general", "btn-personalizar", "", $_SESSION['idioma']); ?> <?= buscarTexto("PRG", "productos", $result->id_producto, "nombre", $_SESSION['idioma']); ?></a>
                                     </div>
                                 </div>
                             </div>

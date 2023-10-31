@@ -79,15 +79,15 @@ require_once('assets/_partials/idioma.php');
                 <main>
                     <section class="mb-5">
                         <h2 class="text-center">¡Apreciamos tu confianza en nosotros!</h2>
-                        <p>Te agradecemos por tu encargo. Puedes descargar el siguiente PDF con tu encargo.
-                            Lo tendrás disponible siempre en el historial de encargos.</p>
-                        <button id="generarPDF" class="btn">PDF del encargo</button>
+                        <p>Te agradecemos por tu diseño. Puedes descargar el siguiente PDF con los detalles.
+                            Lo tendrás disponible siempre en el historial de diseños.</p>
+                        <button id="generarPDF" class="btn">PDF del diseño</button>
                     </section>
 
                     <section class="mb-5">
                         <h2 class="text-center">Proceso de Seguimiento</h2>
-                        <p>Tu encargo estará ahora en manos de nuestros talentosos diseñadores, quienes trabajarán en el boceto. </p>
-                        <p>Te mantendremos informado a medida que tu encargo avance. Recibirás actualizaciones por correo electrónico en cada etapa del proceso.
+                        <p>Tu diseño estará ahora en manos de nuestros talentosos diseñadores, quienes trabajarán en el boceto. </p>
+                        <p>Te mantendremos informado a medida que tu diseño avance. Recibirás actualizaciones por correo electrónico en cada etapa del proceso.
                             Si tienes alguna pregunta, no dudes en contactarnos.</p>
                         <div class="scale-up-bottom text-center">
                             <img class="mx-auto" src="iconos/proceso-pedido/PASO-3.png" alt="Imagen muestra dibujo de persona que está con ordenador creando un diseño">
@@ -98,8 +98,8 @@ require_once('assets/_partials/idioma.php');
                         <h2 class="text-center">Opciones Adicionales</h2>
                         <p>Puedes realizar las siguientes acciones:</p>
                         <ul>
-                            <li><a class="links" href="historial-disenos">Ir a la página de tus encargos</a></li>
-                            <li><a class="links" href="encargar-diseno">Realizar un nuevo encargo</a></li>
+                            <li><a class="links" href="historial-disenos">Ir a la página de tus diseños</a></li>
+                            <li><a class="links" href="encargar-diseno">Encargar un nuevo diseño</a></li>
                         </ul>
                     </section>
 

@@ -6,14 +6,14 @@ include("funciones/functions.php");
 <?php
 $anotaciones = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['pstIdProducto']) || isset($_POST['idPedidoMIE']) || isset($_POST['idPedidoME'])) { //Nueva linea de pedido (viene de ptp) o muestra/muestrario
-        $nombre_pedido = $nombre_personalizacion = $idProducto = $ancho = $largo = $superficie = $cantidad = $colores_has_productos_id =
-            $formas_id_formas =
+    if (isset($_POST['pstid_producto']) || isset($_POST['idPedidoMIE']) || isset($_POST['idPedidoME'])) { //Nueva linea de pedido (viene de ptp) o muestra/muestrario
+        $nombre_pedido = $nombre_personalizacion = $id_producto = $ancho = $largo = $superficie = $cantidad = $productos_has_colores_id =
+            $id_forma =
             $ancho_base = $largo_base = $pelo = "";
 
         $pxuProducto = $pxuBase = $pMoldeProducto = $pMoldeBase = $pPrecioTopes = $subtotal =  $cantidad_topes = 0;
 
-        $base_has_colores_idcolor = $idcolor_piel = $idcolor_modulo = $base_has_colores_idbase = 1584;
+        $base_has_idColor = $idcolor_piel = $idcolor_modulo = $base_has_colores_idbase = 1584;
 
         $arr = ['1584'];
 
@@ -31,8 +31,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $nombre_personalizacion = $_POST['pstNombrePer'] == '' ? '' : $_POST['pstNombrePer'];
         }
 
-        if (isset($_POST['pstIdProducto'])) {
-            $idProducto = $_POST['pstIdProducto'];
+        if (isset($_POST['pstid_producto'])) {
+            $id_producto = $_POST['pstid_producto'];
         }
 
         if (isset($_POST['pstAncho'])) {
@@ -54,15 +54,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         if (isset($_POST['pstIdColoresProducto'])) {
-            $colores_has_productos_id = $_POST['pstIdColoresProducto'][0] == "" ? $arr : $_POST['pstIdColoresProducto'];
+            $productos_has_colores_id = $_POST['pstIdColoresProducto'][0] == "" ? $arr : $_POST['pstIdColoresProducto'];
         } else {
-            $colores_has_productos_id = $arr;
+            $productos_has_colores_id = $arr;
         }
 
-        if (isset($_POST['pstIdForma'])) {
-            $formas_id_formas = $_POST['pstIdForma'] == '' ? 15 : $_POST['pstIdForma'];
+        if (isset($_POST['pstid_forma'])) {
+            $id_forma = $_POST['pstid_forma'] == '' ? 15 : $_POST['pstid_forma'];
         } else {
-            $formas_id_formas = 15;
+            $id_forma = 15;
         }
 
         if (isset($_POST['pstCantidad'])) {
@@ -78,9 +78,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         if (isset($_POST['pstIdColorBase'])) {
-            $base_has_colores_idcolor = $_POST['pstIdColorBase'] == '' ? 1584 : $_POST['pstIdColorBase'];
+            $base_has_idColor = $_POST['pstIdColorBase'] == '' ? 1584 : $_POST['pstIdColorBase'];
         } else {
-            $base_has_colores_idcolor = 1584;
+            $base_has_idColor = 1584;
         }
 
         if (isset($_POST['pstIdColorPiel'])) {
@@ -146,17 +146,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $superficie,
                 $cantidad,
                 $pedidos_idpedidos,
-                $formas_id_formas,
+                $id_forma,
                 $base_has_colores_idbase,
-                $base_has_colores_idcolor,
+                $base_has_idColor,
                 $idcolor_piel,
                 $idcolor_modulo,
                 $ancho_base,
                 $largo_base,
                 $pelo,
                 $cantidad_topes,
-                $colores_has_productos_id,
-                $idProducto,
+                $productos_has_colores_id,
+                $id_producto,
                 $subtotal,
                 $preciomolde,
                 $nombre_personalizacion
@@ -173,17 +173,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $superficie,
                 $cantidad,
                 $pedidos_idpedidos,
-                $formas_id_formas,
+                $id_forma,
                 $base_has_colores_idbase,
-                $base_has_colores_idcolor,
+                $base_has_idColor,
                 $idcolor_piel,
                 $idcolor_modulo,
                 $ancho_base,
                 $largo_base,
                 $pelo,
                 $cantidad_topes,
-                $colores_has_productos_id,
-                $idProducto,
+                $productos_has_colores_id,
+                $id_producto,
                 2,
                 $preciomolde,
                 "Muestra individual"
@@ -191,7 +191,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // historico($conn, $pedidos_idpedidos, 'LINEAPEDIDO_NUEVA', "Muestra individual");
         } else if (isset($_POST['idPedidoME']) && $_POST['idPedidoME'] != '') { //Si viene id pedido ME (Muestrario Existente) se agregara a este pedido, sino sera un pedido nuevo
             $pedidos_idpedidos = $_POST['idPedidoME'];
-            $idProducto = 1;
+            $id_producto = 1;
 
             echo "3";
             lineaPedidoExistente(
@@ -201,17 +201,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $superficie,
                 $cantidad,
                 $pedidos_idpedidos,
-                $formas_id_formas,
+                $id_forma,
                 $base_has_colores_idbase,
-                $base_has_colores_idcolor,
+                $base_has_idColor,
                 $idcolor_piel,
                 $idcolor_modulo,
                 $ancho_base,
                 $largo_base,
                 $pelo,
                 $cantidad_topes,
-                $colores_has_productos_id,
-                $idProducto,
+                $productos_has_colores_id,
+                $id_producto,
                 50,
                 $preciomolde,
                 "Muestrario"
@@ -224,7 +224,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else if (isset($_POST['idPedidoME'])) {
                 $subtotal = 50;
                 $nombre_personalizacion = "Muestrario";
-                $idProducto = 1;
+                $id_producto = 1;
             }
             lineaPedidoNuevo(
                 $conn,
@@ -232,17 +232,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $largo,
                 $superficie,
                 $cantidad,
-                $formas_id_formas,
+                $id_forma,
                 $base_has_colores_idbase,
-                $base_has_colores_idcolor,
+                $base_has_idColor,
                 $idcolor_piel,
                 $idcolor_modulo,
                 $ancho_base,
                 $largo_base,
                 $pelo,
                 $cantidad_topes,
-                $colores_has_productos_id,
-                $idProducto,
+                $productos_has_colores_id,
+                $id_producto,
                 $subtotal,
                 $preciomolde,
                 $nombre_pedido,

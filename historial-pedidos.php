@@ -166,15 +166,15 @@ if (!$user->is_logged_in()) {
                     <h3><?= buscarTexto("WEB", "historial-pedidos", "hp_celda-deta", "", $_SESSION['idioma']); ?></h3>
                     <?php
                     try {
-                        $sql = "SELECT pedidos.idpedidos, pedidos.numeroPedido, pedidos.nombrepedido, pedidos.fechaPedido, pedidos.precioTotal, pedidos.estado, productos.idproductos, productos.nombre, 
-                        lineapedido.nombrepersonalizacion, lineapedido.idlineaPedido, lineapedido.ancho, lineapedido.largo, lineapedido.superficie, lineapedido.cantidad, formas.id_formas, 
+                        $sql = "SELECT pedidos.idpedidos, pedidos.numeroPedido, pedidos.nombrepedido, pedidos.fechaPedido, pedidos.precioTotal, pedidos.estado, productos.id_producto, productos.nombre, 
+                        lineapedido.nombrepersonalizacion, lineapedido.idlineaPedido, lineapedido.ancho, lineapedido.largo, lineapedido.superficie, lineapedido.cantidad, formas.id_forma, 
                         formas.formas, pedidos.notas, base.idBase, base.Tipo_base, lineapedido.subtotal, lineapedido.ancho_base, lineapedido.largo_base,
                         lineapedido.pelo, lineapedido.cantidad_topes
                         FROM pedidos 
                         INNER JOIN lineapedido ON lineapedido.pedidos_idpedidos = pedidos.idpedidos
-                        INNER JOIN colores_has_productos ON colores_has_productos.id = lineapedido.colores_has_productos_id
-                        INNER JOIN productos ON productos.idproductos = colores_has_productos.productos_idproductos
-                        INNER JOIN formas ON formas.id_formas = lineapedido.formas_id_formas
+                        INNER JOIN productos_has_colores ON productos_has_colores.id = lineapedido.productos_has_colores_id
+                        INNER JOIN productos ON productos.id_producto = productos_has_colores.id_producto
+                        INNER JOIN formas ON formas.id_forma = lineapedido.id_forma
                         INNER JOIN base_has_colores ON base_has_colores.idBase = lineapedido.base_has_colores_idbase
                         INNER JOIN base ON base.idBase = base_has_colores.idBase
                         INNER JOIN usuarios ON usuarios.id = pedidos.usuarios_id 
@@ -218,7 +218,7 @@ if (!$user->is_logged_in()) {
                                     <?php if ($result->nombrepersonalizacion != "Muestrario") { ?>
                                         <tr>
                                             <td scope="row"><?= buscarTexto("WEB", "historial-pedidos", "hp_v-modal_detll-producto", "", $_SESSION['idioma']); ?></th>
-                                            <td><?= buscarTexto("PRG", "productos", $result->idproductos, "nombre", $_SESSION['idioma']); ?></td>
+                                            <td><?= buscarTexto("PRG", "productos", $result->id_producto, "nombre", $_SESSION['idioma']); ?></td>
                                         </tr>
                                     <?php } ?>
                                     <tr>
@@ -338,10 +338,10 @@ if (!$user->is_logged_in()) {
                                                 </tr>
                                             <?php } ?>
 
-                                            <?php if ($result->id_formas != 15) { ?>
+                                            <?php if ($result->id_forma != 15) { ?>
                                                 <tr>
                                                     <td scope="row"> <?= buscarTexto("WEB", "historial-pedidos", "hp_v-modal_detll-forma", "", $_SESSION['idioma']); ?></td>
-                                                    <td><?= buscarTexto("PRG", "formas", $result->id_formas, "formas", $_SESSION['idioma']); ?></td>
+                                                    <td><?= buscarTexto("PRG", "formas", $result->id_forma, "formas", $_SESSION['idioma']); ?></td>
                                                 </tr>
                                             <?php } ?>
 
@@ -364,7 +364,7 @@ if (!$user->is_logged_in()) {
                                                 try {
                                                     $sql_color = "SELECT nombre, hexadecimal, francia, portugal, italia
                                                     FROM lineapedido
-                                                    INNER JOIN colores ON colores.idColor = lineapedido.base_has_colores_idcolor
+                                                    INNER JOIN colores ON colores.idColor = lineapedido.base_has_idColor
                                                     WHERE idlineapedido = " . $result->idlineaPedido;
                                                     $query_color = $conn->prepare($sql_color);
                                                     $query_color->execute();
@@ -479,7 +479,7 @@ if (!$user->is_logged_in()) {
                                     <?php if ($result->nombrepersonalizacion != "Muestrario") { ?>
                                         <tr>
                                             <td scope="row"><?= buscarTexto("WEB", "historial-pedidos", "hp_v-modal_detll-producto", "", $_SESSION['idioma']); ?></td>
-                                            <td><?= buscarTexto("PRG", "productos", $result->idproductos, "nombre", $_SESSION['idioma']); ?></td>
+                                            <td><?= buscarTexto("PRG", "productos", $result->id_producto, "nombre", $_SESSION['idioma']); ?></td>
                                         </tr>
                                     <?php } ?>
                                     <tr>
@@ -532,7 +532,7 @@ if (!$user->is_logged_in()) {
                                     try {
                                         $sql_color = "SELECT nombre, hexadecimal, francia, portugal, italia
                                         FROM lineapedido
-                                        INNER JOIN colores ON colores.idColor = lineapedido.base_has_colores_idcolor
+                                        INNER JOIN colores ON colores.idColor = lineapedido.base_has_idColor
                                         WHERE idlineapedido = " . $result->idlineaPedido;
                                         $query_color = $conn->prepare($sql_color);
                                         $query_color->execute();
@@ -633,10 +633,10 @@ if (!$user->is_logged_in()) {
                                                 </tr>
                                             <?php } ?>
 
-                                            <?php if ($result->id_formas != 15) { ?>
+                                            <?php if ($result->id_forma != 15) { ?>
                                                 <tr>
                                                     <td scope="row"> <?= buscarTexto("WEB", "historial-pedidos", "hp_v-modal_detll-forma", "", $_SESSION['idioma']); ?></td>
-                                                    <td><?= buscarTexto("PRG", "formas", $result->id_formas, "formas", $_SESSION['idioma']); ?></td>
+                                                    <td><?= buscarTexto("PRG", "formas", $result->id_forma, "formas", $_SESSION['idioma']); ?></td>
                                                 </tr>
                                             <?php } ?>
 
@@ -1202,7 +1202,7 @@ if (!$user->is_logged_in()) {
                                 <?php foreach ($results as $result => $pedidos) {                        ?>
                                     <div class="pedidosFinalizados pedido_<?= $result ?> m-l-30 mb-5">
                                         <?php foreach ($pedidos as $pedido) {
-                                            switch ($pedido['colores_has_productos_id']) {
+                                            switch ($pedido['productos_has_colores_id']) {
                                                 case '1676':
                                                 case '2138':
                                                 case '2292':

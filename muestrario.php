@@ -147,12 +147,12 @@ require_once "assets/_partials/idioma.php";
 
                                 <?php
                                 try {
-                                    $sql = "SELECT c.idCategorias, p.idproductos, p.nombre, p.molde, p.max_colores, p.cmyk, p.colores, p.tope, p.imagen, p.idtexto_archivos, 
-                                p.alto_min, p.ancho_min, fp.formas_id_formas, fp.ancho_max, fp.alto_max
+                                    $sql = "SELECT c.id_categoria, p.id_producto, p.nombre, p.molde, p.max_colores, p.cmyk, p.colores, p.tope, p.imagen, p.idtexto_archivos, 
+                                p.alto_min, p.ancho_min, fp.id_forma, fp.ancho_max, fp.alto_max
                                 FROM categorias c 
-                                INNER JOIN productos p ON c.idCategorias = p.categorias_idCategorias
-                                INNER JOIN formas_has_productos fp ON fp.productos_idproductos = p.idproductos
-                                WHERE p.idproductos != 43 AND p.idproductos != 44 AND p.idproductos != 50 AND p.idproductos != 49
+                                INNER JOIN productos p ON c.id_categoria = p.categorias_id_categoria
+                                INNER JOIN formas_has_productos fp ON fp.id_producto = p.id_producto
+                                WHERE p.id_producto != 43 AND p.id_producto != 44 AND p.id_producto != 50 AND p.id_producto != 49
                                 GROUP BY nombre";
                                     $query = $conn->query($sql);
                                     $results = $query->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC);
@@ -163,16 +163,16 @@ require_once "assets/_partials/idioma.php";
 
                                 <input id="idPedidoMIE" name="idPedidoMIE" value="" hidden>
                                 <label for="tecnica_muestra" class="m-t-20 fs-20"><?= buscarTexto("WEB", "muestrario", "muestrario-producto-2-tc", "", $_SESSION['idioma']); ?></label>
-                                <select name="pstIdProducto" id="tecnica_muestra" class="nice-select m-b-30 mx-auto" required>
+                                <select name="pstid_producto" id="tecnica_muestra" class="nice-select m-b-30 mx-auto" required>
                                     <option class="" value=""><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_label_paso_1", "", $_SESSION['idioma']); ?>...</option>
                                     <?php foreach ($results as $result => $productos) :
                                     ?>
                                         <optgroup label="<?= buscarTexto("PRG", "categorias", $result, "categoriaNombre", $_SESSION['idioma']); ?>">
                                             <?php foreach ($productos as $producto) :
-                                                if ($producto['idproductos'] != '47') {
+                                                if ($producto['id_producto'] != '47') {
                                             ?>
-                                                    <option class="" value="<?= $producto['idproductos']  ?>">
-                                                        <?= buscarTexto("PRG", "productos", $producto['idproductos'], "nombre", $_SESSION['idioma']);
+                                                    <option class="" value="<?= $producto['id_producto']  ?>">
+                                                        <?= buscarTexto("PRG", "productos", $producto['id_producto'], "nombre", $_SESSION['idioma']);
                                                         ?>
                                                     </option>
                                             <?php }
@@ -289,7 +289,7 @@ require_once "assets/_partials/idioma.php";
         $(document).ready(function() {
 
             $("#tecnica_muestra").on('change', function() {
-                if ($('select[name="pstIdProducto"] :selected').val() != 0) {
+                if ($('select[name="pstid_producto"] :selected').val() != 0) {
                     $('#btnAg').attr('disabled', false);
                 } else {
                     $('#btnAg').attr('disabled', true);

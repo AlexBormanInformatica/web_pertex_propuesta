@@ -48,16 +48,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     /*PASO 2*/
     //<input> ancho producto 
-    if (isset($_POST['anchoProductoInput']) && $_POST['anchoProductoInput'] != "") {
-        $ancho = $_POST['anchoProductoInput'];
+    if (isset($_POST['anchoProductoInput']) && $_POST['anchoProductoInput'] != "0.000" && $_POST['anchoProductoInput'] != "") {
+        $ancho = number_format($_POST['anchoProductoInput'] / 10, 2);
     } else if (isset($_POST['anchoProductoSelect']) && $_POST['anchoProductoSelect'] != "") {
         //<select> ancho producto 
-        $ancho = $_POST['anchoProductoSelect'];
+        $ancho = number_format($_POST['anchoProductoSelect'] / 10, 2);
     }
 
     //<input> alto producto 
-    if (isset($_POST['altoProducto'])  && $_POST['altoProducto'] != "") {
-        $alto = $_POST['altoProducto'];
+    if (isset($_POST['altoProducto']) && $_POST['altoProducto'] != "0.000"   && $_POST['altoProducto'] != "") {
+        $alto = number_format($_POST['altoProducto'] / 10, 2);
     }
 
     //<input type="checkbox"> formas
@@ -72,13 +72,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     //<input> ancho base tela
-    if (isset($_POST['anchoBaseInput']) && $_POST['anchoBaseInput'] != "") {
-        $anchoBase = $_POST['anchoBaseInput'];
+    if (isset($_POST['anchoBaseInput']) && $_POST['anchoBaseInput'] != "0.000" && $_POST['anchoBaseInput'] != "") {
+        $anchoBase = number_format($_POST['anchoBaseInput'] / 10, 2);
     }
 
     //<input> alto base tela
-    if (isset($_POST['altoBaseInput']) && $_POST['altoBaseInput'] != "") {
-        $altoBase = $_POST['altoBaseInput'];
+    if (isset($_POST['altoBaseInput']) && $_POST['altoBaseInput'] != "0.000" && $_POST['altoBaseInput'] != "") {
+        $altoBase = number_format($_POST['altoBaseInput'] / 10, 2);
     }
 
     //<input type="checkbox"> color base
@@ -94,8 +94,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     /*PASO 4*/
     // Definimos la carpeta destino
-    // Guardamos la imagen luego de guardar el encargo en la BBDD
+    // Guardamos la imagen luego de guardar el diseño en la BBDD
     $carpetaDestino = "imagenes_bocetos/";
+
+    //<input> comentarios / notas
+    if (isset($_POST['comentariosDiseno']) && $_POST['comentariosDiseno'] != "") {
+        $comentarios = $_POST['comentariosDiseno'];
+    }
 
     $fecha = date("Y-m-d H:i:s", time());
     $estado = "Boceto pendiente";
@@ -108,10 +113,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     2 : El pedido es repetido desde el sistema
     */
 
-    // INSERT EN LA TABLA ENCARGOS
+    // INSERT EN LA TABLA DISENOS
     try {
-        $sql = "INSERT INTO encargos (tipo, fecha_encargo, precio_moldes, subtotal, id_usuario, estado, nota, nombre_encargo, 
-        idproductos, ancho_cm, alto_cm, cantidad, id_formas, id_complemento, id_color_complemento, id_color_metal, id_color_piel, 
+        $sql = "INSERT INTO disenos (tipo, fecha_encargo, precio_moldes, subtotal, id_usuario, estado, nota, nombre_diseno, 
+        id_producto, ancho_cm, alto_cm, cantidad, id_forma, id_complemento, id_color_complemento, id_color_metal, id_color_piel, 
         ancho_cm_base, alto_cm_base, cantidad_topes, num_referencia, num_fabricacion, id_pedido_envio) 
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
@@ -141,9 +146,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sentencia->bindParam(23, $nullValue, PDO::PARAM_NULL);
         $sentencia->execute();
 
+        // echo "FECHA ". $fecha ."<br>";
+        // echo "MOLDE ". $moldes ."<br>";
+        // echo "SUBTOTAL ". $subtotal ."<br>";
+        // echo "ID ". $_SESSION['ID'] ."<br>";
+        // echo "ESTADO ". $estado ."<br>";
+        // echo "COMENTARIO ". $comentarios ."<br>";
+        // echo "TECNICA ". $tecnica ."<br>";
+        // echo "ANCHO ". $ancho ."<br>";
+        // echo "ALTO ". $alto ."<br>";
+        // echo "CANTIDAD ". $cantidad ."<br>";
+        // echo "FORMA ". $forma ."<br>";
+        // echo "COMPLEMENTO ". $complemento ."<br>";
+        // echo "COLOR BASE ". $colorBase ."<br>";
+        // echo "COLOR METAL ". $colorMetal ."<br>";
+        // echo "COLOR PIEL ". $colorPiel ."<br>";
+        // echo "ANCHO BASE ". $anchoBase ."<br>";
+        // echo "ALTO BASE ". $altoBase ."<br>";
+        // echo "CANTIDAD TOPES ". $cantidadTopes ."<br>";
+
         //Id del encargo agregado
-        $id_encargo_nuevo = $conn->lastInsertId();
-        $_SESSION['id_ultimo_encargo'] = $id_encargo_nuevo;
+        $id_diseno_nuevo = $conn->lastInsertId();
+        $_SESSION['id_ultimo_diseno'] = $id_diseno_nuevo;
 
         //Ahora guardo la imagen
         // Si hay algun archivo que subir
@@ -157,15 +181,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 // movemos el archivo
                 if (@move_uploaded_file($origen, $destino)) {
-                    // Renombrar el archivo con el id del encargo y una C de prefijo que nos indica que es del Cliente
+                    // Renombrar el archivo con el id del diseño y una C de prefijo que nos indica que es del Cliente
                     $oldname = "../imagenes_bocetos/" . $_FILES["archivo"]["name"];
-                    $newname = "../imagenes_bocetos/C" . $id_encargo_nuevo . "." . $ext;
+                    $newname = "../imagenes_bocetos/C" . $id_diseno_nuevo . "." . $ext;
                     rename($oldname, $newname);
                 }
             }
         }
         header("location: ../gracias-por-tu-encargo");
     } catch (Exception $e) {
-       echo $e->getMessage();
+        echo $e->getMessage();
     }
 }

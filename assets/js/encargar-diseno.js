@@ -284,7 +284,7 @@ var cantidadTopes = false;
           method: "POST",
           url: "funciones/functions.php",
           data: {
-            precioPorForma: "", idproducto: $('select[name="tecnica"] :selected').val(), cantidad: inputCantidad.value, idforma: this.value
+            precioPorForma: "", id_producto: $('select[name="tecnica"] :selected').val(), cantidad: inputCantidad.value, id_forma: this.value
           }
         }).done(function (response) {
           response = response.trim();
@@ -703,7 +703,7 @@ function cargarCamposSegunTecnica() {
       url: "funciones/functions.php",
       dataType: 'json',
       data: {
-        buscarColores: "", idproducto: $('select[name="tecnica"] :selected').val()
+        buscarColores: "", id_producto: $('select[name="tecnica"] :selected').val()
       }
     }).done(function (response) {
       // Obtén el contenedor donde deseas mostrar los colores
@@ -769,7 +769,7 @@ function cargarCamposSegunTecnica() {
     url: "funciones/functions.php",
     dataType: 'json',
     data: {
-      buscarMetal: "", idproducto: $('select[name="tecnica"] :selected').val()
+      buscarMetal: "", id_producto: $('select[name="tecnica"] :selected').val()
     }
   }).done(function (response) {
     //Si regresa algo, es que tiene
@@ -831,7 +831,7 @@ function cargarCamposSegunTecnica() {
     url: "funciones/functions.php",
     dataType: 'json',
     data: {
-      buscarPiel: "", idproducto: $('select[name="tecnica"] :selected').val()
+      buscarPiel: "", id_producto: $('select[name="tecnica"] :selected').val()
     }
   }).done(function (response) {
     //Si regresa algo, es que tiene
@@ -949,7 +949,7 @@ function cargarCamposSegunTecnica() {
     url: "funciones/functions.php",
     dataType: 'json',
     data: {
-      buscarFormas: "", idproducto: $('select[name="tecnica"] :selected').val()
+      buscarFormas: "", id_producto: $('select[name="tecnica"] :selected').val()
     }
   }).done(function (response) {
     if (response.length > 0) {// Si tiene formas
@@ -961,7 +961,7 @@ function cargarCamposSegunTecnica() {
 
       //Recorro el response y muestro cada div correspondiente
       for (var i = 0; i < response.length; i++) {
-        document.getElementById("forma" + response[i].id_formas.toString()).style.display = "block";
+        document.getElementById("forma" + response[i].id_forma.toString()).style.display = "block";
       }
     }
   });
@@ -1019,7 +1019,7 @@ function cargarCamposSegunTecnica() {
       url: "funciones/functions.php",
       dataType: 'json',
       data: {
-        buscarBases: "", idproducto: $('select[name="tecnica"] :selected').val()
+        buscarBases: "", id_producto: $('select[name="tecnica"] :selected').val()
       }
     }).done(function (response) {
       if (response.length > 0) {
@@ -1067,7 +1067,7 @@ function verificarCantidad() {
     method: "POST",
     url: "funciones/functions.php",
     data: {
-      cantidadMinima: "", idproducto: $('select[name="tecnica"] :selected').val()
+      cantidadMinima: "", id_producto: $('select[name="tecnica"] :selected').val()
     }
   }).done(function (response) {
     //Verifico que la cantidad introducida sea mayor que el mínimo de la técncia
@@ -1091,7 +1091,7 @@ function verificarCantidad() {
           method: "POST",
           url: "funciones/functions.php",
           data: {
-            precio: "", idproducto: $('select[name="tecnica"] :selected').val(), cantidad: inputCantidad.value, superficie: null
+            precio: "", id_producto: $('select[name="tecnica"] :selected').val(), cantidad: inputCantidad.value, superficie: null
           }
         }).done(function (response) {
           console.log("response=" + response);
@@ -1303,8 +1303,8 @@ function sumaSubtotal() {
   document.getElementById('resumenSubtotal').innerText = suma.toFixed(2).toString().replace('.', ',') + " €";
 
   //Relleno los campos ocultos
-  document.getElementById('precioMoldes').innerText = suma.toFixed(2).toString().replace('.', ',') + " €";
-  document.getElementById('precioSubtotal').innerText = suma.toFixed(2).toString().replace('.', ',') + " €";
+  document.getElementById('precioMoldes').value = sumaMoldes.toFixed(2);
+  document.getElementById('precioSubtotal').value = suma.toFixed(2);
 }
 
 function calcularSuperficieTela() {
@@ -1315,7 +1315,7 @@ function calcularSuperficieTela() {
     method: "POST",
     url: "funciones/functions.php",
     data: {
-      precio: "", idproducto: 0, id_complemento: 1, cantidad: inputCantidad.value, superficie: superficieBase
+      precio: "", id_producto: 0, id_complemento: 1, cantidad: inputCantidad.value, superficie: superficieBase
     }
   }).done(function (response) {
     response = response.trim();
@@ -1465,7 +1465,7 @@ function calcularSuperficieProducto() {
     method: "POST",
     url: "funciones/functions.php",
     data: {
-      precio: "", idproducto: $('select[name="tecnica"] :selected').val(), cantidad: inputCantidad.value, superficie: superficie
+      precio: "", id_producto: $('select[name="tecnica"] :selected').val(), cantidad: inputCantidad.value, superficie: superficie
     }
   }).done(function (response) {
     response = response.trim();

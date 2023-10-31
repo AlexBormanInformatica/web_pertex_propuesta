@@ -142,50 +142,6 @@ if (isset($_POST['nombreDisenoExiste'])) {
     }
     echo false;
 }
-/**
- * Busca la existencia del nombre de pedido por usuario, devuelve true si existe.
- */
-if (isset($_POST['nombrePedidoExiste'])) {
-    require "../includes/config.php";
-    $nombre = $_POST["nombrePedidoExiste"];
-
-    try {
-        $sql = "SELECT nombrepedido FROM pedidos WHERE UPPER(nombrepedido) = UPPER(?) AND usuarios_id=?";
-        $sentencia = $conn->prepare($sql);
-        $sentencia->bindParam(1, $nombre, PDO::PARAM_STR);
-        $sentencia->bindParam(2, $_SESSION['ID'], PDO::PARAM_INT);
-        $sentencia->execute();
-    } catch (Exception $e) {
-        echo $e->getMessage();
-    }
-
-    if ($sentencia->rowCount() == 1) {
-        echo true;
-    }
-    echo false;
-}
-
-/**
- * Busca la existencia del nombre de personalización/diseño, devuelve true si existe.
- */
-function datosCompletos()
-{
-    require "../includes/config.php";
-    try {
-        $sql = "SELECT sepuedemodificar
-        FROM fichaempresametas
-        WHERE email=?";
-        $sentencia = $conn_formularios->prepare($sql);
-        $sentencia->bindParam(1, $_SESSION['email'], PDO::PARAM_STR);
-        $sentencia->execute();
-        $results = $sentencia->fetchColumn();
-        if ($results == 0) {
-            return true;
-        }
-    } catch (Exception $e) {
-        echo $e->getMessage();
-    }
-}
 
 /**
  * Busca el precio del producto indicado segun la cantidad y superficie
@@ -196,7 +152,7 @@ if (isset($_POST['precio'])) {
     $cantidad = $_POST['cantidad'];
     $superficie = $_POST['superficie'];
 
-    $idproducto = isset($_POST['idproducto']) ? $_POST['idproducto'] : 0;
+    $id_producto = isset($_POST['id_producto']) ? $_POST['id_producto'] : 0;
     $id_complemento = isset($_POST['id_complemento']) ? $_POST['id_complemento'] : 0;
 
     if ($cantidad == 1) { // Asignamos valor a variable que servira para la consulta SQL
@@ -241,15 +197,15 @@ if (isset($_POST['precio'])) {
         $sqlCantidad = 10000;
     }
 
-    if ($idproducto != 0) {
+    if ($id_producto != 0) {
         try {
-            $sql = "SELECT `" . $sqlCantidad . "` FROM `precios`  WHERE `productos_idproductos`= ? ";
+            $sql = "SELECT `" . $sqlCantidad . "` FROM `precios`  WHERE `id_producto`= ? ";
             if ($superficie != null) {
                 $sql .= " AND superficie > ? ";
                 $sql .= " ORDER BY superficie ASC LIMIT 1;";
             }
             $query = $conn->prepare($sql);
-            $query->bindParam(1, $idproducto, PDO::PARAM_INT);
+            $query->bindParam(1, $id_producto, PDO::PARAM_INT);
             if ($superficie != null) {
                 $query->bindParam(2, $superficie, PDO::PARAM_STR);
             }
@@ -260,7 +216,7 @@ if (isset($_POST['precio'])) {
         }
     } else if ($id_complemento != 0) {
         try {
-            $sql = "SELECT `" . $sqlCantidad . "` FROM `precios`  WHERE `id_complementos`= ? AND superficie > ? ORDER BY superficie ASC LIMIT 1;";
+            $sql = "SELECT `" . $sqlCantidad . "` FROM `precios`  WHERE `id_complemento`= ? AND superficie > ? ORDER BY superficie ASC LIMIT 1;";
             $query = $conn->prepare($sql);
             $query->bindParam(1, $id_complemento, PDO::PARAM_INT);
             $query->bindParam(2, $superficie, PDO::PARAM_STR);
@@ -276,7 +232,7 @@ if (isset($_POST['precioTopes'])) {
     require "../includes/config.php";
 
     try {
-        $sql = "SELECT `fijo` FROM `precios`  WHERE `id_complementos`= 4";
+        $sql = "SELECT `fijo` FROM `precios`  WHERE `id_complemento`= 4";
         $query = $conn->prepare($sql);
         $query->execute();
         echo $query->fetchColumn();
@@ -292,8 +248,8 @@ if (isset($_POST['precioPorForma'])) {
     require "../includes/config.php";
     $sqlCantidad = 0;
     $cantidad = $_POST['cantidad'];
-    $idforma = $_POST['idforma'];
-    $idproducto = $_POST['idproducto'];
+    $id_forma = $_POST['id_forma'];
+    $id_producto = $_POST['id_producto'];
 
     if ($cantidad == 1) { // Asignamos valor a variable que servira para la consulta SQL
         $sqlCantidad = 1;
@@ -337,10 +293,10 @@ if (isset($_POST['precioPorForma'])) {
         $sqlCantidad = 10000;
     }
     try {
-        $sql = "SELECT `" . $sqlCantidad . "` FROM `precios`  WHERE `productos_idproductos`= ? AND id_formas=?";
+        $sql = "SELECT `" . $sqlCantidad . "` FROM `precios`  WHERE `id_producto`= ? AND id_forma=?";
         $query = $conn->prepare($sql);
-        $query->bindParam(1, $idproducto, PDO::PARAM_INT);
-        $query->bindParam(2, $idforma, PDO::PARAM_STR);
+        $query->bindParam(1, $id_producto, PDO::PARAM_INT);
+        $query->bindParam(2, $id_forma, PDO::PARAM_STR);
         $query->execute();
         echo $query->fetchColumn();
     } catch (Exception $e) {
@@ -364,9 +320,9 @@ if (isset($_POST['cantidadMinima'])) {
         WHEN `2999` IS NOT NULL THEN '2000'  WHEN `3999` IS NOT NULL THEN '3000' 
         WHEN `5999` IS NOT NULL THEN '4000'  WHEN `7999` IS NOT NULL THEN '6000' 
         WHEN `9999` IS NOT NULL THEN '8000'  WHEN `10000` IS NOT NULL THEN '10000'  ELSE 'fijo' 
-        END AS primera_columna_no_nula  FROM precios  WHERE productos_idproductos = ? limit 1;";
+        END AS primera_columna_no_nula  FROM precios  WHERE id_producto = ? limit 1;";
         $query = $conn->prepare($sql);
-        $query->bindParam(1, $_POST['idproducto'], PDO::PARAM_INT);
+        $query->bindParam(1, $_POST['id_producto'], PDO::PARAM_INT);
         $query->execute();
         echo $query->fetchColumn();
     } catch (Exception $e) {
@@ -403,12 +359,12 @@ if (isset($_POST['buscarMail'])) {
 
 if (isset($_POST['buscarBases'])) {
     require "../includes/config.php";
-    $id = $_POST['idproducto'];
+    $id = $_POST['id_producto'];
 
     $sql = "SELECT c.id_complemento FROM pertex.complementos c
     INNER JOIN productos_has_complementos pc ON pc.id_complemento = c.id_complemento
-    INNER JOIN productos p ON p.idproductos = pc.id_productos
-    WHERE idproductos=?";
+    INNER JOIN productos p ON p.id_producto = pc.id_producto
+    WHERE id_producto=?";
     $query = $conn->prepare($sql);
     $query->bindParam(1, $id, PDO::PARAM_INT);
     $query->execute();
@@ -420,12 +376,12 @@ if (isset($_POST['buscarBases'])) {
 
 if (isset($_POST['buscarFormas'])) {
     require "../includes/config.php";
-    $id = $_POST['idproducto'];
+    $id = $_POST['id_producto'];
 
-    $sql = "SELECT f.id_formas FROM pertex.formas f
-    INNER JOIN formas_has_productos fp ON fp.formas_id_formas = f.id_formas
-    INNER JOIN productos p ON p.idproductos = fp.productos_idproductos
-    WHERE idproductos=?";
+    $sql = "SELECT f.id_forma FROM pertex.formas f
+    INNER JOIN productos_has_formas fp ON fp.id_forma = f.id_forma
+    INNER JOIN productos p ON p.id_producto = fp.id_producto
+    WHERE id_producto=?";
     $query = $conn->prepare($sql);
     $query->bindParam(1, $id, PDO::PARAM_INT);
     $query->execute();
@@ -437,11 +393,11 @@ if (isset($_POST['buscarFormas'])) {
 
 if (isset($_POST['buscarColores'])) {
     require "../includes/config.php";
-    $id = $_POST['idproducto'];
+    $id = $_POST['id_producto'];
     $coloresData = []; // Un array para almacenar los datos de colores
 
     //obtengo los id color
-    $sql = "SELECT idColor FROM colores_has_productos WHERE productos_idproductos=?";
+    $sql = "SELECT idColor FROM productos_has_colores WHERE id_producto=?";
     $query = $conn->prepare($sql);
     $query->bindParam(1, $id, PDO::PARAM_INT);
     $query->execute();
@@ -464,11 +420,11 @@ if (isset($_POST['buscarColores'])) {
 
 if (isset($_POST['buscarMetal'])) {
     require "../includes/config.php";
-    $id = $_POST['idproducto'];
+    $id = $_POST['id_producto'];
     $coloresData = []; // Un array para almacenar los datos de colores
 
     //obtengo los id color
-    $sql = "SELECT colores_idColor FROM productos_has_modulo WHERE productos_idproductos=? AND modulo_idmodulo=1";
+    $sql = "SELECT idColor FROM productos_has_modulo WHERE id_producto=? AND id_modulo=1";
     $query = $conn->prepare($sql);
     $query->bindParam(1, $id, PDO::PARAM_INT);
     $query->execute();
@@ -479,7 +435,7 @@ if (isset($_POST['buscarMetal'])) {
         $sql = "SELECT rgb_R, rgb_G, rgb_B, nombre
         FROM colores WHERE idColor=?";
         $query = $conn_prgborman->prepare($sql);
-        $query->bindParam(1, $idcolor->colores_idColor, PDO::PARAM_INT);
+        $query->bindParam(1, $idcolor->idColor, PDO::PARAM_INT);
         $query->execute();
         // Agregar los resultados al array
         $coloresData[] = $query->fetchAll(PDO::FETCH_OBJ);
@@ -491,11 +447,11 @@ if (isset($_POST['buscarMetal'])) {
 
 if (isset($_POST['buscarPiel'])) {
     require "../includes/config.php";
-    $id = $_POST['idproducto'];
+    $id = $_POST['id_producto'];
     $coloresData = []; // Un array para almacenar los datos de colores
 
     //obtengo los id color
-    $sql = "SELECT colores_idColor FROM productos_has_modulo WHERE productos_idproductos=? AND modulo_idmodulo=2";
+    $sql = "SELECT idColor FROM productos_has_modulo WHERE id_producto=? AND id_modulo=2";
     $query = $conn->prepare($sql);
     $query->bindParam(1, $id, PDO::PARAM_INT);
     $query->execute();
@@ -506,7 +462,7 @@ if (isset($_POST['buscarPiel'])) {
         $sql = "SELECT rgb_R, rgb_G, rgb_B, nombre
         FROM colores WHERE idColor=?";
         $query = $conn_prgborman->prepare($sql);
-        $query->bindParam(1, $idcolor->colores_idColor, PDO::PARAM_INT);
+        $query->bindParam(1, $idcolor->idColor, PDO::PARAM_INT);
         $query->execute();
         // Agregar los resultados al array
         $coloresData[] = $query->fetchAll(PDO::FETCH_OBJ);
@@ -522,7 +478,7 @@ if (isset($_POST['buscarColorBase'])) {
     $coloresData = []; // Un array para almacenar los datos de colores
 
     //obtengo los id color
-    $sql = "SELECT idColor FROM complementos_has_colores WHERE id_complementos=?";
+    $sql = "SELECT idColor FROM complementos_has_colores WHERE id_complemento=?";
     $query = $conn->prepare($sql);
     $query->bindParam(1, $id, PDO::PARAM_INT);
     $query->execute();
@@ -559,13 +515,13 @@ if (isset($_POST['detallesEncargoSeleccionado'])) {
     $id = $_POST['numDiseno'];
 
     $sql = "SELECT e.nota, e.ancho_cm, e.alto_cm, e.ancho_cm_base, e.alto_cm_base, e.cantidad_topes, 
-    p.nombre as producto, p.colores_limitados, f.formas, c.nombre as complemento, nota
+    p.nombre as producto, p.colores_limitados, f.nombre as formas, c.nombre as complemento, nota
     id_color_complemento, id_color_metal, id_color_piel
-    FROM encargos e
-    INNER JOIN productos p ON p.idproductos = e.idproductos
-    LEFT JOIN formas f ON e.id_formas = f.id_formas
+    FROM disenos e
+    INNER JOIN productos p ON p.id_producto = e.id_producto
+    LEFT JOIN formas f ON e.id_forma = f.id_forma
     LEFT JOIN complementos c ON e.id_complemento = c.id_complemento
-    WHERE id_encargo = ?";
+    WHERE id_diseno = ?";
     $query = $conn->prepare($sql);
     $query->bindParam(1, $id, PDO::PARAM_INT);
     $query->execute();
@@ -594,7 +550,7 @@ if (isset($_POST['detallesEncargoSeleccionado'])) {
     $lista_colores = [];
     if ($colores_limitados = 1) {
         //obtengo los id color
-        $sql = "SELECT idColor FROM colores_has_encargos WHERE idencargo=?";
+        $sql = "SELECT idColor FROM disenos_has_colores WHERE id_diseno=?";
         $query = $conn->prepare($sql);
         $query->bindParam(1, $id, PDO::PARAM_INT);
         $query->execute();

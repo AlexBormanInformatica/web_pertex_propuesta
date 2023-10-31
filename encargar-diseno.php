@@ -96,10 +96,10 @@ require_once('assets/_partials/idioma.php');
                 <fieldset>
                   <?php
                   try {
-                    $sql = "SELECT c.idCategorias, p.idproductos, p.nombre, p.molde, p.max_colores, p.cmyk, 
+                    $sql = "SELECT c.id_categoria, p.id_producto, p.nombre, p.molde, p.max_colores, p.cmyk, 
                     p.colores_pantone, p.colores_limitados, p.tope, p.alto_min, p.ancho_min, p.ancho_max, p.alto_max
                     FROM categorias c 
-                    INNER JOIN productos p ON c.idCategorias = p.categorias_idCategorias
+                    INNER JOIN productos p ON c.id_categoria = p.id_categoria
                     GROUP BY nombre";
                     $query = $conn->query($sql);
                     $results = $query->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC);
@@ -124,7 +124,7 @@ require_once('assets/_partials/idioma.php');
                             <optgroup label="<?= buscarTexto("PRG", "categorias", $result, "categoriaNombre", $_SESSION['idioma']); ?>">
                               <?php foreach ($productos as $producto) :
                               ?>
-                                <option class="<?= $producto['max_colores']  ?> <?= $producto['molde']  ?> <?= $producto['cmyk']  ?> <?= $producto['colores_limitados']  ?> <?= $producto['tope']  ?> <?= $producto['ancho_min']  ?> <?= $producto['alto_min']  ?> <?= $producto['ancho_max']  ?> <?= $producto['alto_max']  ?> <?= $producto['colores_pantone']  ?>" value="<?= $producto['idproductos']  ?>">
+                                <option class="<?= $producto['max_colores']  ?> <?= $producto['molde']  ?> <?= $producto['cmyk']  ?> <?= $producto['colores_limitados']  ?> <?= $producto['tope']  ?> <?= $producto['ancho_min']  ?> <?= $producto['alto_min']  ?> <?= $producto['ancho_max']  ?> <?= $producto['alto_max']  ?> <?= $producto['colores_pantone']  ?>" value="<?= $producto['id_producto']  ?>">
                                   <!--
                                     class:[0] maximo de colores -> máximo de colores a elegir 
                                           [1] molde -> es el precio del molde del producto
@@ -139,7 +139,7 @@ require_once('assets/_partials/idioma.php');
                                           [8] alto maximo
                                           [9] colores_pantone -> si tiene colores, debe elegir en el paso 4
                                     -->
-                                  <?= buscarTexto("PRG", "productos", $producto['idproductos'], "nombre", $_SESSION['idioma']);
+                                  <?= buscarTexto("PRG", "productos", $producto['id_producto'], "nombre", $_SESSION['idioma']);
                                   ?>
                                 </option>
                               <?php
@@ -249,10 +249,10 @@ require_once('assets/_partials/idioma.php');
                       ?>
                       <div class="row">
                         <?php foreach ($results as $result) { ?>
-                          <div class="cc-selector divCadaForma text-center col-3" id="forma<?= $result->id_formas ?>">
-                            <input type="radio" name="formas" value="<?= $result->id_formas ?>" id="forma_<?= $result->id_formas ?>" />
-                            <label class="drinkcard-cc mb-0  forma_<?= $result->id_formas ?>" for="forma_<?= $result->id_formas ?>"></label>
-                            <p style="font-size:12px;color:#0075BE;"><?= $result->formas ?></p>
+                          <div class="cc-selector divCadaForma text-center col-3" id="forma<?= $result->id_forma ?>">
+                            <input type="radio" name="formas" value="<?= $result->id_forma ?>" id="forma_<?= $result->id_forma ?>" />
+                            <label class="drinkcard-cc mb-0  forma_<?= $result->id_forma ?>" for="forma_<?= $result->id_forma ?>"></label>
+                            <p style="font-size:12px;color:#0075BE;"><?= $result->nombre ?></p>
                           </div>
                         <?php } ?>
                       </div>
@@ -438,7 +438,8 @@ require_once('assets/_partials/idioma.php');
 
           <?php
           try {
-            $sql = "SELECT p.idproductos, p.desc_larga, p.desc_corta, p.imagen,   i.descripcion as info, e.descripcion as entrega, cl.descripcion as lavado FROM productos as p
+            $sql = "SELECT p.id_producto, p.descripcion_larga, p.descripcion_corta, p.imagen,  
+            i.descripcion as info, e.descripcion as entrega, cl.descripcion as lavado FROM productos as p
             INNER JOIN informacion as i ON i.idinformacion = p.informacion_idinformacion
             INNER JOIN envios as e ON e.idenvios = p.envios_idenvios
             INNER JOIN consejoslavado as cl ON cl.idconsejoslavado = p.consejoslavado_idconsejoslavado ";
@@ -567,7 +568,7 @@ require_once('assets/_partials/idioma.php');
           </fieldset>
         </div>
 
-        <!--Modal a que pedido agregar-->
+        <!--Modal encargar diseño-->
         <div class="modal fade" id="encargarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 1000px;">
             <div class="modal-content modal-aviso">
@@ -585,7 +586,7 @@ require_once('assets/_partials/idioma.php');
                 <p class="mb-3">Por favor, revisa tus datos de diseño y asegúrate de que todo esté correcto antes de enviar.</p>
                 <p>Tu diseño será entregado a nuestros diseñadores, y recibirás información sobre el proceso en tu correo electrónico.</p>
 
-                <button type="submit" class="btn btn-primary">ENCARGAR DISEÑO</button>
+                <button id="submitDelFormularioEncargarDiseno" class="btn btn-primary">ENCARGAR DISEÑO</button>
               </div>
             </div>
           </div>
@@ -652,23 +653,26 @@ require_once('assets/_partials/idioma.php');
       });
     </script>
     <script>
-      /* CONTROL DE BOTONES SIGUIENTE Y ENCARGAR*/
-      const formulario = document.getElementById('formularioPersonalizar');
-      const botonEnviar = document.getElementById('encargarDiseno');
+      document.addEventListener("DOMContentLoaded", function() {
+        /* CONTROL DE BOTONES SIGUIENTE Y ENCARGAR*/
+        const formulario = document.getElementById('formularioPersonalizar');
+        const botonEnviar = document.getElementById('submitDelFormularioEncargarDiseno');
 
-      formulario.addEventListener('submit', function(event) {
-        event.preventDefault(); // Evitar el envío del formulario al presionar Enter
-      });
+        botonEnviar.addEventListener('click', function() {
+          console.log("click boton enviar formulario");
+          formulario.submit(); // Enviar el formulario cuando se hace clic en el botón
+        });
 
-      botonEnviar.addEventListener('click', function() {
-        formulario.submit(); // Enviar el formulario cuando se hace clic en el botón
-      });
+        formulario.addEventListener('submit', function(event) {
+          event.preventDefault(); // Evitar el envío del formulario al presionar Enter
+        });
 
-      const enlace = document.getElementById('v-pills-next-tab');
-      enlace.addEventListener('click', function(event) {
-        if (enlace.getAttribute('disabled') === 'true') {
-          event.preventDefault(); // Evitar la acción predeterminada del enlace
-        }
+        const enlace = document.getElementById('v-pills-next-tab');
+        enlace.addEventListener('click', function(event) {
+          if (enlace.getAttribute('disabled') === 'true') {
+            event.preventDefault(); // Evitar la acción predeterminada del enlace
+          }
+        });
       });
     </script>
 </body>

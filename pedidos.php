@@ -50,19 +50,19 @@ function agregarLineaRepetida($conn, $linea, $cantidad, $nombre)
 
     foreach ($results as $result) {
         try {
-            echo "INSERT INTO lineapedido (Ancho, Largo, Superficie, Cantidad, pedidos_idpedidos, colores_has_productos_id, formas_id_formas, base_has_colores_idbase, 
-            base_has_colores_idcolor, idcolor_piel, idcolor_modulo, ancho_base, largo_base, pelo, cantidad_topes, numFabricacion, numReferencia, subtotal, preciomolde, 
+            echo "INSERT INTO lineapedido (Ancho, Largo, Superficie, Cantidad, pedidos_idpedidos, productos_has_colores_id, id_forma, base_has_colores_idbase, 
+            base_has_idColor, idcolor_piel, idcolor_modulo, ancho_base, largo_base, pelo, cantidad_topes, numFabricacion, numReferencia, subtotal, preciomolde, 
             nombrepersonalizacion)
-            SELECT Ancho, Largo, Superficie," . $cantidad . ", " . $idPedidoNuevoRepetido . ", colores_has_productos_id, formas_id_formas, base_has_colores_idbase, 
-            base_has_colores_idcolor, idcolor_piel, idcolor_modulo, ancho_base, largo_base, pelo, cantidad_topes, null, numReferencia, 0, 0, '" . $nombre . "'
+            SELECT Ancho, Largo, Superficie," . $cantidad . ", " . $idPedidoNuevoRepetido . ", productos_has_colores_id, id_forma, base_has_colores_idbase, 
+            base_has_idColor, idcolor_piel, idcolor_modulo, ancho_base, largo_base, pelo, cantidad_topes, null, numReferencia, 0, 0, '" . $nombre . "'
             FROM lineapedido
             WHERE idlineaPedido=" . $result->idlineaPedido;
 
-            $sql = "INSERT INTO lineapedido (Ancho, Largo, Superficie, Cantidad, pedidos_idpedidos, colores_has_productos_id, formas_id_formas, base_has_colores_idbase, 
-            base_has_colores_idcolor, idcolor_piel, idcolor_modulo, ancho_base, largo_base, pelo, cantidad_topes, numFabricacion, numReferencia, subtotal, preciomolde, 
+            $sql = "INSERT INTO lineapedido (Ancho, Largo, Superficie, Cantidad, pedidos_idpedidos, productos_has_colores_id, id_forma, base_has_colores_idbase, 
+            base_has_idColor, idcolor_piel, idcolor_modulo, ancho_base, largo_base, pelo, cantidad_topes, numFabricacion, numReferencia, subtotal, preciomolde, 
             nombrepersonalizacion)
-            SELECT Ancho, Largo, Superficie," . $cantidad . ", " . $idPedidoNuevoRepetido . ", colores_has_productos_id, formas_id_formas, base_has_colores_idbase, 
-            base_has_colores_idcolor, idcolor_piel, idcolor_modulo, ancho_base, largo_base, pelo, cantidad_topes, null, numReferencia, 0, 0, '" . $nombre . "'
+            SELECT Ancho, Largo, Superficie," . $cantidad . ", " . $idPedidoNuevoRepetido . ", productos_has_colores_id, id_forma, base_has_colores_idbase, 
+            base_has_idColor, idcolor_piel, idcolor_modulo, ancho_base, largo_base, pelo, cantidad_topes, null, numReferencia, 0, 0, '" . $nombre . "'
             FROM lineapedido
             WHERE idlineaPedido=" . $result->idlineaPedido;
             $sentencia = $conn->prepare($sql);
@@ -92,7 +92,7 @@ function agregarLineaRepetida($conn, $linea, $cantidad, $nombre)
         //Sumar subtotal
         $total = getPrecioPedido($conn, $idPedidoNuevoRepetido);
         try {
-            $sql_subtotal = "SELECT colores_has_productos_id, Superficie, Cantidad, formas_id_formas, base_has_colores_idbase, ancho_base, largo_base, pelo, cantidad_topes 
+            $sql_subtotal = "SELECT productos_has_colores_id, Superficie, Cantidad, id_forma, base_has_colores_idbase, ancho_base, largo_base, pelo, cantidad_topes 
         FROM lineapedido WHERE idlineapedido=" . $idLineaNueva;
             $query_subtotal = $conn->prepare($sql_subtotal);
             $query_subtotal->execute();
@@ -104,9 +104,9 @@ function agregarLineaRepetida($conn, $linea, $cantidad, $nombre)
         //Buscar tarifas y calcular subtotal de linea de pedido
         //Dependera de la tecnica, si quiere base, etc etc
         foreach ($results_subtotal as $result_subtotal) {
-            $colores_has_productos_id = $result_subtotal->colores_has_productos_id;
+            $productos_has_colores_id = $result_subtotal->productos_has_colores_id;
             $sup = $result_subtotal->Superficie;
-            $formas_id_formas = $result_subtotal->formas_id_formas;
+            $id_forma = $result_subtotal->id_forma;
             $base_has_colores_idbase = $result_subtotal->base_has_colores_idbase;
             $ancho_base = $result_subtotal->ancho_base;
             $largo_base = $result_subtotal->largo_base;
@@ -120,13 +120,13 @@ function agregarLineaRepetida($conn, $linea, $cantidad, $nombre)
             $preciopelo = 0;
 
             //Calculo precio producto x unidad
-            $idprod = getIdProductoByCHP($conn, $colores_has_productos_id);
+            $idprod = getid_productoByCHP($conn, $productos_has_colores_id);
             if (
-                $colores_has_productos_id == '3370' || $colores_has_productos_id == '3524' || $colores_has_productos_id == '3780' ||
-                $colores_has_productos_id == '3786'
+                $productos_has_colores_id == '3370' || $productos_has_colores_id == '3524' || $productos_has_colores_id == '3780' ||
+                $productos_has_colores_id == '3786'
             ) { //Si es un producto fijo (crematex, cremajet, cremaglass, papertick)
-                if ($colores_has_productos_id == '3786') { //Si tiene eleccion de forma (papertick)
-                    $producto = getTarifa($conn, 41, $formas_id_formas, $cant);
+                if ($productos_has_colores_id == '3786') { //Si tiene eleccion de forma (papertick)
+                    $producto = getTarifa($conn, 41, $id_forma, $cant);
                 } else {
                     $producto = getTarifa($conn, $idprod, $sup, $cant);
                 }
@@ -135,7 +135,7 @@ function agregarLineaRepetida($conn, $linea, $cantidad, $nombre)
             }
 
             //Si es pulseras precio de los topes
-            if ($colores_has_productos_id == '3787') {
+            if ($productos_has_colores_id == '3787') {
                 $condint = getTarifa($conn, 47, 47, $cantidad_topes);
             }
 
@@ -197,17 +197,17 @@ function lineaPedidoExistente(
     $superficie,
     $cantidad,
     $pedidos_idpedidos,
-    $formas_id_formas,
+    $id_forma,
     $base_has_colores_idbase,
-    $base_has_colores_idcolor,
+    $base_has_idColor,
     $idcolor_piel,
     $idcolor_modulo,
     $ancho_base,
     $largo_base,
     $pelo,
     $cantidad_topes,
-    $colores_has_productos_id,
-    $idProducto,
+    $productos_has_colores_id,
+    $id_producto,
     $subtotal,
     $preciomolde,
     $nombre_personalizacion
@@ -215,15 +215,15 @@ function lineaPedidoExistente(
     try {
         $nomper = $nombre_personalizacion == '' ? "Diseño - " . $pedidos_idpedidos : $nombre_personalizacion;
 
-        $sql = "SELECT colores_has_productos.id FROM colores_has_productos
-        INNER JOIN productos ON productos.idproductos = colores_has_productos.productos_idproductos
-        WHERE colores_has_productos.idColor = 1584 AND productos_idproductos=$idProducto";
+        $sql = "SELECT productos_has_colores.id FROM productos_has_colores
+        INNER JOIN productos ON productos.id_producto = productos_has_colores.id_producto
+        WHERE productos_has_colores.idColor = 1584 AND id_producto=$id_producto";
         $query = $conn->prepare($sql);
         $query->execute();
         $id_colorProducto = $query->fetchColumn();
 
-        $sql = "INSERT INTO lineapedido (Ancho, Largo, Superficie, cantidad, pedidos_idpedidos, colores_has_productos_id, formas_id_formas, 
-            base_has_colores_idbase, base_has_colores_idcolor, idcolor_piel, idcolor_modulo, ancho_base, largo_base, pelo, cantidad_topes, 
+        $sql = "INSERT INTO lineapedido (Ancho, Largo, Superficie, cantidad, pedidos_idpedidos, productos_has_colores_id, id_forma, 
+            base_has_colores_idbase, base_has_idColor, idcolor_piel, idcolor_modulo, ancho_base, largo_base, pelo, cantidad_topes, 
             subtotal, preciomolde, nombrepersonalizacion) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $sentencia = $conn->prepare($sql);
@@ -233,9 +233,9 @@ function lineaPedidoExistente(
         $sentencia->bindParam(4, $cantidad, PDO::PARAM_STR);
         $sentencia->bindParam(5, $pedidos_idpedidos, PDO::PARAM_INT);
         $sentencia->bindParam(6, $id_colorProducto, PDO::PARAM_INT);
-        $sentencia->bindParam(7, $formas_id_formas, PDO::PARAM_STR);
+        $sentencia->bindParam(7, $id_forma, PDO::PARAM_STR);
         $sentencia->bindParam(8, $base_has_colores_idbase, PDO::PARAM_STR);
-        $sentencia->bindParam(9, $base_has_colores_idcolor, PDO::PARAM_STR);
+        $sentencia->bindParam(9, $base_has_idColor, PDO::PARAM_STR);
         $sentencia->bindParam(10, $idcolor_piel, PDO::PARAM_STR);
         $sentencia->bindParam(11, $idcolor_modulo, PDO::PARAM_STR);
         $sentencia->bindParam(12, $ancho_base, PDO::PARAM_STR);
@@ -255,7 +255,7 @@ function lineaPedidoExistente(
     $id_lineapedido_nuevo = $conn->lastInsertId(); //https://www.php.net/manual/es/pdo.lastinsertid.php
 
     //Agregar los colores de la linea de pedido
-    $str = strval($colores_has_productos_id[0]);
+    $str = strval($productos_has_colores_id[0]);
     $arr = explode(",", $str);
     foreach ($arr as $idcolor) {
         try {
@@ -317,17 +317,17 @@ function lineaPedidoNuevo(
     $largo,
     $superficie,
     $cantidad,
-    $formas_id_formas,
+    $id_forma,
     $base_has_colores_idbase,
-    $base_has_colores_idcolor,
+    $base_has_idColor,
     $idcolor_piel,
     $idcolor_modulo,
     $ancho_base,
     $largo_base,
     $pelo,
     $cantidad_topes,
-    $colores_has_productos_id,
-    $idProducto,
+    $productos_has_colores_id,
+    $id_producto,
     $subtotal,
     $preciomolde,
     $nombre_pedido,
@@ -338,9 +338,9 @@ function lineaPedidoNuevo(
     $nomped = $nombre_pedido == '' ? "Pedido - " . $numeroDePedidoNuevo : $nombre_pedido;
 
     try {
-        $sql = "SELECT colores_has_productos.id FROM colores_has_productos
-        INNER JOIN productos ON productos.idproductos = colores_has_productos.productos_idproductos
-        WHERE colores_has_productos.idColor = 1584 AND productos_idproductos=$idProducto";
+        $sql = "SELECT productos_has_colores.id FROM productos_has_colores
+        INNER JOIN productos ON productos.id_producto = productos_has_colores.id_producto
+        WHERE productos_has_colores.idColor = 1584 AND id_producto=$id_producto";
         $query = $conn->prepare($sql);
         $query->execute();
         $id_colorProducto = $query->fetchColumn();
@@ -367,8 +367,8 @@ function lineaPedidoNuevo(
 
     //Agregar la linea de pedido al pedido que se ha creado
     try {
-        $sql = "INSERT INTO lineapedido (Ancho, Largo, Superficie, cantidad, pedidos_idpedidos, colores_has_productos_id, formas_id_formas, 
-        base_has_colores_idbase, base_has_colores_idcolor, idcolor_piel, idcolor_modulo, ancho_base, largo_base, pelo, cantidad_topes, subtotal,
+        $sql = "INSERT INTO lineapedido (Ancho, Largo, Superficie, cantidad, pedidos_idpedidos, productos_has_colores_id, id_forma, 
+        base_has_colores_idbase, base_has_idColor, idcolor_piel, idcolor_modulo, ancho_base, largo_base, pelo, cantidad_topes, subtotal,
         preciomolde, nombrepersonalizacion) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $sentencia = $conn->prepare($sql);
@@ -378,9 +378,9 @@ function lineaPedidoNuevo(
         $sentencia->bindParam(4, $cantidad, PDO::PARAM_STR);
         $sentencia->bindParam(5, $id_pedido_nuevo, PDO::PARAM_INT);
         $sentencia->bindParam(6, $id_colorProducto, PDO::PARAM_INT);
-        $sentencia->bindParam(7, $formas_id_formas, PDO::PARAM_STR);
+        $sentencia->bindParam(7, $id_forma, PDO::PARAM_STR);
         $sentencia->bindParam(8, $base_has_colores_idbase, PDO::PARAM_STR);
-        $sentencia->bindParam(9, $base_has_colores_idcolor, PDO::PARAM_STR);
+        $sentencia->bindParam(9, $base_has_idColor, PDO::PARAM_STR);
         $sentencia->bindParam(10, $idcolor_piel, PDO::PARAM_STR);
         $sentencia->bindParam(11, $idcolor_modulo, PDO::PARAM_STR);
         $sentencia->bindParam(12, $ancho_base, PDO::PARAM_STR);
@@ -399,7 +399,7 @@ function lineaPedidoNuevo(
     $id_lineapedido_nuevo = $conn->lastInsertId(); //https://www.php.net/manual/es/pdo.lastinsertid.php
 
     //Agregar los colores de la linea de pedido
-    $str = strval($colores_has_productos_id[0]);
+    $str = strval($productos_has_colores_id[0]);
     $arr = explode(",", $str);
     foreach ($arr as $idcolor) {
         try {
@@ -605,7 +605,7 @@ function getTarifa($conn, $id, $superficie, $cantidad)
 
     try {
         $sql = "SELECT `" . $cantidadSQL . "` FROM precios 
-        WHERE superficie='$superficieSQL' AND productos_idproductos =$id";
+        WHERE superficie='$superficieSQL' AND id_producto =$id";
         $query = $conn->prepare($sql);
         $query->execute();
         $tarifa = $query->fetchColumn();
@@ -625,11 +625,11 @@ function getTarifa($conn, $id, $superficie, $cantidad)
 /**
  * Buscar id del producto por el id del color_has_producto
  */
-function getIdProductoByCHP($conn, $colores_has_productos_id)
+function getid_productoByCHP($conn, $productos_has_colores_id)
 {
     try {
-        $sql = "SELECT productos_idproductos FROM colores_has_productos 
-        WHERE id=" . $colores_has_productos_id . " GROUP BY productos_idproductos";
+        $sql = "SELECT id_producto FROM productos_has_colores 
+        WHERE id=" . $productos_has_colores_id . " GROUP BY id_producto";
         $query = $conn->prepare($sql);
         $query->execute();
         return $query->fetchColumn();

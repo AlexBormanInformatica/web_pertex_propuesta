@@ -6,16 +6,16 @@ require_once('assets/_partials/idioma.php');
 $fecha = date("d/m/Y H:i", time());
 // Obtengo el id del pedido y sus datos
 
-$sql = "SELECT e.id_encargo, e.subtotal, e.nota, e.ancho_cm, e.alto_cm, 
-e.cantidad, e.ancho_cm_base, e.alto_cm_base, e.cantidad_topes, p.nombre as producto, p.colores_limitados, f.formas, c.nombre as complemento,
+$sql = "SELECT e.id_diseno, e.subtotal, e.nota, e.ancho_cm, e.alto_cm, 
+e.cantidad, e.ancho_cm_base, e.alto_cm_base, e.cantidad_topes, p.nombre as producto, p.colores_limitados, f.nombre as formas, c.nombre as complemento,
 id_color_complemento, id_color_metal, id_color_piel
-FROM encargos e
-INNER JOIN productos p ON p.idproductos = e.idproductos
-LEFT JOIN formas f ON e.id_formas = f.id_formas
+FROM disenos e
+INNER JOIN productos p ON p.id_producto = e.id_producto
+LEFT JOIN formas f ON e.id_forma = f.id_forma
 LEFT JOIN complementos c ON e.id_complemento = c.id_complemento
-WHERE id_encargo = ?";
+WHERE id_diseno = ?";
 $query = $conn->prepare($sql);
-$query->bindParam(1, $_SESSION['id_ultimo_encargo'], PDO::PARAM_INT);
+$query->bindParam(1, $_SESSION['id_ultimo_diseno'], PDO::PARAM_INT);
 $query->execute();
 $results = $query->fetchAll(PDO::FETCH_OBJ);
 
@@ -23,7 +23,7 @@ $id = $producto = $comentarios = $ancho = $alto = $forma = $subtotal = $cantidad
 $id_color_complemento = $id_color_metal = $id_color_piel = null;
 $colores_limitados = 0;
 foreach ($results as $result) {
-    $id = $result->id_encargo;
+    $id = $result->id_diseno;
     $producto = $result->producto;
     $comentarios = $result->nota;
     $ancho = $result->ancho_cm;
@@ -45,7 +45,7 @@ foreach ($results as $result) {
 $lista_colores = [];
 if ($colores_limitados = 1) {
     //obtengo los id color
-    $sql = "SELECT idColor FROM colores_has_encargos WHERE idencargo=?";
+    $sql = "SELECT idColor FROM disenos_has_colores WHERE id_diseno=?";
     $query = $conn->prepare($sql);
     $query->bindParam(1, $id, PDO::PARAM_INT);
     $query->execute();

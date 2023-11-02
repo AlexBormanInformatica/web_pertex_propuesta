@@ -31,7 +31,7 @@
                                  <li><a href="<?= buscarTexto("WEB", "paginas", "contacto", "", $_SESSION['idioma']); ?>"> <?= buscarTexto("WEB", "footer", "foot_menu_pers-li-2", "", $_SESSION['idioma']); ?></a></li>
                                  <li><a href="<?= buscarTexto("WEB", "paginas", "ptp", "", $_SESSION['idioma']); ?>"> <?= buscarTexto("WEB", "footer", "foot_menu_pers-li-3", "", $_SESSION['idioma']); ?></a></li>
                                  <li><a href="https://www.clustertextilzgz.com/CatalogoPersonalizacionesTextiles/index.html" target="_blank"><?= buscarTexto("WEB", "nav", "nav_catalogo", "", $_SESSION['idioma']); ?></a></li>
-                                 <li><a href="<?= buscarTexto("WEB", "paginas", "muestrario", "", $_SESSION['idioma']); ?>"> <?= buscarTexto("WEB", "footer", "foot_menu_pers-li-5", "", $_SESSION['idioma']); ?></a></li>
+                                 <!-- <li><a href="<?= buscarTexto("WEB", "paginas", "muestrario", "", $_SESSION['idioma']); ?>"> <?= buscarTexto("WEB", "footer", "foot_menu_pers-li-5", "", $_SESSION['idioma']); ?></a></li> -->
                              </ul>
                          </div>
                      </div>
@@ -46,7 +46,7 @@
                                  <li><a href="<?= buscarTexto("WEB", "paginas", "etiquetas", "", $_SESSION['idioma']); ?>"> <?= buscarTexto("WEB", "footer", "foot_menu_tec-li-3", "", $_SESSION['idioma']); ?></a></li>
                                  <li><a href="<?= buscarTexto("WEB", "paginas", "tiradores", "", $_SESSION['idioma']); ?>"> <?= buscarTexto("WEB", "footer", "foot_menu_tec-li-4", "", $_SESSION['idioma']); ?></a></li>
                                  <li><a href="<?= buscarTexto("WEB", "paginas", "pulseras", "", $_SESSION['idioma']); ?>"> <?= buscarTexto("WEB", "footer", "foot_menu_tec-li-5", "", $_SESSION['idioma']); ?></a></li>
-                                 <li><a href="<?= buscarTexto("WEB", "paginas", "bases", "", $_SESSION['idioma']); ?>"><?= buscarTexto("WEB", "footer", "foot_menu_tec-li-6", "", $_SESSION['idioma']); ?></a></li>
+                                 <li><a href="<?= buscarTexto("WEB", "paginas", "bases", "", $_SESSION['idioma']); ?>">Bases</a></li>
                              </ul>
                          </div>
                      </div>
@@ -101,6 +101,7 @@
  <script type="text/javascript" src="https://mottie.github.io/tablesorter/addons/pager/jquery.tablesorter.pager.js"></script>
  <script src="https://www.google.com/recaptcha/api.js?render=reCAPTCHA_site_key"></script>
  <script src="./assets/js/historial-disenos.js"></script>
+ <script src="./assets/js/carrito.js"></script>
  </body>
  
  <div class="bigCookieContainer" style="display: block;">

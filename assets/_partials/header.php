@@ -67,6 +67,15 @@
 
                                         <?php if ((isset($_SESSION['email'])) && ($_SESSION['email'] != "")) { ?>
                                             <li>
+                                                <?php
+                                                  $sql = "SELECT COUNT(id_diseno) FROM disenos WHERE estado = 'Boceto aceptado' ";
+                                                  $query = $conn->prepare($sql);
+                                                  $query->execute();
+                                                  $count_disenos = $query->fetchColumn();
+                                                ?>
+                                                <a href="carrito"><i class="fas fa-shopping-cart"></i>  <span><?= $count_disenos ?></span></a>
+                                            </li>
+                                            <li>
                                                 <a href="<?= buscarTexto("WEB", "paginas", "cuenta", "", $_SESSION['idioma']); ?>"><?= buscarTexto("WEB", "header", "header_top-4", "", $_SESSION['idioma']); ?></a>
                                             </li>
                                             <li>

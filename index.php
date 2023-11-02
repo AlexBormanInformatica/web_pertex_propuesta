@@ -274,7 +274,7 @@ require_once "assets/_partials/idioma.php";
     <!-- Fin Sección CTA pedidos -->
 
     <!--    Sección  información -->
-    <section class="bg-img-22">
+    <!-- <section class="bg-img-22">
         <div class="container">
             <div class="row text-center cta-muestra ">
                 <div class="col-lg-10 mx-auto">
@@ -290,7 +290,7 @@ require_once "assets/_partials/idioma.php";
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <section class="feature_part section_padding">
         <div class="container  p-rl-30">

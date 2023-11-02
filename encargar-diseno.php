@@ -172,8 +172,6 @@ require_once('assets/_partials/idioma.php');
                       <div id="coloresProducto" class="row">
                       </div>
                     </div>
-                    <!--Campo con los seleccionados-->
-
 
                     <!--Colores piel-->
                     <div class="" id="divColoresPiel" style="display: none;">

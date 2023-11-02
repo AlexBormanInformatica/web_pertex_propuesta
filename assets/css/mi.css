@@ -4110,3 +4110,18 @@ input[type="number"] {
   background-size: cover; /* Escala la imagen para cubrir todo el div */
   background-repeat: no-repeat; /* Evita que la imagen se repita */
 }
+
+.modal-ver-boceto {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Estilo para la imagen dentro de la modal */
+#bocetoImage {
+  max-width: 100%; /* La imagen se ajustará al ancho de la modal */
+  max-height: 80vh; /* Establece una altura máxima para evitar desbordamientos */
+  display: block; /* Asegura que la imagen esté centrada en la modal */
+  margin: 0 auto;
+}

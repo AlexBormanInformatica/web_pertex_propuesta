@@ -1,8 +1,8 @@
 <?php
-require_once('includes/config.php');
+require_once('../includes/config.php');
 
 # definimos la carpeta destino
-$carpetaDestino = "imagenes_bocetos/";
+$carpetaDestino = "../imagenes_bocetos/";
 
 # si hay algun archivo que subir
 if (isset($_FILES["archivo"]) && $_FILES["archivo"]["name"]) {
@@ -16,8 +16,8 @@ if (isset($_FILES["archivo"]) && $_FILES["archivo"]["name"]) {
         # movemos el archivo
         if (@move_uploaded_file($origen, $rutaDestino)) {
             // Renombrar el archivo
-            $oldname = "imagenes_bocetos/" . $_FILES["archivo"]["name"];
-            $newname = "imagenes_bocetos/" . $_FILES["archivo"]["name"] . ".jpg";
+            $oldname = "../imagenes_bocetos/" . $_FILES["archivo"]["name"];
+            $newname = "../imagenes_bocetos/" . $_FILES["archivo"]["name"] . ".jpg";
             rename($oldname, $newname);
             echo "Imagen subida correctamente.";
         } else {

@@ -642,13 +642,13 @@ if (isset($_POST['detallesEncargoSeleccionado'])) {
         $stringDetalles .= $color_metal . '</p>';
     }
 
-    if ($ancho != "") {
+    if ($ancho != "0.00"  && $ancho != "") {
         //Ancho
         $stringDetalles .= '<p class="m-0"><b>Ancho: </b>';
         $stringDetalles .= number_format($ancho, 2, ',', '') . 'cm</p>';
     }
 
-    if ($alto != "") {
+    if ($alto != "0.00" && $alto != "") {
         //Alto
         $stringDetalles .= '<p class="m-0"><b>Alto: </b>';
         $stringDetalles .= number_format($alto, 2, ',', '') . 'cm</p>';
@@ -666,7 +666,7 @@ if (isset($_POST['detallesEncargoSeleccionado'])) {
         $stringDetalles .= $complemento . '</p>';
     }
 
-    if ($anchoBase != "") {
+    if ($anchoBase != "0.00" && $anchoBase != "") {
         //Ancho cm base de tela
         $stringDetalles .= '<tr>';
         $stringDetalles .= '<p class="m-0"><b>Ancho base de tela: </b>';
@@ -674,7 +674,7 @@ if (isset($_POST['detallesEncargoSeleccionado'])) {
         $stringDetalles .= '</tr>';
     }
 
-    if ($altoBase != "") {
+    if ($altoBase != "0.00" && $altoBase != "") {
         //Alto cm base de tela
         $stringDetalles .= '<p class="m-0"><b>Alto base de tela: </b>';
         $stringDetalles .= number_format($altoBase, 2, ',', '') . 'cm</p>';
@@ -710,4 +710,22 @@ if (isset($_POST['detallesEncargoSeleccionado'])) {
     }
 
     echo $stringDetalles;
+}
+if (isset($_POST['historialEncargoSeleccionado'])) {
+    require "../includes/config.php";
+    $id = $_POST['numDiseno'];
+
+    $sql = "SELECT h.* FROM historial_pertex h WHERE h.id_diseno = ? ORDER BY fecha ASC";
+    $query = $conn->prepare($sql);
+    $query->bindParam(1, $id, PDO::PARAM_INT);
+    $query->execute();
+    $results = $query->fetchAll(PDO::FETCH_OBJ);
+
+    $texto = "";
+    foreach ($results as $result) {
+        $texto .= "<p><strong>" . date('d/m/Y H:i', strtotime($result->fecha)) . " - " . "</strong>" . $result->descripcion . " "
+            . $result->anotaciones . "</p><br>";
+    }
+
+    echo $texto;
 }

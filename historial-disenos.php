@@ -124,21 +124,34 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
                                         <td><?= $result->nombre ?></td>
                                         <td><?= $result->cantidad ?></td>
                                         <td>
-                                            <button data-toggle="modal" data-target="#" class="mr-10 aceptar-boceto-encargo zoom" data-encargo-id="<?= $result->id_diseno ?>"><i style="font-size:20px" class="ti-check" aria-hidden="true"></i></button>
-                                            <button data-toggle="modal" data-target="#modificarEncargo" class="mr-10 modificar-boceto-encargo zoom" data-encargo-id="<?= $result->id_diseno ?>"><i style="font-size:20px" class="ti-pencil" aria-hidden="true"></i></button>
-                                            <button data-toggle="modal" data-target="#anularEncargo" class="ml-10 mr-10 anular-encargo zoom" data-encargo-id="<?= $result->id_diseno ?>"><i style="font-size:20px" class="ti-na" aria-hidden="true"></i></button>
+                                            <?php
+                                            if ($result->estado == "Boceto disponible") {
+                                            ?>
+                                                <button data-toggle="modal" data-target="#verBoceto" class="mr-10 ver-boceto-encargo zoom" data-encargo-id="<?= $result->id_diseno ?>"><i style="font-size:20px" class="ti-eye" aria-hidden="true"></i></button>
+                                                <form method="POST" action="aceptar-propiedad-intelectual" style="display: contents;">
+                                                    <input hidden value="<?= $result->id_diseno ?>">
+                                                    <button class="mr-10 zoom"><i style="font-size:20px" class="ti-check" aria-hidden="true"></i></button>
+                                                </form>
+                                                <button data-toggle="modal" data-target="#modificarBoceto" class="mr-10 zoom" data-encargo-id="<?= $result->id_diseno ?>"><i style="font-size:20px" class="ti-pencil" aria-hidden="true"></i></button>
+                                            <?php
+                                            }
+                                            if (
+                                                $result->estado == "Boceto pendiente" || $result->estado == "Preparando boceto"
+                                                || $result->estado == "Boceto disponible" || $result->estado == "Boceto aceptado"
+                                                || $result->estado == "Boceto modificado" || $result->estado == "Boceto no posible"
+                                            ) {
+                                            ?>
+                                                <button data-toggle="modal" data-target="#anularEncargo" class="ml-10 mr-10 anular-encargo zoom" data-encargo-id="<?= $result->id_diseno ?>"><i style="font-size:20px" class="ti-na" aria-hidden="true"></i></button>
+                                            <?php
+                                            }
+                                            ?>
                                         </td>
                                     </tr>
                                     <!-- Fila de detalles oculta -->
                                     <tr class="no-hover" style="display: none;vertical-align:top">
                                         <td id="celdaDetalles<?= $result->id_diseno ?>" colspan="3">
                                         </td>
-                                        <td id="mensajesEquipoPertex" colspan="4">
-                                            <h4 class="text-center m-0">Modificaciones del diseño:</h4>
-                                            <p style="font-size:small"><b>27/10/2023</b> Se agrega 1cm más porque necesita un borde. No cambia el presupuesto.</p>
-                                            <p style="font-size:small"><b>27/10/2023</b> Se agrega 1cm más porque necesita un borde. No cambia el presupuesto.</p>
-                                            <p style="font-size:small"><b>27/10/2023</b> Se agrega 1cm más porque necesita un borde. No cambia el presupuesto.</p>
-                                            <p style="font-size:small"><b>27/10/2023</b> Se agrega 1cm más porque necesita un borde. No cambia el presupuesto.</p>
+                                        <td id="mensajesEquipoPertex<?= $result->id_diseno ?>" colspan="4">
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -182,8 +195,24 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
     </div>
 
 
-    <!--MODAL MODIFICAR ENCARGO-->
-    <div class="modal fade" id="modificarEncargo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <!--MODAL VER BOCETO-->
+    <div class="modal fade" id="verBoceto" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 1000px;">
+            <div class="modal-content modal-ver-boceto">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img id="bocetoImage" src="" alt="Boceto">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--MODAL MODIFICAR BOCETO-->
+    <div class="modal fade" id="modificarBoceto" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 1000px;">
             <div class="modal-content modal-aviso">
                 <div class="modal-header">
@@ -193,7 +222,7 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
                 </div>
 
                 <div class="text-center p-all-10">
-                    <h3>¿Deseas modificar el encargo?</h3>
+                    <h3>¿Deseas modificar el boceto?</h3>
                 </div>
 
                 <div class="modal-body">
@@ -217,30 +246,6 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
         </div>
     </div>
 
-
-    <!--MODAL ACEPTAR ENCARGO-->
-    <div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 1000px;">
-            <div class="modal-content modal-aviso">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="text-center p-all-10">
-                    <h3>¡Casi listo!</h3>
-                </div>
-
-                <div class="modal-body">
-                    <p class="mb-3">Por favor, revisa tus datos de diseño y asegúrate de que todo esté correcto antes de enviar.</p>
-                    <p>Tu diseño será entregado a nuestros diseñadores, y recibirás información sobre el proceso en tu correo electrónico.</p>
-
-                    <button id="submitDelFormularioEncargo" class="btn btn-primary">ENCARGAR DISEÑO</button>
-                </div>
-            </div>
-        </div>
-    </div>
     <?php
     include("assets/_partials/footer.php");
     ?>

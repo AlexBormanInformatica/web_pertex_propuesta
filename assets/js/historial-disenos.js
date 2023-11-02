@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /*_________________________________________________MANEJAR ACCIONES_________________________________________________*/
-    const enviarAnulado = document.getElementById('submitDelFormularioEncargo');
+    const enviarAnulado = document.getElementById('submitDelFormularioAnular');
     const formularioAnular = document.getElementById('formularioAnular');
 
     enviarAnulado.addEventListener('click', function () {
@@ -170,13 +170,23 @@ $(document).ready(function () {
         var numDiseno = $(this).find("td:first").text();
         document.getElementById('id_disenoAnular').value = numDiseno;
 
-        // Solicitud AJAX
+        // Solicitud AJAX detalles del diseño
         $.ajax({
             url: "funciones/functions.php",
             type: 'POST',
             data: { detallesEncargoSeleccionado: "", numDiseno: numDiseno },
             success: function (response) {
                 $("#celdaDetalles" + numDiseno).html(response);
+            }
+        });
+
+        // Solicitud AJAX historial
+        $.ajax({
+            url: "funciones/functions.php",
+            type: 'POST',
+            data: { historialEncargoSeleccionado: "", numDiseno: numDiseno },
+            success: function (response) {
+                $("#mensajesEquipoPertex" + numDiseno).html("<h4 class='text-center m-0'>Modificaciones del diseño:</h4>" + response);
             }
         });
     });
@@ -201,5 +211,11 @@ $(document).ready(function () {
             error.addClass("");
             error.insertAfter(element);
         }
+    });
+
+    // Cuando se hace clic en el botón "Ver boceto" en la tabla
+    $('.ver-boceto-encargo').on('click', function () {
+        $('#bocetoImage').attr('src', 'imagenes_bocetos/D' + $(this).data('encargo-id') + '.jpg');
+        $('#verBoceto').css('display', 'block');
     });
 });

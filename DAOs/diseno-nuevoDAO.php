@@ -95,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     /*PASO 4*/
     // Definimos la carpeta destino
     // Guardamos la imagen luego de guardar el diseño en la BBDD
-    $carpetaDestino = "imagenes_bocetos/";
+    $carpetaDestino = "../imagenes_bocetos/";
 
     //<input> comentarios / notas
     if (isset($_POST['comentariosDiseno']) && $_POST['comentariosDiseno'] != "") {
@@ -188,6 +188,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
         }
+
+        // INSERT EN LA TABLA HISTORIAL
+        $descripcion = "DISEÑO ENCARGADO";
+        $anotaciones = "";
+        $sql = "INSERT INTO historial_pertex (usuario, descripcion, anotaciones, fecha, id_diseno) 
+        VALUES (?,?,?,?,?)";
+
+        $sentencia = $conn->prepare($sql);
+        $sentencia->bindParam(1, $_SESSION['ID'], PDO::PARAM_INT);
+        $sentencia->bindParam(2, $descripcion, PDO::PARAM_STR);
+        $sentencia->bindParam(3, $anotaciones, PDO::PARAM_STR);
+        $sentencia->bindParam(4, $fecha, PDO::PARAM_STR);
+        $sentencia->bindParam(5, $id_diseno_nuevo, PDO::PARAM_INT);
+        $sentencia->execute();
+
         header("location: ../gracias-por-tu-encargo");
     } catch (Exception $e) {
         echo $e->getMessage();

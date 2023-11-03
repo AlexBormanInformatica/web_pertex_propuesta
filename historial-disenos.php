@@ -84,9 +84,9 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
                                 <span>➔ Información sobre el proceso y los estados</span>
                             </a>
                         </p>
-                        <p style="font-size:small;margin:auto;"><a href="#" target="_blank" class="pregunta-formulario">
+                        <p style="font-size:small;margin:auto;"><button data-toggle="modal" data-target="#infoAcciones" class="pregunta-formulario">
                                 <span>➔ Información sobre las acciones</span>
-                            </a>
+                            </button>
                         </p>
                         <?php if (isset($_GET['ok'])) {
                             //Mensaje de OK cuando actualiza la ficha
@@ -102,7 +102,7 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
                                 </div>
                             </div>
                         <?php } ?>
-                        <table class="tablesorter-blackice" id="tablaEncargos">
+                        <table class="tablesorter-blackice table-bordered"" id=" tablaEncargos">
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">Nº diseño</th>
@@ -129,8 +129,9 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
                                             ?>
                                                 <button data-toggle="modal" data-target="#verBoceto" class="mr-10 ver-boceto-encargo zoom" data-encargo-id="<?= $result->id_diseno ?>"><i style="font-size:20px" class="ti-eye" aria-hidden="true"></i></button>
                                                 <form method="POST" action="aceptar-propiedad-intelectual" style="display: contents;">
-                                                    <input hidden value="<?= $result->id_diseno ?>">
-                                                    <button class="mr-10 zoom"><i style="font-size:20px" class="ti-check" aria-hidden="true"></i></button>
+                                                    <input hidden name="id_diseno" value="<?= $result->id_diseno ?>">
+                                                    <input hidden name="cantidad_diseno" value="<?= $result->cantidad ?>">
+                                                    <button class="mr-10 btn-check zoom" style="<?= $escliente == 0 ? "cursor:not-allowed" : "" ?>" <?= $escliente == 0 ? "disabled" : "" ?>><i style="font-size:20px" class="ti-check" aria-hidden="true"></i></button>
                                                 </form>
                                                 <button data-toggle="modal" data-target="#modificarBoceto" class="mr-10 zoom" data-encargo-id="<?= $result->id_diseno ?>"><i style="font-size:20px" class="ti-pencil" aria-hidden="true"></i></button>
                                             <?php
@@ -151,7 +152,7 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
                                     <tr class="no-hover" style="display: none;vertical-align:top">
                                         <td id="celdaDetalles<?= $result->id_diseno ?>" colspan="3">
                                         </td>
-                                        <td id="mensajesEquipoPertex<?= $result->id_diseno ?>" colspan="4">
+                                        <td id="mensajesEquipoPertex<?= $result->id_diseno ?>" colspan="4" style="background-color: #f0f0f0 ">
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -241,6 +242,56 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
                         </div>
                         <button id="submitDelFormularioModificar" class="btn btn-primary">MODIFICAR DISEÑO</button>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--MODAL INFORMACION SOBRE LAS ACCIONES-->
+    <div class="modal fade" id="infoAcciones" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 1000px;">
+            <div class="modal-content modal-aviso">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="text-center p-all-10">
+                    <h3>Información sobre las acciones</h3>
+                </div>
+
+                <div class="modal-body row">
+                    <div class="col-6">
+                        <h4 class="text-center"><i style="font-size:30px" class="ti-eye" aria-hidden="true"></i> <b>Icono ver boceto</b></h4>
+                        <ul class="mb-5">
+                            <li>Estado: Boceto disponible</li>
+                            <li>Acción: Muestra el boceto del diseño</li>
+                        </ul>
+
+                        <h4 class="text-center"><i style="font-size:30px" class="ti-check" aria-hidden="true"></i> <b>Icono aceptar boceto</b></h4>
+                        <ul class="mb-5">
+                            <li>Estado: Boceto disponible</li>
+                            <li>Acción: Redireccionar a un formulario para confirmar que acepta la propiedad intelectual del boceto</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-6">
+                        <h4 class="text-center"><i style="font-size:30px" class="ti-pencil" aria-hidden="true"></i> <b>Icono modificar boceto</b></h4>
+                        <ul class="mb-5">
+                            <li>Estado: Boceto disponible</li>
+                            <li>Acción: Solicitar los cambios del boceto</li>
+                        </ul>
+
+                        <h4 class="text-center"><i style="font-size:30px" class="ti-na" aria-hidden="true"></i> <b>Icono anular encargo</b></h4>
+                        <ul class="mb-5">
+                            <li>Estados: Boceto pendiente, preparando boceto, boceto disponible, boceto aceptado.</li>
+                            <li>Acción: Indicar los motivos de anulación del encargo</li>
+                        </ul>
+                    </div>
+                    <br>
+                    <p class="mb-3">Si tienes alguna pregunta, no dudes en contactar con nuestro servicio de atención al cliente.</p>
+                    <a href="infografia" target="_blank" class="btn"> Información sobre el proceso y los estados</span> </a>
                 </div>
             </div>
         </div>

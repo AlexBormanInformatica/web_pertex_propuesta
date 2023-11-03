@@ -1,9 +1,7 @@
 <?php
-require_once "includes/config.php";
-include("funciones/functions.php");
 /* Importar el fichero principal de la librería, tal y como se muestra a
 continuación: */
-include_once 'api/apiRedsys.php';
+include_once '../api/apiRedsys.php';
 //El comercio debe decidir si la importación desea hacerla con la función “include” o “required”, según los desarrollos realizados.
 /* Definir un objeto de la clase principal de la librería, tal y como se
 muestra a continuación: */
@@ -20,7 +18,8 @@ $amount = $_POST['amount'];
 $currency = "978"; // Euro
 
 //DS_MERCHANT_MERCHANTCODE = Código FUC asignado al comercio.(Nº de comercio)
-$merchantCode = "014409783";
+// $merchantCode = "014409783";
+$merchantCode = "999008881";
 
 //DS_MERCHANT_ORDER = Se recomienda, por posibles problemas en el proceso de liquidación, que los 4 primeros dígitos sean numéricos. 
 //Para los dígitos restantes solo utilizar los siguientes caracteres ASCII:
@@ -37,42 +36,29 @@ if (strlen($order) == 1) {
 }
 
 //DS_MERCHANT_TERMINAL = Número de terminal que le asignará su banco.
-$terminal = "002";
+$terminal = 1;//"002";
 
 //DS_MERCHANT_TRANSACTIONTYPE = Tipo de operación.
 $trans = "0"; // AUTORIZADO 
-
-//DS_MERCHANT_PAYMETHODS
-$paymethod = $_POST['paymethod']; //En el caso que se apliquen mas metodos que la tarjeta (por ej. Bizum o Paypal)
 
 //URL del comercio para la notificación "on-line"	
 // $url = "https://personalizacionestextiles.com/checkout"; 
 
 //DS_MERCHANT_URLOK = URL en la que se enviará una petición HTTP get cuando el resultado de la transacción sea OK.
-$urlOK = "https://personalizacionestextiles.com/gracias-por-comprar";
+$urlOK = "http://localhost/web_pertex_propuesta/gracias-por-comprar";
 
 //DS_MERCHANT_URLKO = URL en la que se enviará una petición HTTP get cuando el resultado de la transacción sea KO.
-$urlKO = "https://personalizacionestextiles.com/error-pago";
+$urlKO = "http://localhost/web_pertex_propuesta/error-pago";
 
 $miObj->setParameter("DS_MERCHANT_AMOUNT", $amount);
 $miObj->setParameter("DS_MERCHANT_CURRENCY", $currency);
 $miObj->setParameter("DS_MERCHANT_MERCHANTCODE", $merchantCode);
-// $miObj->setParameter("DS_MERCHANT_MERCHANTURL", $url);
 $miObj->setParameter("DS_MERCHANT_ORDER", $order);
 $miObj->setParameter("DS_MERCHANT_TERMINAL", $terminal);
 $miObj->setParameter("DS_MERCHANT_TRANSACTIONTYPE", $trans);
 $miObj->setParameter("DS_MERCHANT_URLOK", $urlOK);
 $miObj->setParameter("DS_MERCHANT_URLKO", $urlKO);
-// if ($paymethod != "" && $paymethod != null) {
-//     switch ($paymethod) {
-//         case "bizum":
-// $miObj->setParameter("DS_MERCHANT_PAYMETHODS", "z");
-//             break;
-//         case "paypal":
-//             $miObj->setParameter("DS_MERCHANT_PAYMETHODS", "p");
-//             break;
-//     }
-// }
+
 /*Por último, para calcular el parámetro Ds_MerchantParameters, se debe
 llamar a la función de la librería “createMerchantParameters()”, tal y como
 se muestra a continuación: */

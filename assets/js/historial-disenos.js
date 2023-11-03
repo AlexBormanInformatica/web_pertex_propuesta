@@ -15,10 +15,8 @@ document.addEventListener('DOMContentLoaded', function () {
             // Alternar la visibilidad de la fila de detalles
             if (detalles.style.display === 'none' || getComputedStyle(detalles).display === 'none') {
                 detalles.style.display = 'table-row';
-                fila.classList.add('seleccionada'); // Aplica la clase seleccionada
             } else {
                 detalles.style.display = 'none';
-                fila.classList.remove('seleccionada'); // Quita la clase seleccionada
             }
         });
     });
@@ -145,11 +143,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const detallesAbiertos = document.getElementsByClassName("no-hover");
         for (let i = 0; i < detallesAbiertos.length; i++) {
             detallesAbiertos[i].style.display = 'none';
-        }
-        // Quito la clase "seleccionada" de las filas
-        const filasSeleccionadas = document.getElementsByClassName("fila_hc seleccionada");
-        for (let i = 0; i < filasSeleccionadas.length; i++) {
-            filasSeleccionadas[i].classList.remove('seleccionada');
         }
     }
 

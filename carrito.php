@@ -1,10 +1,5 @@
 <?php
-//Declaramos la conexion con el servidor de base de datos
-use LDAP\Result;
-
 require_once('includes/config.php');
-include("pedidos.php");
-
 include("funciones/functions.php");
 if (!$user->is_logged_in()) {
     header('Location: login');
@@ -94,7 +89,11 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
                             </tfoot>
                         </table>
                     </div>
-                    <button class="btn" style="width: -webkit-fill-available;">Pagar</button>
+                    <form action="checkout" method="post" id="formularioPago">
+                        <input type="hidden" name="disenos" id="disenosInput">
+                        <input type="hidden" name="subtotal" id="subtotalInput">
+                        <button class="btn" style="width: -webkit-fill-available;" id="btnPagar" disabled>Pagar</button>
+                    </form>
                     <p style="font-size:small;margin:auto;"><a href="infografia" target="_blank" class="pregunta-formulario">
                             <span>➔ Información sobre el proceso y los estados</span>
                         </a>
@@ -102,6 +101,7 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
                 </div>
             </div>
         </div>
+
     </main>
     <?php
     include("assets/_partials/footer.php");

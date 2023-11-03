@@ -1,33 +1,63 @@
 <?php
 require_once('includes/config.php');
 include("funciones/functions.php");
-include("pedidos.php");
-
 if (!$user->is_logged_in()) {
     header('Location: login');
     exit();
 }
+$id_nuevo_pedido = 0;
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST["disenos"]) && isset($_POST["subtotal"])) {
+        //Creo el nuevo pedido para tener el número (id)
+        $fechaAhora = date("Y-m-d H:i:s", time());
+        $sql = "INSERT INTO pedido_envio (fecha) VALUES (?)";
+        $sentencia = $conn->prepare($sql);
+        $sentencia->bindParam(1, $fechaAhora, PDO::PARAM_STR);
+        $sentencia->execute();
 
-// if ($_SERVER["REQUEST_METHOD"] == "POST") {
-$amount = 0;
-$numeroPedido  = "";
+        // Obtengo el ID 
+        $id_nuevo_pedido = $conn->lastInsertId();
 
-$numeroPedido = isset($_POST['idPedidos'])?$_POST['idPedidos']:$_GET['check'];
-
-try {
-    $sql = "SELECT precioTotal FROM pedidos 
-    WHERE idpedidos=?";
-    $query = $conn->prepare($sql);
-    $query->bindParam(1, $numeroPedido, PDO::PARAM_STR);
-    $query->execute();
-    $amount = $query->fetchColumn();
-} catch (Exception $e) {
-    header("location: error.php?msg=" . $e->getCode());
+        $idsDisenos = explode(",", $_POST["disenos"]);
+        $subtotal = floatval($_POST["subtotal"]);
+        // Ahora $idsDisenos es un array con los números de diseño seleccionados.
+        // $subtotal contiene el subtotal.
+        foreach ($idsDisenos as $idDiseno) {
+            // Agrego el numero de pedido a cada diseño
+            $sql = "UPDATE disenos SET id_pedido_envio=? WHERE id_diseno=?";
+            $sentencia = $conn->prepare($sql);
+            $sentencia->bindParam(1, $id_nuevo_pedido, PDO::PARAM_INT);
+            $sentencia->bindParam(2, $idDiseno, PDO::PARAM_INT);
+            $sentencia->execute();
+        }
+    } else {
+        echo "Datos de diseño no encontrados en la solicitud POST.";
+    }
 }
 
-$recargo = ""; //recargo de equivalencia
+$email = $nombrecomercial = $nombrefiscal = $intracomunitario = $vatno = $direccion =
+    $postal = $pais = $provincia = $poblacion = $telefono = $movil = $actividades = $recargo = $conocido = "";
+$sql = "SELECT * FROM fichaempresametas WHERE idfichaempresa=?";
+$query = $conn_formularios->prepare($sql);
+$query->bindParam(1, $_SESSION['idfichaempresa'], PDO::PARAM_STR);
+$query->execute();
+$results = $query->fetchAll(PDO::FETCH_OBJ);
 
-
+foreach ($results as $result) {
+    $nombrefiscal = $result->nombreFiscal;
+    $nombrecomercial = $result->nombreComercial;
+    $direccion  = $result->direccion;
+    $postal = $result->codigoPostal;
+    $poblacion = $result->poblacion;
+    $provincia = $result->provincia;
+    $pais = $result->pais;
+    $vatno = $result->CifDniVat;
+    $telefono = $result->telefono;
+    $movil = $result->telefono;
+    $email = $result->email;
+    $intracomunitario = $result->TieneIvaExentoIntracomunitario;
+    $recargo = $result->TieneRecargoEquivalencia;
+}
 ?>
 <!doctype html>
 <html class="no-js" lang="zxx">
@@ -44,47 +74,43 @@ $recargo = ""; //recargo de equivalencia
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Finalizar compra | Personalizaciones textiles" />
     <meta property="og:image" content="https://personalizacionestextiles.com/images/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/flaticon.css">
+    <link rel="stylesheet" href="assets/css/slicknav.css">
+    <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/css/themify-icons.css">
+    <link rel="stylesheet" href="assets/css/nice-select.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/imprimir.css" media="print">
+    <link rel="stylesheet" href="assets/css/util.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/mi.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/formulario-diseno.css">
+</head>
 
-    <?php
-    include("assets/_partials/header-personalizar.php");
-    ?>
+<body>
+    <div id="preloader-active">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="preloader-circle"></div>
+                <div class="preloader-img pere-text">
+                    <img src="assets/img/logo/logo.png" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
 
     <main>
-
-        <?php
-        include("funciones/errores.php");
-
-        $email = $nombrecomercial = $nombrefiscal = $intracomunitario = $vatno = $direccion =
-            $postal = $pais = $provincia = $poblacion = $telefono = $movil = $actividades = $recargo = $conocido = "";
-
-        try {
-            $sql = "SELECT * FROM fichaempresametas 
-            WHERE email=?";
-            $query = $conn_formularios->prepare($sql);
-            $query->bindParam(1, $_SESSION['email'], PDO::PARAM_STR);
-            $query->execute();
-            $results = $query->fetchAll(PDO::FETCH_OBJ);
-            foreach ($results as $result) {
-                $nombrefiscal = $result->nombreFiscal;
-                $nombrecomercial = $result->nombreComercial;
-                $direccion  = $result->direccion;
-                $postal = $result->codigoPostal;
-                $poblacion = $result->poblacion;
-                $provincia = $result->provincia;
-                $pais = $result->pais;
-                $vatno = $result->CifDniVat;
-                $telefono = $result->telefono;
-                $movil = $result->telefono;
-                $email = $result->email;
-                $intracomunitario = $result->TieneIvaExentoIntracomunitario;
-                $recargo = $result->TieneRecargoEquivalencia;
-            }
-        } catch (Exception $e) {
-            header("location: error.php?msg=" . $e->getCode());
-        }
-        ?>
-
         <section class="checkout_area section_padding">
             <div class="container">
                 <div class="billing_details">
@@ -192,7 +218,7 @@ $recargo = ""; //recargo de equivalencia
                                         </div>
                                     </div>
 
-                                    <label><?= buscarTexto("WEB", "checkout", "checkout_factura", "", $_SESSION['idioma']); ?></label>
+                                    <!-- <label><?= buscarTexto("WEB", "checkout", "checkout_factura", "", $_SESSION['idioma']); ?></label>
                                     <div class="payment_item active">
                                         <div class="radion_btn">
                                             <input type="radio" id="sifac" name="factura" value="sifactura" />
@@ -207,18 +233,18 @@ $recargo = ""; //recargo de equivalencia
                                             <label for="nofac"><?= buscarTexto("WEB", "generico", "no", "", $_SESSION['idioma']); ?></label>
                                             <div class="check"></div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-lg-4">
                             <div class="order_box">
-                                <h2><?= buscarTexto("WEB", "checkout", "checkout_tit2", "", $_SESSION['idioma']); ?> #<?= $numeroPedido ?></h2>
+                                <h2><?= buscarTexto("WEB", "checkout", "checkout_tit2", "", $_SESSION['idioma']); ?> #<?= $id_nuevo_pedido ?></h2>
                                 <ul class="list list_2">
                                     <li>
                                         <a style="cursor:auto" href="#"><?= buscarTexto("WEB", "checkout", "checkout_tit2-li1", "", $_SESSION['idioma']); ?>
-                                            <span id="subtotal" val="<?= str_replace(',', '.', $amount) ?>"><?= str_replace('.', ',', $amount) ?></span>
+                                            <span id="subtotal" val="<?= str_replace(',', '.', $_POST['subtotal']) ?>"><?= str_replace('.', ',', $_POST['subtotal']) ?></span>
                                         </a>
                                     </li>
 
@@ -304,25 +330,14 @@ $recargo = ""; //recargo de equivalencia
 
                                 <!--action Redsys de prueba: https://sis-t.redsys.es:25443/sis/realizarPago -->
                                 <!--action Redsys real: https://sis.redsys.es/sis/realizarPago -->
-                                <form id="formulariopago" action="https://sis.redsys.es/sis/realizarPago" method="POST">
-                                    <!--Términos y condiciones / Propiedad intelectual-->
-                                    <div class="creat_account">
-                                        <label><input required type="checkbox" name="privacidad" id="input-privacidad" class="m-r-5" /><span class="fs-12"><?= buscarTexto("WEB", "checkout", "checkout_terminos1", "", $_SESSION['idioma']); ?> *</span>
-                                            <a target="_blank" href="<?= buscarTexto("WEB", "paginas", "privacidad", "", $_SESSION['idioma']); ?>" class="fs-12"><?= buscarTexto("WEB", "checkout", "checkout_terminos2", "", $_SESSION['idioma']); ?></a>
-                                        </label><br>
-
-                                        <label><input required type="checkbox" name="intelectual" id="input-intelectual" class="m-r-5" /><span class="fs-12"><?= buscarTexto("WEB", "checkout", "checkout_propiedad1", "", $_SESSION['idioma']); ?> *</span>
-                                            <a target="_blank" href="<?= buscarTexto("WEB", "paginas", "intelectual", "", $_SESSION['idioma']); ?>" class="fs-12"><?= buscarTexto("WEB", "checkout", "checkout_propiedad2", "", $_SESSION['idioma']); ?></a>
-                                        </label>
-                                    </div>
-
+                                <form id="formulariopago" action="https://sis-t.redsys.es:25443/sis/realizarPago" method="POST">
                                     <!--Datos Redsys-->
                                     <input type="hidden" name="Ds_SignatureVersion" value="HMAC_SHA256_V1" />
                                     <input type="hidden" name="Ds_MerchantParameters" value="" />
                                     <input type="hidden" name="Ds_Signature" value="" />
 
                                     <!--Otros datos necesarios para la gestión del pedido por nuestra parte-->
-                                    <input type="hidden" name="nPedido" value="<?= $numeroPedido ?>" />
+                                    <input type="hidden" name="nPedido" value="<?= $id_nuevo_pedido ?>" />
                                     <input type="hidden" name="quiereFactura" value="" />
                                     <input type="hidden" name="total" id="total" value="" />
                                     <input type="hidden" name="strTotal" id="strTotal" value="" />
@@ -338,380 +353,21 @@ $recargo = ""; //recargo de equivalencia
             </div>
         </section>
     </main>
-    <?php
-    include("assets/_partials/footer.php");
-    ?>
-
-    <script type="text/javascript">
-        $.validator.setDefaults({
-            submitHandler: function() {
-                $('#boton_formulario_checkout').addClass("button--loading");
-                $('#boton_formulario_checkout').prop("disabled", true);
-                var amount = $('#total').val();
-                var order = $('input[name=nPedido]').val();
-                var paymethod = $('input[name=metodoPago]:checked').val();
-                var factura = $('#sifac').is(':checked') ? 1 : 0;
-
-                submitDelForm(amount, order, paymethod, factura);
-            }
-        });
-
-        var x = false;
-
-        function submitDelForm(paymethod, order, paymethod, factura) {
-            if (!x) {
-                $.ajax({ //Peticion de ajax
-                    method: "POST",
-                    url: "historicoPago.php",
-                    data: {
-                        nPedido: order,
-                        metodo: paymethod,
-                        factura: factura,
-                        total: suma.toFixed(2)
-                    }
-                }).done(function(response) {
-                    // console.log("re=" + response);
-                });
-                x = true;
-            }
-            if (paymethod == "transferenciaBancaria") {
-                $('#quiereFactura').val($('#sifac').is(':checked') ? 1 : 0);
-
-                $('#formulariopago').attr('action', "transferencia");
-                $('#formulariopago').submit();
-            } else {
-                $('#formulariopago').attr('action', "https://sis.redsys.es/sis/realizarPago");
-
-                if ($('input[name=Ds_MerchantParameters]').val() != "" && $('input[name=Ds_Signature]').val() != "") {
-                    $('#formulariopago').submit();
-                }
-            }
-        }
-
-        $(document).ready(function() {
-            $("#formulariopago").validate({
-                rules: {
-                    privacidad: "required",
-                    intelectual: "required"
-                },
-                messages: {
-                    privacidad: $('#valida-privacidad').text(),
-                    intelectual: $('#valida-intelectual').text()
-                },
-                errorElement: "em",
-                errorPlacement: function(error, element) {
-                    error.addClass("help-block");
-
-                    if (element.prop("type") === "checkbox") {
-                        error.insertAfter(element.parent("label"));
-                    } else {
-                        error.insertAfter(element);
-                    }
-                },
-                highlight: function(element, errorClass, validClass) {
-                    $(element).parents(".col-sm-5").addClass("has-error").removeClass("has-success");
-                },
-                unhighlight: function(element, errorClass, validClass) {
-                    $(element).parents(".col-sm-5").addClass("has-success").removeClass("has-error");
-                }
-            });
-        });
-
-        var acc = document.getElementsByClassName("accordionPA");
-        var i;
-
-        for (i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function() {
-                this.classList.toggle("active");
-                var panel = this.nextElementSibling;
-                var icono = this.firstChild.firstChild;
-
-                if (panel.style.display === "block") {
-                    panel.style.display = "none";
-                } else {
-                    panel.style.display = "block";
-                }
-
-                if (icono.className === "fa fa-plus") {
-                    icono.className = "fa fa-minus";
-                } else {
-                    icono.className = "fa fa-plus";
-                }
-            });
-        }
-        /////////////////////////////////////////////////ENVIO//////////////////////////////////////////////////////////////////////////////
-        $(document).ready(function() {
-            calcularPrecio();
-        })
-        var suma = 0;
-
-        function calcularPrecio() {
-            var pais = $('#pais').val();
-            var provincia = $('#provincia').val();
-
-            //Booleanos para saber que sumar
-            var nacional = false;
-            var peninsula = false;
-            var baleares = false;
-            var ceutaYmelilla = false;
-            var canarias = false;
-
-            var corcega = false;
-            var siciliaYcerdana = false;
-            var azoresYmadeira = false;
-
-            nacional = pais == "ESPAÑA" ? true : false;
-            baleares = provincia == "Balears (Illes)" ? true : false;
-            ceutaYmelilla = provincia == "Ceuta" ? true : provincia == "Melilla" ? true : false;
-            canarias = provincia == "Palmas (Las)" ? true : provincia == "Santa Cruz de Tenerife" ? true : false;
-
-            corcega = provincia == "Córcega" ? true : false;
-            siciliaYcerdana = provincia == "Sicilia" ? true : provincia == "Cerdeña" ? true : false;
-            azoresYmadeira = provincia == "Azores" ? true : provincia == "Madeira" ? true : false;
-
-            var suplementoDua = 20.50;
-            var vat = $('#intracomunitario').val() == 'Sí' ? true : false; //Si es 1 esta excento de iva (es intracomunitario), si es 0 se cobra el iva con normalidad
-            var precio = ($('#subtotal').text().split(' ')[0]).replace(",", ".");
-            var recargo = $('#inputRecargo').val() == 'Sí' ? (precio * 5.2) / 100 : 0;
-            var iva = canarias ? 0 : ceutaYmelilla ? 0 : vat ? 0 : (precio * 21) / 100;
-            var envio = 0;
-
-            var precioMasIva = parseFloat(precio) + parseFloat(iva);
-
-            if (nacional && (!baleares && !ceutaYmelilla && !canarias)) {
-                peninsula = true;
-            }
-
-            if (nacional) {
-                if (peninsula) {
-                    if (precioMasIva < 25) {
-                        envio = 5;
-                    } else if (precioMasIva < 99) {
-                        envio = 8;
-                    } else if (precioMasIva < 199) {
-                        envio = 11;
-                    } else if (precioMasIva < 399) {
-                        envio = 14;
-                    } else if (precioMasIva < 1000) {
-                        envio = 0;
-                    } else if (precioMasIva > 1000) {
-                        envio = 0;
-                    }
-                } else if (baleares) {
-                    if (precioMasIva < 25) {
-                        envio = 10;
-                    } else if (precioMasIva < 99) {
-                        envio = 16;
-                    } else if (precioMasIva < 199) {
-                        envio = 23;
-                    } else if (precioMasIva < 399) {
-                        envio = 30;
-                    } else if (precioMasIva < 1000) {
-                        envio = 50;
-                    } else if (precioMasIva > 1000) {
-                        envio = 75;
-                    }
-                } else if (ceutaYmelilla) {
-                    if (precioMasIva < 25) {
-                        envio = 30;
-                    } else if (precioMasIva < 99) {
-                        envio = 39;
-                    } else if (precioMasIva < 199) {
-                        envio = 48;
-                    } else if (precioMasIva < 399) {
-                        envio = 55;
-                    } else if (precioMasIva < 1000) {
-                        envio = 75;
-                    } else if (precioMasIva > 1000) {
-                        envio = 110;
-                    }
-                } else if (canarias) {
-                    if (precioMasIva < 25) {
-                        envio = 40;
-                    } else if (precioMasIva < 99) {
-                        envio = 50;
-                    } else if (precioMasIva < 199) {
-                        envio = 63;
-                    } else if (precioMasIva < 399) {
-                        envio = 75;
-                    } else if (precioMasIva < 1000) {
-                        envio = 110;
-                    } else if (precioMasIva > 1000) {
-                        envio = 180;
-                    }
-                }
-            } else {
-                if (pais == "FRANCIA") {
-                    if (corcega) {
-                        if (precioMasIva < 50) {
-                            envio = 40;
-                        } else if (precioMasIva < 149) {
-                            envio = 60;
-                        } else if (precioMasIva < 299) {
-                            envio = 80;
-                        } else if (precioMasIva < 499) {
-                            envio = 120;
-                        } else if (precioMasIva < 1000) {
-                            envio = 180;
-                        } else if (precioMasIva > 1000) {
-                            envio = 260;
-                        }
-                    } else {
-                        if (precioMasIva < 50) {
-                            envio = 12;
-                        } else if (precioMasIva < 149) {
-                            envio = 19;
-                        } else if (precioMasIva < 299) {
-                            envio = 25;
-                        } else if (precioMasIva < 499) {
-                            envio = 30;
-                        } else if (precioMasIva < 1000) {
-                            envio = 50;
-                        } else if (precioMasIva > 1000) {
-                            envio = 90;
-                        }
-                    }
-                } else if (pais == "ITALIA") {
-                    if (siciliaYcerdana) {
-                        if (precioMasIva < 50) {
-                            envio = 40;
-                        } else if (precioMasIva < 149) {
-                            envio = 60;
-                        } else if (precioMasIva < 299) {
-                            envio = 80;
-                        } else if (precioMasIva < 499) {
-                            envio = 120;
-                        } else if (precioMasIva < 1000) {
-                            envio = 180;
-                        } else if (precioMasIva > 1000) {
-                            envio = 260;
-                        }
-                    } else {
-                        if (precioMasIva < 50) {
-                            envio = 15;
-                        } else if (precioMasIva < 149) {
-                            envio = 22;
-                        } else if (precioMasIva < 299) {
-                            envio = 32;
-                        } else if (precioMasIva < 499) {
-                            envio = 40;
-                        } else if (precioMasIva < 1000) {
-                            envio = 65;
-                        } else if (precioMasIva > 1000) {
-                            envio = 110;
-                        }
-                    }
-                } else if (pais == "PORTUGAL") {
-                    if (azoresYmadeira) {
-                        if (precioMasIva < 50) {
-                            envio = 70;
-                        } else if (precioMasIva < 149) {
-                            envio = 90;
-                        } else if (precioMasIva < 299) {
-                            envio = 130;
-                        } else if (precioMasIva < 499) {
-                            envio = 190;
-                        } else if (precioMasIva < 1000) {
-                            envio = 260;
-                        } else if (precioMasIva > 1000) {
-                            envio = 320;
-                        }
-                    } else {
-                        if (precioMasIva < 50) {
-                            envio = 10;
-                        } else if (precioMasIva < 149) {
-                            envio = 13;
-                        } else if (precioMasIva < 299) {
-                            envio = 16;
-                        } else if (precioMasIva < 499) {
-                            envio = 20;
-                        } else if (precioMasIva < 1000) {
-                            envio = 30;
-                        } else if (precioMasIva > 1000) {
-                            envio = 0;
-                        }
-                    }
-                }
-
-            }
-
-            suma = (parseFloat(precio) + parseFloat(recargo) + parseFloat(iva) + parseFloat(envio));
-
-            if (canarias) {
-                suma += (suma => 3000 ? parseFloat(suplementoDua) : 0);
-                $('#liGestionDua').show();
-            } else if (ceutaYmelilla) {
-                suma += parseFloat(suplementoDua);
-                $('#liGestionDua').show();
-            } else {
-                suplementoDua = 0;
-                $('#liGestionDua').hide();
-            }
-
-            var strSuma = suma.toFixed(2).replace(".", ",");
-
-            // console.log(precio + " + " + recargo + " + " + iva + " + " + envio);
-            $("#gestionDua").text(suplementoDua.toFixed(2).replace(".", ","));
-            $("#envio").text(envio.toFixed(2).replace(".", ","));
-            $("#recargo").text(recargo.toFixed(2).replace(".", ","));
-            $("#iva").text(iva.toFixed(2).replace(".", ","));
-            $('#total').val(suma.toFixed(2).replace(".", ""));
-            $('#totalAmount').text(strSuma);
-            $('#strTotal').val(strSuma);
-        }
-
-        $('#input-privacidad').on('click', function() {
-            var amount = $('#total').val();
-            var order = $('input[name=nPedido]').val();
-            var paymethod = $('input[name=metodoPago]:checked').val();
-            if ($('#input-privacidad').is(':checked') && $('#input-intelectual').is(':checked')) {
-                $.ajax({ //Peticion de ajax
-                    method: "POST",
-                    url: "redsysParametros.php",
-                    data: {
-                        amount: amount,
-                        paymethod: paymethod,
-                        order: order
-                    }
-                }).done(function(response) {
-                    // console.log("re1=" + response);
-
-                    var params = response.split(' ')[0];
-                    var firma = response.split(' ')[1];
-
-                    $('input[name=Ds_MerchantParameters]').val(params);
-                    $('input[name=Ds_Signature]').val(firma);
-                });
-            }
-        });
-
-        $('#input-intelectual').on('click', function() {
-            var amount = $('#total').val();
-            var order = $('input[name=nPedido]').val();
-            var paymethod = $('input[name=metodoPago]:checked').val();
-            if ($('#input-privacidad').is(':checked') && $('#input-intelectual').is(':checked')) {
-                $.ajax({ //Peticion de ajax
-                    method: "POST",
-                    url: "redsysParametros.php",
-                    data: {
-                        amount: amount,
-                        paymethod: paymethod,
-                        order: order
-                    }
-                }).done(function(response) {
-                    // console.log("re2=" + response);
-
-                    var params = response.trim().split(' ')[0];
-                    var firma = response.trim().split(' ')[1];
-
-                    $('input[name=Ds_MerchantParameters]').val(params);
-                    $('input[name=Ds_Signature]').val(firma);
-                });
-            }
-        });
-    </script>
-
-    <?php /*} else {
-    header("Location: 404");
-}*/
-    ?>
+    <script src="https://www.google.com/recaptcha/api.js?render=6Le8UoMkAAAAALmqYyAs8L4dBYMQL6N4lhSqvCld"></script>
+    <script src="./assets/js/vendor/modernizr-3.5.0.min.js"></script>
+    <script src="./assets/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="./assets/js/jquery.scrollUp.min.js"></script>
+    <script src="./assets/js/popper.min.js"></script>
+    <script src="./assets/js/bootstrap.min.js"></script>
+    <script src="./assets/js/jquery.slicknav.min.js"></script>
+    <script src="./assets/js/jquery.form.js"></script>
+    <script src="./assets/js/jquery.validate.min.js"></script>
+    <script src="./assets/js/jquery.ajaxchimp.min.js"></script>
+    <script src="./assets/js/cookies.js"></script>
+    <script src="./assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pselect.js@4.0.1/dist/pselect.min.js"></script>
+    <script type="text/javascript" src="https://mottie.github.io/tablesorter/js/jquery.tablesorter.js"></script>
+    <script type="text/javascript" src="https://mottie.github.io/tablesorter/js/jquery.tablesorter.widgets.js"></script>
+    <script type="text/javascript" src="https://mottie.github.io/tablesorter/addons/pager/jquery.tablesorter.pager.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=reCAPTCHA_site_key"></script>
+    <script src="./assets/js/checkout.js"></script>

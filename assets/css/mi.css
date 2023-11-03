@@ -3514,6 +3514,14 @@ h3.tit-form {
   border-radius: 5px;
 }
 
+.color-danger {
+  background-color: #ffe4a9;
+  margin: 5px;
+  border-radius: 5px;
+  padding: 5px;
+  text-align: center;
+}
+
 @media (max-width: 992px) {
   .coming-soon {
     padding: 80px 0;
@@ -4124,4 +4132,11 @@ input[type="number"] {
   max-height: 80vh; /* Establece una altura máxima para evitar desbordamientos */
   display: block; /* Asegura que la imagen esté centrada en la modal */
   margin: 0 auto;
+}
+
+.btn-check:disabled,
+.btn-check[disabled] {
+    border: none; /* Anula el borde */
+    background-color: transparent; /* Anula el fondo */
+    color: inherit; /* Hereda el color del texto */
 }

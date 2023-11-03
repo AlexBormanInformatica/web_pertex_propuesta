@@ -10,15 +10,6 @@ if (!$user->is_logged_in()) {
     exit();
 }
 
-$sql = "SELECT id_diseno, fecha_encargo, subtotal, estado, nombre, cantidad
-FROM disenos 
-INNER JOIN productos p ON p.id_producto = disenos.id_producto
-INNER JOIN usuarios ON usuarios.id = disenos.id_usuario 
-WHERE estado <> 'Anulado' AND id_usuario=" . $_SESSION['ID'] . " ORDER BY fecha_encargo DESC";
-$query = $conn->prepare($sql);
-$query->execute();
-$results = $query->fetchAll(PDO::FETCH_OBJ);
-
 $email = $nombrecomercial = $nombrefiscal = $intracomunitario = $vatno = $direccion =
     $postal = $pais = $provincia = $poblacion = $telefono = $movil = $actividades = $recargo = $conocido = "";
 
@@ -94,9 +85,6 @@ foreach ($results as $result) {
 
     <main>
         <div class="container p-b-150 p-t-50">
-            <div class="logo text-center">
-                <a href="."><img src="assets/img/logo/logo.png" alt=""></a>
-            </div>
             <div class="row">
                 <div class="col-lg-7 mx-auto p-tb-40">
                     <h2 class="text-center mb-5">FORMULARIO DE AUTORIZACIÓN DE USO DE LA PROPIEDAD INTELECTUAL</h2>
@@ -110,26 +98,8 @@ foreach ($results as $result) {
                     <div>
                         <br>Declara que el pedido encargado a la compañía <strong>Borman Industria Textil, S.L.</strong>,
                         con C.I.F. <strong>B99117996</strong> para la fabricación de<br>
-                        <?php
-                        try {
-                            $sql = "SELECT * FROM pedidos p 
-                            INNER JOIN lineapedido lp ON lp.pedidos_idpedidos = p.idpedidos
-                            WHERE idpedidos=?";
-                            $query = $conn->prepare($sql);
-                            $query->bindParam(1, $idpedido, PDO::PARAM_INT);
-                            $query->execute();
-                            $results = $query->fetchAll(PDO::FETCH_OBJ);
-                            foreach ($results as $result) {
-
-                        ?>
-                                <strong><?= $result->Cantidad ?>uds:</strong><br>
-
-                                <img class="img-fluid mx-auto" src="imagenes_bocetos/D<?= $result->idpedidos ?>-<?= $result->idlineaPedido ?>.jpg"><br>
-                        <?php }
-                        } catch (Exception $e) {
-                            // header("location: error.php?msg=" . $e->getCode());
-                        }
-                        ?>
+                        <strong><?= $_POST['cantidad_diseno'] ?>uds:</strong><br>
+                        <img class="img-fluid mx-auto" src="imagenes_bocetos/D<?= $_POST['id_diseno'] ?>.jpg"><br>
                     </div>
 
                     <div>
@@ -151,19 +121,19 @@ foreach ($results as $result) {
                         </div>
                     </div>
 
-                    <br>Fecha: <?= date("d") ?> de <?= date("m") ?> de <?= date("Y") ?>
 
-                    <div class="mt-3 mb-3 form-check">
-                        <label class="form-check-label" for="propiedad-intelectual">
-                            <input type="checkbox" class="form-check-input" id="propiedad-intelectual" name="propiedad-intelectual" required>
-                            Autoriza a la compañía <strong>Borman Industria Textil, S.L.</strong>, con C.I.F. <strong>B99117996</strong>
-                            a la utilización de dicho logo, marca o diseño para la realización del pedido encargado.
-                        </label>
-                    </div>
+                    <br>Fecha: <span id="spanfecha"></span>
+
                     <div class="form-group">
-                        <form action="DAOs/historial-pedidosDAO.php?pag=<?= buscarTexto("WEB", "paginas", "historial-pedidos", "", $_SESSION['idioma']); ?>" method="POST">
-                            <input name="prop-int" value="1" hidden>
-                            <input name="idPedidos" value="<?= $idpedido ?>" hidden>
+                        <form action="DAOs/acepta-propiedadDAO.php" method="POST">
+                            <div class="mt-3 mb-3 form-check">
+                                <label class="form-check-label" for="propiedad_intelectual">
+                                    <input type="checkbox" class="form-check-input" id="propiedad_intelectual" name="propiedad_intelectual" required>
+                                    Autoriza a la compañía <strong>Borman Industria Textil, S.L.</strong>, con C.I.F. <strong>B99117996</strong>
+                                    a la utilización de dicho logo, marca o diseño para la realización del pedido encargado.
+                                </label>
+                            </div>
+                            <input name="id_diseno" value="<?= $_POST['id_diseno'] ?>" hidden>
                             <button class="btn" id="btnPropiedad" type="submit" disabled>
                                 Enviar
                             </button>
@@ -185,7 +155,6 @@ foreach ($results as $result) {
     <script src="./assets/js/jquery.ajaxchimp.min.js"></script>
     <script src="./assets/js/cookies.js"></script>
     <script src="./assets/js/main.js"></script>
-    <script src="./assets/js/historial-pedidos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pselect.js@4.0.1/dist/pselect.min.js"></script>
     <script type="text/javascript" src="https://mottie.github.io/tablesorter/js/jquery.tablesorter.js"></script>
     <script type="text/javascript" src="https://mottie.github.io/tablesorter/js/jquery.tablesorter.widgets.js"></script>
@@ -193,13 +162,41 @@ foreach ($results as $result) {
     <script src="https://www.google.com/recaptcha/api.js?render=reCAPTCHA_site_key"></script>
     <script src="./assets/js/historial-disenos.js"></script>
     <script src="./assets/js/carrito.js"></script>
-</body>
+    <script>
+        // Obtenemos la fecha actual
+        const fecha = new Date();
 
-<div class="bigCookieContainer" style="display: block;">
-    <div id="cajacookies" class="text-center">
-        <?= buscarTexto("WEB", "index", "idx_cookies1", "", $_SESSION['idioma']); ?> 🍪, <?= buscarTexto("WEB", "index", "idx_cookies2", "", $_SESSION['idioma']); ?><a href="<?= buscarTexto("WEB", "paginas", "politica-cookies", "", $_SESSION['idioma']); ?>" class="pl-3"><?= buscarTexto("WEB", "footer-fin", "foot_fin-cookies", "", $_SESSION['idioma']); ?></a>.
-        <button onclick="aceptarCookies()" class="pull-right"> <?= buscarTexto("WEB", "index", "idx_cookies-btn", "", $_SESSION['idioma']); ?></button>
-    </div>
-</div>
+        const language = "<?= strtolower($_SESSION['idioma']) ?>";
+        // Configuramos el formateador de fecha en el idioma correspondiente
+        const options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        };
+        const dateFormater = new Intl.DateTimeFormat(language, options);
+
+        // Formateamos la fecha
+        const fechaFormateada = dateFormater.format(fecha);
+
+        // Mostramos la fecha en el elemento HTML
+        document.getElementById("spanfecha").textContent = fechaFormateada;
+    </script>
+
+    <script>
+        // Obtén una referencia al checkbox y al botón
+        const checkbox = document.getElementById("propiedad_intelectual");
+        const boton = document.getElementById("btnPropiedad");
+
+        // Escucha el evento "change" del checkbox
+        checkbox.addEventListener("change", function() {
+            // Si el checkbox está marcado, habilita el botón; de lo contrario, desactívalo.
+            if (checkbox.checked) {
+                boton.disabled = false;
+            } else {
+                boton.disabled = true;
+            }
+        });
+    </script>
+</body>
 
 </html>

@@ -37,32 +37,15 @@
 
 /* hovered row colors */
 .tablesorter-blackice tbody > tr.hover > td,
-.tablesorter-blackice tbody > tr:hover > td,
-.tablesorter-blackice tbody > tr.even:hover > td,
-.tablesorter-blackice tbody > tr.odd:hover > td,
-.tablesorter-blackice tbody > tr.hover > td > button > i,
-.tablesorter-blackice tbody > tr:hover > td > button > i,
-.tablesorter-blackice tbody > tr.even:hover > td > button > i,
-.tablesorter-blackice tbody > tr.odd:hover > td > button > i {
+.tablesorter-blackice tbody > tr:hover > td {
   background-color: #e2e2e2;
   cursor: pointer;
   color: black;
 }
 
-.seleccionada, .seleccionada i {
-  background-color: #00953e;
-  color: white;
-}
-
 /* Estilos específicos para las filas de detalles */
 .no-hover {
   background-color: #e1ebe5;
-  text-align: left;
-}
-
-/* Estilos específicos para las filas de mensajes */
-#mensajesEquipoPertex {
-  background-color: #f0f0f0;
   text-align: left;
 }
 

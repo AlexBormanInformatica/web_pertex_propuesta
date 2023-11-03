@@ -364,7 +364,7 @@ if (isset($_POST['buscarBases'])) {
     $sql = "SELECT c.id_complemento FROM pertex.complementos c
     INNER JOIN productos_has_complementos pc ON pc.id_complemento = c.id_complemento
     INNER JOIN productos p ON p.id_producto = pc.id_producto
-    WHERE id_producto=?";
+    WHERE p.id_producto=?";
     $query = $conn->prepare($sql);
     $query->bindParam(1, $id, PDO::PARAM_INT);
     $query->execute();
@@ -724,7 +724,7 @@ if (isset($_POST['historialEncargoSeleccionado'])) {
     $texto = "";
     foreach ($results as $result) {
         $texto .= "<p><strong>" . date('d/m/Y H:i', strtotime($result->fecha)) . " - " . "</strong>" . $result->descripcion . " "
-            . $result->anotaciones . "</p><br>";
+            . $result->anotaciones . "</p>";
     }
 
     echo $texto;

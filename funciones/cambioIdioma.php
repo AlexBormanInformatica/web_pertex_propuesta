@@ -2,16 +2,9 @@
 require_once('../includes/config.php');
 include("functions.php");
 
-if (isset($_GET['idioma'])) {
-    $_SESSION['resultadoTraduccionPertex'] = llamadoInicial($_SESSION['idioma']);
-    $_SESSION['resultadoTraduccionFormularios'] = llamadoInicialFormularios($_SESSION["idioma"]);
-} else if (!isset($_GET['idioma']) && ($_SESSION['idioma'] == 'ES')) {
-    $_SESSION['resultadoTraduccionPertex'] = llamadoInicial('ES');
-    $_SESSION['resultadoTraduccionFormularios'] = llamadoInicialFormularios($_SESSION["ES"]);
-} else {
-    $_SESSION['resultadoTraduccionPertex'] = llamadoInicial('ES');
-    $_SESSION['resultadoTraduccionFormularios'] = llamadoInicialFormularios($_SESSION["ES"]);
-}
+$_SESSION['resultadoTraduccionPertex'] = llamadoInicial($_GET['idioma']);
+$_SESSION['resultadoTraduccionFormularios'] = llamadoInicialFormularios($_GET["idioma"]);
+$_SESSION['idioma'] = $_GET['idioma'];
 
 $pagina = "";
 

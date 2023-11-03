@@ -1,6 +1,8 @@
 <?php
 require_once('../includes/config.php');
 
+use PHPMailer\PHPMailer\PHPMailer;
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //Variables para cada campo del formulario
     $tecnica = $cantidad = $ancho = $alto = $comentarios = "";
@@ -146,25 +148,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sentencia->bindParam(23, $nullValue, PDO::PARAM_NULL);
         $sentencia->execute();
 
-        // echo "FECHA ". $fecha ."<br>";
-        // echo "MOLDE ". $moldes ."<br>";
-        // echo "SUBTOTAL ". $subtotal ."<br>";
-        // echo "ID ". $_SESSION['ID'] ."<br>";
-        // echo "ESTADO ". $estado ."<br>";
-        // echo "COMENTARIO ". $comentarios ."<br>";
-        // echo "TECNICA ". $tecnica ."<br>";
-        // echo "ANCHO ". $ancho ."<br>";
-        // echo "ALTO ". $alto ."<br>";
-        // echo "CANTIDAD ". $cantidad ."<br>";
-        // echo "FORMA ". $forma ."<br>";
-        // echo "COMPLEMENTO ". $complemento ."<br>";
-        // echo "COLOR BASE ". $colorBase ."<br>";
-        // echo "COLOR METAL ". $colorMetal ."<br>";
-        // echo "COLOR PIEL ". $colorPiel ."<br>";
-        // echo "ANCHO BASE ". $anchoBase ."<br>";
-        // echo "ALTO BASE ". $altoBase ."<br>";
-        // echo "CANTIDAD TOPES ". $cantidadTopes ."<br>";
-
         //Id del encargo agregado
         $id_diseno_nuevo = $conn->lastInsertId();
         $_SESSION['id_ultimo_diseno'] = $id_diseno_nuevo;
@@ -202,6 +185,126 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sentencia->bindParam(4, $fecha, PDO::PARAM_STR);
         $sentencia->bindParam(5, $id_diseno_nuevo, PDO::PARAM_INT);
         $sentencia->execute();
+
+        // ENVIO CORREO
+        //Se envía un correo al cliente por encargar un diseño explicandole qué sigue
+
+        require_once '../vendor/autoload.php';
+        $mail = new PHPMailer();
+
+        $mail->CharSet = "UTF-8";
+        $mail->SetFrom('alexandra.serrano.chacon@gmail.com', "Alexandra");
+        $mail->IsHTML(true);
+        $mail->SMTPDebug = 2;
+
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'alexandra.serrano.chacon@gmail.com';
+        $mail->Password = 'wnye mdqz eaid ztme';
+        $mail->SMTPSecure = 'tls';
+        $mail->Port = 587;
+
+        $mail->addAddress("alexandra.serrano.chacon@gmail.com", '');
+        $mail->Subject = "¡Gracias por tu encargo! 🎉";
+        $mail->Body = "<!DOCTYPE html>
+            <html lang='en' xmlns='http://www.w3.org/1999/xhtml' xmlns:o='urn:schemas-microsoft-com:office:office'>
+            
+            <head>
+                <meta charset='utf-8'>
+                <meta name='viewport' content='width=device-width,initial-scale=1'>
+                <meta name='x-apple-disable-message-reformatting'>
+                <title></title>
+                <!--[if mso]>
+                        <noscript>
+                            <xml>
+                                <o:OfficeDocumentSettings>
+                                    <o:PixelsPerInch>96</o:PixelsPerInch>
+                                </o:OfficeDocumentSettings>
+                            </xml>
+                        </noscript>
+                        <![endif]-->
+                <style>
+                    table,
+                    td,
+                    div,
+                    h1,
+                    p {
+                        font-family: Arial, sans-serif;
+                    }
+                </style>
+            </head>
+            
+            <body style='margin:0;padding:0;text-align: justify;'>
+                <table role='presentation' style='width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;'>
+                    <tr>
+                        <td align='center' style='padding:0;'>
+                            <img src='https://personalizacionestextiles.com/assets/img/logo/logo.png' alt='' width='150' style='height:auto;display:block;padding:30px;' />
+                            <table role='presentation' style='width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;'>
+                                <tr>
+                                    <td align='center' style='padding:40px 0 30px 0;background:#00953e'>
+                                        <h1 style='font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;color:#FFF;'>Personalizaciones textiles</h1>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style='padding:36px 30px 42px 30px;'>
+                                        <table role='presentation' style='width:100%;border-collapse:collapse;border:0;border-spacing:0;'>
+                                            <tr>
+                                                <td style='padding:0 0 36px 0;color:#191D34;'>
+                                                    <h1 style='font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;'>Encargo del diseño Nº" . $id_diseno_nuevo . "</h1>
+                                                    <p style='margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;'>Gracias por elegirnos para realizar vuestro diseño.</p>
+                                                    <p style='margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;'>El diseño está ahora en estado \"Boceto pendiente\". Esto significa que nuestro equipo de Personalizaciones Textiles está trabajando en él.</p>
+                                                    <p style='margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;'>En breve, recibirás un correo electrónico con los siguientes pasos del proceso. También puedes ver la lista de tus diseños en la sección <a href='http://localhost/web_pertex_propuesta/historial-disenos' style='color:#00953e;'>Mis diseños</a> de tu cuenta.</p>
+                                                    <p style='margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;'>¿Tienes alguna pregunta? No dudes en contactarnos.</p>
+                                                    <a href='https://personalizacionestextiles.com/' style='color:#00953e;'>personalizacionestextiles.com</a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style='padding:30px;background:#191D34;'>
+                                        <table role='presentation' style='width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;'>
+                                            <tr>
+                                                <td style='padding:0;' align='center'>
+                                                    <h2 style='font-size:18px;margin:0 0 20px 0;font-family:Arial,sans-serif;color:#ffffff;'>¿Cómo es el proceso?</h2>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style='padding:0;' align='center'>
+                                                    <p style='margin:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;'><a href='https://personalizacionestextiles.com/infografia' style='background-color:#00953E;padding:10px 30px 10px 30px;border-radius:20px;color:#fff;text-decoration: none;'>Ver</a></p>
+                                                </td>
+            
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style='padding:30px;background:#eeee;'>
+                                        <table role='presentation' style='width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;'>
+                                            <tr>
+                                                <td style='padding:0;width:50%;' align='center'>
+                                                    <p style='margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#000;'>
+                                                        &reg; Personalizaciones textiles 2022<br /><a href='https://personalizacionestextiles.com/aviso-legal' style='color:#000;text-decoration:underline;'>Aviso legal</a> | <a href='https://personalizacionestextiles.com/politica-privacidad' style='color:#000;text-decoration:underline;'>Política de privacidad</a>
+                                                    </p>
+            
+                                                </td>
+            
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </body>
+            
+            </html>";
+
+        if ($mail->send()) {
+        } else {
+        }
 
         header("location: ../gracias-por-tu-encargo");
     } catch (Exception $e) {

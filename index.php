@@ -6,10 +6,9 @@
  * 2022
  */
 require_once('includes/config.php');
-
 include("funciones/functions.php");
-
-require_once "assets/_partials/idioma.php";
+include('classes/AES.php');
+include("assets/_partials/codigo-idiomas.php");
 
 ?>
 

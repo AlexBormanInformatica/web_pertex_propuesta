@@ -1,5 +1,6 @@
 <?php
 require_once('../includes/config.php');
+require_once('../classes/AES.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //Variables para cada campo del formulario
@@ -20,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     try {
         // UPDATE EN LA TABLA ENCARGOS
-        $sql = "UPDATE encargos SET estado=? WHERE id_diseno=?";
+        $sql = "UPDATE disenos SET estado=? WHERE id_diseno=?";
         $sentencia = $conn->prepare($sql);
         $sentencia->bindParam(1, $estado, PDO::PARAM_STR);
         $sentencia->bindParam(2, $id_diseno, PDO::PARAM_INT);
@@ -36,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sentencia->bindParam(5, $id_diseno, PDO::PARAM_INT);
         $sentencia->execute();
 
-        header("location: ../historial-disenos?ok&anulado=" . $id_diseno);
+        header("location: ../historial-disenos?". PHP_AES_Cipher::encrypt("ok&anulado=" . $id_diseno));
     } catch (Exception $e) {
         echo $e->getMessage();
     }

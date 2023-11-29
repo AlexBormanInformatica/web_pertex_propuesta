@@ -1,8 +1,8 @@
 <?php
 require_once('includes/config.php');
 include("funciones/functions.php");
-
-require_once "assets/_partials/idioma.php";
+include('classes/AES.php');
+include("assets/_partials/codigo-idiomas.php");
  ?>
 
 <!doctype html>
@@ -25,12 +25,12 @@ require_once "assets/_partials/idioma.php";
     <?php
     include("assets/_partials/header.php");
     try {
-        $sql = "SELECT * FROM productos p INNER JOIN consejoslavado co ON  co.idconsejoslavado = p.consejoslavado_idconsejoslavado WHERE categorias_id_categoria = 4";
+        $sql = "SELECT * FROM productos p INNER JOIN consejoslavado co ON  co.idconsejoslavado = p.consejoslavado_idconsejoslavado WHERE id_categoria = 4";
         $query = $conn->prepare($sql);
         $query->execute();
         $results = $query->fetchAll(PDO::FETCH_OBJ);
     } catch (Exception $e) {
-        header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
+        header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?". PHP_AES_Cipher::encrypt("msg=" . $e->getCode()));
     }
     ?>
 
@@ -59,8 +59,8 @@ require_once "assets/_partials/idioma.php";
 
                                 <div class="col-md-8 mt-sm-20">
                                     <h2 class="mb-30 overflow-hidden"><?php echo buscarTexto("PRG", "productos", $result->id_producto, "nombre", $_SESSION['idioma']); ?></h2>
-                                    <h4 class="card-text mb-3 overflow-hidden txt-alineado"><?php echo buscarTexto("PRG", "productos", $result->id_producto, "descripcion_corta", $_SESSION['idioma']); ?></h4>
-                                    <p class="card-text overflow-hidden txt-alineado"><?php echo buscarTexto("PRG", "productos", $result->id_producto, "descripcion_larga", $_SESSION['idioma']); ?></p>
+                                    <h4 class="card-text mb-3 overflow-hidden txt-alineado"><?php echo buscarTexto("PRG", "productos", $result->id_producto, "desc_corta", $_SESSION['idioma']); ?></h4>
+                                    <p class="card-text overflow-hidden txt-alineado"><?php echo buscarTexto("PRG", "productos", $result->id_producto, "desc_larga", $_SESSION['idioma']); ?></p>
                                     <?php
                                     if ($result->id_producto == '38') {
                                     ?>

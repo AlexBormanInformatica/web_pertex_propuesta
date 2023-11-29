@@ -3,7 +3,6 @@ require_once('../includes/config.php');
 include("functions.php");
 
 $_SESSION['resultadoTraduccionPertex'] = llamadoInicial($_GET['idioma']);
-$_SESSION['resultadoTraduccionFormularios'] = llamadoInicialFormularios($_GET["idioma"]);
 $_SESSION['idioma'] = $_GET['idioma'];
 
 $pagina = "";

@@ -1,5 +1,6 @@
 <?php
 require_once('../includes/config.php');
+require_once('../classes/AES.php');
 
 use PHPMailer\PHPMailer\PHPMailer;
 

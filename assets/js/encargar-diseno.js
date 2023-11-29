@@ -1079,7 +1079,7 @@ function verificarCantidad() {
       // Relleno los campos de la tabla resumen
       // La cantidad introducida 
       document.getElementById('resumenCantidad').innerText = inputCantidad.value;
-      if (altoInt != "" && anchoInt != "" && altoInt > 0 && altoInt > 0) {
+      if (altoInt != "" && anchoInt != "" && altoInt > 0 && anchoInt > 0) {
         calcularSuperficieProducto();
       }
 
@@ -1212,7 +1212,7 @@ function verificarPaso2() {
 /**
  * Compruebo que los 4 pasos estén COMPLETO para habilitar el boton de encargar diseño
  */
-function verificar4Completos() {
+function  verificar4Completos() {
   var bool = true;
 
   if (document.querySelector(".paso1").classList.contains("paso-incompleto")) {

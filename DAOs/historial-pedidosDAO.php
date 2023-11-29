@@ -2,6 +2,7 @@
 require_once('includes/config.php');
 include("pedidos.php");
 include("funciones/functions.php");
+require_once('classes/AES.php');
 ?>
 <?php
 $anotaciones = "";
@@ -345,7 +346,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             //SI paga por la web
             historico($conn, $idpedido, 'BOCETO ACEPTADO', "Boceto+Propiedad Intelectual aceptado. Pasa al área de pago de la web.");
-            header("Location: checkout?check=" . $idpedido);
+            header("Location: checkout?" . PHP_AES_Cipher::encrypt("check=" . $idpedido));
         }
     }
 } else if ($_SERVER["REQUEST_METHOD"] == "GET") {

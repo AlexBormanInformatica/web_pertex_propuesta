@@ -1,9 +1,8 @@
 <?php
 require_once('includes/config.php');
-include("pedidos.php");
 include("funciones/functions.php");
-
-require_once "assets/_partials/idioma.php";
+include('classes/AES.php');
+include("assets/_partials/codigo-idiomas.php");
 
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {

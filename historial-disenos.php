@@ -4,8 +4,9 @@ use LDAP\Result;
 
 require_once('includes/config.php');
 include("pedidos.php");
-
 include("funciones/functions.php");
+include('classes/AES.php');
+include("assets/_partials/codigo-idiomas.php");
 if (!$user->is_logged_in()) {
     header('Location: login');
     exit();
@@ -63,7 +64,7 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
                     <!--BUSCADOR DE DISEÑOS-->
                     <div class="search-container">
                         <form>
-                            <input class="pl-20" type="text" id="busquedaEncargo" placeholder="Buscar número nº diseño...">
+                            <input class="pl-20 busqueda" type="text" id="busquedaEncargo" placeholder="Buscar número nº diseño...">
                         </form>
                         <!--FILTRO POR PRODUCTO-->
                         <select id="filtroProducto">
@@ -102,7 +103,7 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
                                 </div>
                             </div>
                         <?php } ?>
-                        <table class="tablesorter-blackice table-bordered"" id=" tablaEncargos">
+                        <table class="tablesorter-blackice table-bordered">
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">Nº diseño</th>

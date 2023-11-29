@@ -68,12 +68,12 @@
                                         <?php if ((isset($_SESSION['email'])) && ($_SESSION['email'] != "")) { ?>
                                             <li>
                                                 <?php
-                                                  $sql = "SELECT COUNT(id_diseno) FROM disenos WHERE estado = 'Boceto aceptado' ";
-                                                  $query = $conn->prepare($sql);
-                                                  $query->execute();
-                                                  $count_disenos = $query->fetchColumn();
+                                                $sql = "SELECT COUNT(id_diseno) FROM disenos WHERE estado = 'Boceto aceptado' ";
+                                                $query = $conn->prepare($sql);
+                                                $query->execute();
+                                                $count_disenos = $query->fetchColumn();
                                                 ?>
-                                                <a href="carrito"><i class="fas fa-shopping-cart"></i>  <span><?= $count_disenos ?></span></a>
+                                                <a href="carrito"><i class="fas fa-shopping-cart"></i> <span><?= $count_disenos ?></span></a>
                                             </li>
                                             <li>
                                                 <a href="<?= buscarTexto("WEB", "paginas", "cuenta", "", $_SESSION['idioma']); ?>"><?= buscarTexto("WEB", "header", "header_top-4", "", $_SESSION['idioma']); ?></a>
@@ -120,46 +120,53 @@
                                                     <li><a href="<?= buscarTexto("WEB", "paginas", "etiquetas", "", $_SESSION['idioma']); ?>"><?= buscarTexto("WEB", "nav", "nav_sub-etique", "", $_SESSION['idioma']); ?></a></li>
                                                     <li><a href="<?= buscarTexto("WEB", "paginas", "tiradores", "", $_SESSION['idioma']); ?>"><?= buscarTexto("WEB", "nav", "nav_sub-tirad", "", $_SESSION['idioma']); ?></a></li>
                                                     <li><a href="<?= buscarTexto("WEB", "paginas", "pulseras", "", $_SESSION['idioma']); ?>"><?= buscarTexto("WEB", "nav", "nav_sub-pulse", "", $_SESSION['idioma']); ?></a></li>
-                                                    <li><a href="<?= buscarTexto("WEB", "paginas", "bases", "", $_SESSION['idioma']); ?>"><?= buscarTexto("WEB", "nav", "nav_sub-bases", "", $_SESSION['idioma']); ?></a></li>
+                                                    <li><a href="<?= buscarTexto("WEB", "paginas", "complementos", "", $_SESSION['idioma']); ?>"><?= buscarTexto("WEB", "nav", "nav_sub-complemento", "", $_SESSION['idioma']); ?></a></li>
                                                 </ul>
                                             </li>
 
                                             <li><a href="https://www.clustertextilzgz.com/CatalogoPersonalizacionesTextiles/index.html" target="_blank"><?= buscarTexto("WEB", "nav", "nav_catalogo", "", $_SESSION['idioma']); ?></a></li>
                                             <li><a href="encargar-diseno"><?= buscarTexto("WEB", "general", "btn-personalizar", "", $_SESSION['idioma']); ?></a></li>
-                                            <?php if ($_SESSION['idioma'] == "ES") { ?>
-                                                <li><a class="pb-2" href='funciones/cambioIdioma.php?idioma=ES&name=<?php echo basename($_SERVER['REQUEST_URI']) ?>'><img src="imagenes/es.png" alt="<?= buscarTexto("WEB", "nav", "nav_altEspana", "", $_SESSION['idioma']); ?>" class="mr-3"></a>
+                                            <?php
+                                            $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                                            // Parsea la URL para obtener la ruta
+                                            $path = parse_url($url, PHP_URL_PATH);
+                                            // Obtiene el nombre del archivo usando basename
+                                            $enlace_pagina = basename($path, '.php');
+                                            // echo $enlace_pagina;
+                                            if ($_SESSION['idioma'] == "ES") { ?>
+                                                <li><a class="pb-2" href='funciones/cambioIdioma.php?<?= PHP_AES_Cipher::encrypt("pag=" . $enlace_pagina . "&idioma=ES"); ?>'><img src="imagenes/es.png" alt="<?= buscarTexto("WEB", "nav", "nav_altEspana", "", $_SESSION['idioma']); ?>" class="mr-3"></a>
                                                     <ul class="flag">
                                                         <li></li>
-                                                        <li><a href='funciones/cambioIdioma.php?idioma=FR&name=<?php echo basename($_SERVER['REQUEST_URI']) ?>'><img src="imagenes/fr.png" alt="<?= buscarTexto("WEB", "nav", "nav_altFrancia", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
-                                                        <li><a href='funciones/cambioIdioma.php?idioma=IT&name=<?php echo basename($_SERVER['REQUEST_URI']) ?>'><img src="imagenes/it.png" alt="<?= buscarTexto("WEB", "nav", "nav_altItalia", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
-                                                        <li><a href='funciones/cambioIdioma.php?idioma=PT&name=<?php echo basename($_SERVER['REQUEST_URI']) ?>'><img src="imagenes/pt.png" alt="<?= buscarTexto("WEB", "nav", "nav_altPortugal", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
+                                                        <li><a href='funciones/cambioIdioma.php?<?= PHP_AES_Cipher::encrypt("pag=" . $enlace_pagina . "&idioma=FR"); ?>'><img src="imagenes/fr.png" alt="<?= buscarTexto("WEB", "nav", "nav_altFrancia", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
+                                                        <li><a href='funciones/cambioIdioma.php?<?= PHP_AES_Cipher::encrypt("pag=" . $enlace_pagina . "&idioma=IT"); ?>'><img src="imagenes/it.png" alt="<?= buscarTexto("WEB", "nav", "nav_altItalia", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
+                                                        <li><a href='funciones/cambioIdioma.php?<?= PHP_AES_Cipher::encrypt("pag=" . $enlace_pagina . "&idioma=PT"); ?>'><img src="imagenes/pt.png" alt="<?= buscarTexto("WEB", "nav", "nav_altPortugal", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
                                                     </ul>
                                                 </li>
                                             <?php } else if ($_SESSION['idioma'] == "FR") { ?>
-                                                <li><a class="pb-2" href='funciones/cambioIdioma.php?idioma=FR&name=<?php echo basename($_SERVER['REQUEST_URI']) ?>'><img src="imagenes/fr.png" alt="<?= buscarTexto("WEB", "nav", "nav_altFrancia", "", $_SESSION['idioma']); ?>" class="mr-3"></a>
+                                                <li><a class="pb-2" href='funciones/cambioIdioma.php?<?= PHP_AES_Cipher::encrypt("pag=" . $enlace_pagina . "&idioma=FR"); ?>'><img src="imagenes/fr.png" alt="<?= buscarTexto("WEB", "nav", "nav_altFrancia", "", $_SESSION['idioma']); ?>" class="mr-3"></a>
                                                     <ul class="flag">
                                                         <li></li>
-                                                        <li><a href='funciones/cambioIdioma.php?idioma=ES&name=<?php echo basename($_SERVER['REQUEST_URI']) ?>'><img src="imagenes/es.png" alt="<?= buscarTexto("WEB", "nav", "nav_altEspana", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
-                                                        <li><a href='funciones/cambioIdioma.php?idioma=IT&name=<?php echo basename($_SERVER['REQUEST_URI']) ?>'><img src="imagenes/it.png" alt="<?= buscarTexto("WEB", "nav", "nav_altItalia", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
-                                                        <li><a href='funciones/cambioIdioma.php?idioma=PT&name=<?php echo basename($_SERVER['REQUEST_URI']) ?>'><img src="imagenes/pt.png" alt="<?= buscarTexto("WEB", "nav", "nav_altPortugal", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
+                                                        <li><a href='funciones/cambioIdioma.php?<?= PHP_AES_Cipher::encrypt("pag=" . $enlace_pagina . "&idioma=ES"); ?>'><img src="imagenes/es.png" alt="<?= buscarTexto("WEB", "nav", "nav_altEspana", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
+                                                        <li><a href='funciones/cambioIdioma.php?<?= PHP_AES_Cipher::encrypt("pag=" . $enlace_pagina . "&idioma=IT"); ?>'><img src="imagenes/it.png" alt="<?= buscarTexto("WEB", "nav", "nav_altItalia", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
+                                                        <li><a href='funciones/cambioIdioma.php?<?= PHP_AES_Cipher::encrypt("pag=" . $enlace_pagina . "&idioma=PT"); ?>'><img src="imagenes/pt.png" alt="<?= buscarTexto("WEB", "nav", "nav_altPortugal", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
                                                     </ul>
                                                 </li>
                                             <?php } else if ($_SESSION['idioma'] == "IT") { ?>
-                                                <li><a class="pb-2" href='funciones/cambioIdioma.php?idioma=IT&name=<?php echo basename($_SERVER['REQUEST_URI']) ?>'><img src="imagenes/it.png" alt="<?= buscarTexto("WEB", "nav", "nav_altItalia", "", $_SESSION['idioma']); ?>" class="mr-3"></a>
+                                                <li><a class="pb-2" href='funciones/cambioIdioma.php?<?= PHP_AES_Cipher::encrypt("pag=" . $enlace_pagina . "&idioma=IT"); ?>'><img src="imagenes/it.png" alt="<?= buscarTexto("WEB", "nav", "nav_altItalia", "", $_SESSION['idioma']); ?>" class="mr-3"></a>
                                                     <ul class="flag">
                                                         <li></li>
-                                                        <li><a href='funciones/cambioIdioma.php?idioma=ES&name=<?php echo basename($_SERVER['REQUEST_URI']) ?>'><img src="imagenes/es.png" alt="<?= buscarTexto("WEB", "nav", "nav_altEspana", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
-                                                        <li><a href='funciones/cambioIdioma.php?idioma=FR&name=<?php echo basename($_SERVER['REQUEST_URI']) ?>'><img src="imagenes/fr.png" alt="<?= buscarTexto("WEB", "nav", "nav_altFrancia", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
-                                                        <li><a href='funciones/cambioIdioma.php?idioma=PT&name=<?php echo basename($_SERVER['REQUEST_URI']) ?>'><img src="imagenes/pt.png" alt="<?= buscarTexto("WEB", "nav", "nav_altPortugal", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
+                                                        <li><a href='funciones/cambioIdioma.php?<?= PHP_AES_Cipher::encrypt("pag=" . $enlace_pagina . "&idioma=ES"); ?>'><img src="imagenes/es.png" alt="<?= buscarTexto("WEB", "nav", "nav_altEspana", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
+                                                        <li><a href='funciones/cambioIdioma.php?<?= PHP_AES_Cipher::encrypt("pag=" . $enlace_pagina . "&idioma=FR"); ?>'><img src="imagenes/fr.png" alt="<?= buscarTexto("WEB", "nav", "nav_altFrancia", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
+                                                        <li><a href='funciones/cambioIdioma.php?<?= PHP_AES_Cipher::encrypt("pag=" . $enlace_pagina . "&idioma=PT"); ?>'><img src="imagenes/pt.png" alt="<?= buscarTexto("WEB", "nav", "nav_altPortugal", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
                                                     </ul>
                                                 </li>
                                             <?php } else if ($_SESSION['idioma'] == "PT") { ?>
-                                                <li><a class="pb-2" href='funciones/cambioIdioma.php?idioma=PT&name=<?php echo basename($_SERVER['REQUEST_URI']) ?>'><img src="imagenes/pt.png" alt="<?= buscarTexto("WEB", "nav", "nav_altPortugal", "", $_SESSION['idioma']); ?>" class="mr-3"></a>
+                                                <li><a class="pb-2" href='funciones/cambioIdioma.php?<?= PHP_AES_Cipher::encrypt("pag=" . $enlace_pagina . "&idioma=PT"); ?>'><img src="imagenes/pt.png" alt="<?= buscarTexto("WEB", "nav", "nav_altPortugal", "", $_SESSION['idioma']); ?>" class="mr-3"></a>
                                                     <ul class="flag">
                                                         <li></li>
-                                                        <li><a href='funciones/cambioIdioma.php?idioma=ES&name=<?php echo basename($_SERVER['REQUEST_URI']) ?>'><img src="imagenes/es.png" alt="<?= buscarTexto("WEB", "nav", "nav_altEspana", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
-                                                        <li><a href='funciones/cambioIdioma.php?idioma=FR&name=<?php echo basename($_SERVER['REQUEST_URI']) ?>'><img src="imagenes/fr.png" alt="<?= buscarTexto("WEB", "nav", "nav_altFrancia", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
-                                                        <li><a href='funciones/cambioIdioma.php?idioma=IT&name=<?php echo basename($_SERVER['REQUEST_URI']) ?>'><img src="imagenes/it.png" alt="<?= buscarTexto("WEB", "nav", "nav_altItalia", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
+                                                        <li><a href='funciones/cambioIdioma.php?<?= PHP_AES_Cipher::encrypt("pag=" . $enlace_pagina . "&idioma=ES"); ?>'><img src="imagenes/es.png" alt="<?= buscarTexto("WEB", "nav", "nav_altEspana", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
+                                                        <li><a href='funciones/cambioIdioma.php?<?= PHP_AES_Cipher::encrypt("pag=" . $enlace_pagina . "&idioma=FR"); ?>'><img src="imagenes/fr.png" alt="<?= buscarTexto("WEB", "nav", "nav_altFrancia", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
+                                                        <li><a href='funciones/cambioIdioma.php?<?= PHP_AES_Cipher::encrypt("pag=" . $enlace_pagina . "&idioma=IT"); ?>'><img src="imagenes/it.png" alt="<?= buscarTexto("WEB", "nav", "nav_altItalia", "", $_SESSION['idioma']); ?>" class="mr-3"></a></li>
                                                     </ul>
                                                 </li>
                                             <?php } ?>

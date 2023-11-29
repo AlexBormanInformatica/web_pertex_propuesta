@@ -1,7 +1,8 @@
 <?php
 require_once('includes/config.php');
-require_once('funciones/functions.php');
-require_once('assets/_partials/idioma.php');
+include("funciones/functions.php");
+include('classes/AES.php');
+include("assets/_partials/codigo-idiomas.php");
 
 $fecha = date("d/m/Y H:i", time());
 // Obtengo el id del pedido y sus datos

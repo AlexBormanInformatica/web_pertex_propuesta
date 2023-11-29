@@ -1,7 +1,8 @@
 <?php
-//Declaramos la conexion con el servidor de base de datos
 require_once('includes/config.php');
 include("funciones/functions.php");
+include('classes/AES.php');
+include("assets/_partials/codigo-idiomas.php");
 
 if (!$user->is_logged_in()) {
     // echo "e " . $_SESSION['loggedin'];
@@ -118,7 +119,7 @@ if (!$user->is_logged_in()) {
                                                     $query = $conn_formularios->prepare($sql);
                                                     $query->execute();
                                                 } catch (Exception $e) {
-                                                    header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
+                                                    header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?". PHP_AES_Cipher::encrypt("msg=" . $e->getCode()));
                                                 }
                                                 if ($sql) {  ?>
                                                     <div class='fs-18  alert alert-success'> <?php echo buscarTexto("WEB", "mi-cuenta", "cuenta-pass-txtCorrecto", "", $_SESSION['idioma']); ?></div>

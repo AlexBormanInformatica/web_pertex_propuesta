@@ -62,44 +62,6 @@ function buscarTextoConReturn($tipo, $identificador, $subidentificador1, $subide
 }
 
 /**
- * Recoge todos los textos del idioma seleccionado, por defecto será el español 
- */
-function  llamadoInicialFormularios($idiomaselect)
-{
-    require "../includes/config.php";
-    try {
-        global $conn_formularios;
-        $query2 = $conn_formularios->prepare("SELECT * FROM traducciones WHERE (idioma= '" .  $idiomaselect . "' AND correcto=1 ) or idioma='ES' ORDER BY tipo, subidentificador1, subidentificador2, FIELD(idioma, '" .  $idiomaselect . "') DESC;");
-        $query2->execute();
-        return $query2->fetchAll(PDO::FETCH_OBJ);
-    } catch (Exception $e) {
-        //Mensaje de error o redirección
-    }
-}
-
-
-/**
- * Con el resultado de la llamada inicial esta función busca el texto deseado para imprimirlo en pantalla.
- * Si no se encontrara el texto correcto para el idioma seleccionado, será por defecto español
- */
-function buscarTextoFormularios($tipo, $identificador, $subidentificador1, $subidentificador2, $idiomaselect)
-{
-    foreach ($_SESSION['resultadoTraduccionFormularios'] as $result) {
-        if (($result->tipo == $tipo && $result->identificador == $identificador &&
-            $result->subidentificador1 == $subidentificador1 && $result->subidentificador2 == $subidentificador2) && ($result->idioma == $idiomaselect && $result->idioma != "ES")) {
-            echo $result->texto;
-            break;
-        } else if (
-            $result->tipo == $tipo && $result->identificador == $identificador &&
-            $result->subidentificador1 == $subidentificador1 && $result->subidentificador2 == $subidentificador2 && ($result->idioma == "ES")
-        ) {
-            echo $result->texto;
-        }
-    }
-}
-
-
-/**
  * Verifica la existencia de un texto por medio de sus identificadores
  */
 function existe($tipo, $identificador, $subidentificador1, $subidentificador2, $idiomaselect)
@@ -330,33 +292,6 @@ if (isset($_POST['cantidadMinima'])) {
     }
 }
 
-
-/**
- * Si existe el email
- */
-if (isset($_POST['buscarMail'])) {
-    require "../includes/config.php";
-    $email = $_POST['buscarMail'];
-
-    $sql = "SELECT idfichaempresa FROM fichaempresametas WHERE email =?";
-    $query = $conn_formularios->prepare($sql);
-    $query->bindParam(1, $email, PDO::PARAM_STR);
-    $query->execute();
-    $count1 = $query->rowCount();
-
-    $sql2 = "SELECT idpersonaDeContacto FROM personadecontactometa WHERE email =? AND numCliFP is not null";
-    $query2 = $conn_formularios->prepare($sql2);
-    $query2->bindParam(1, $email, PDO::PARAM_STR);
-    $query2->execute();
-    $count2 = $query2->rowCount();
-    if (($count2 + $count1) > 0) {
-        echo "1";
-    } else {
-        echo "0";
-    }
-}
-
-
 if (isset($_POST['buscarBases'])) {
     require "../includes/config.php";
     $id = $_POST['id_producto'];
@@ -381,7 +316,7 @@ if (isset($_POST['buscarFormas'])) {
     $sql = "SELECT f.id_forma FROM pertex.formas f
     INNER JOIN productos_has_formas fp ON fp.id_forma = f.id_forma
     INNER JOIN productos p ON p.id_producto = fp.id_producto
-    WHERE id_producto=?";
+    WHERE p.id_producto=?";
     $query = $conn->prepare($sql);
     $query->bindParam(1, $id, PDO::PARAM_INT);
     $query->execute();

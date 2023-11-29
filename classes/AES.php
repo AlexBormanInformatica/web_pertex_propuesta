@@ -32,19 +32,18 @@ class PHP_AES_Cipher {
      * @param data - encrypted data with iv at the end separate by :
      * @return decrypted data string
      */ 
-    static function decrypt($key, $data) {
+    static function decrypt($data) {
         $key = '1A2sK0da85gvZ5t8'; 	#Same as in JAVA
         if (strlen($key) < PHP_AES_Cipher::$CIPHER_KEY_LEN) {
             $key = str_pad("$key", PHP_AES_Cipher::$CIPHER_KEY_LEN, "0"); 	//0 pad to len 16
         } else if (strlen($key) > PHP_AES_Cipher::$CIPHER_KEY_LEN) {
             $key = substr($data, 0, PHP_AES_Cipher::$CIPHER_KEY_LEN); 		//Truncate to 16 bytes
         }
-        
         $parts = explode(':', $data); //Separate Encrypted data from iv.
+        // print_r($parts);
         $decryptedData = openssl_decrypt(base64_decode($parts[0]), PHP_AES_Cipher::$OPENSSL_CIPHER_NAME, $key, OPENSSL_RAW_DATA, base64_decode($parts[1]));     
         return $decryptedData;
     }
-
 }
 
 

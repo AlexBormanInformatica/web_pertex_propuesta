@@ -1,8 +1,8 @@
 <?php
 require_once('includes/config.php');
 include("funciones/functions.php");
-
-require_once "assets/_partials/idioma.php";
+include('classes/AES.php');
+include("assets/_partials/codigo-idiomas.php");
  ?>
 
 <!doctype html>
@@ -45,7 +45,7 @@ require_once "assets/_partials/idioma.php";
                     <div class="section-top-border">
                         <div class="row model-product p-lr-10">
                             <div class="col-md-3 ">
-                                <img class="img-fluid" src="imagenes/base-tela.png" alt="<?= buscarTexto("WEB", "bases-tela-y-cierre", "alt-tela", "", $_SESSION['idioma']); ?>">
+                                <img class="img-fluid" src="imagenes/base-tela.png" alt="<?= buscarTexto("WEB", "complementos", "alt-tela", "", $_SESSION['idioma']); ?>">
                             </div>
 
                             <div class="col-md-8 mt-sm-20">
@@ -72,7 +72,7 @@ require_once "assets/_partials/idioma.php";
                     <div class="section-top-border">
                         <div class="row model-product p-lr-10">
                             <div class="col-md-3 ">
-                                <img class="img-fluid" src="imagenes/base-cierre.png" alt="<?= buscarTexto("WEB", "bases-tela-y-cierre", "alt-cierre", "", $_SESSION['idioma']); ?>">
+                                <img class="img-fluid" src="imagenes/base-cierre.png" alt="<?= buscarTexto("WEB", "complementos", "alt-cierre", "", $_SESSION['idioma']); ?>">
                             </div>
 
                             <div class="col-md-8 mt-sm-20 mb-5">
@@ -95,7 +95,7 @@ require_once "assets/_partials/idioma.php";
                     <div class="section-top-border">
                         <div class="row model-product p-lr-10">
                             <div class="col-md-3 ">
-                                <img class="img-fluid" src="imagenes/pelo.png" alt="<?= buscarTexto("WEB", "bases-tela-y-cierre", "alt-cierre", "", $_SESSION['idioma']); ?>">
+                                <img class="img-fluid" src="imagenes/pelo.png" alt="<?= buscarTexto("WEB", "complementos", "alt-cierre", "", $_SESSION['idioma']); ?>">
                             </div>
 
                             <div class="col-md-8 mt-sm-20">

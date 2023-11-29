@@ -43,7 +43,7 @@ try {
     $query->execute();
     // echo $factura . " " . $nMetodo . " " . $dirE . " " . $dirF . " " . $persona . " " . $idPedido;
 } catch (Exception $e) {
-    header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
+    header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?" . PHP_AES_Cipher::encrypt("msg=" . $e->getCode()));
 }
 
 echo $sql;

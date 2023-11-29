@@ -1,6 +1,8 @@
 <?php
-require_once "includes/config.php";
+require_once('includes/config.php');
 include("funciones/functions.php");
+include('classes/AES.php');
+include("assets/_partials/codigo-idiomas.php");
 ?>
 <!doctype html>
 <html class="no-js" lang="zxx">

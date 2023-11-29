@@ -909,7 +909,7 @@ if (isset($_POST['numped_exist'])) {
         $sentencia->execute();
         $results = $sentencia->fetchColumn();
     } catch (Exception $e) {
-        header("location: error.php?msg=" . $e->getCode());
+        header("location: error.php?". PHP_AES_Cipher::encrypt("msg=" . $e->getCode()));
     }
 
     if ($sentencia->rowCount() >= 1) {
@@ -932,7 +932,7 @@ if (isset($_POST['numfab_exist'])) {
         $sentencia->execute();
         $results = $sentencia->fetchColumn();
     } catch (Exception $e) {
-        header("location: error.php?msg=" . $e->getCode());
+        header("location: error.php?". PHP_AES_Cipher::encrypt("msg=" . $e->getCode()));
     }
 
     if ($sentencia->rowCount() >= 1) {

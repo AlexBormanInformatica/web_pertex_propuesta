@@ -1,8 +1,8 @@
 <?php
 require_once('includes/config.php');
 include("funciones/functions.php");
-
-require_once "assets/_partials/idioma.php";
+include('classes/AES.php');
+include("assets/_partials/codigo-idiomas.php");
  ?>
 <!doctype html>
 <html class="no-js" lang="zxx">
@@ -114,7 +114,7 @@ require_once "assets/_partials/idioma.php";
                                                             $query = $conn->query($sql);
                                                             $r_lista = $query->fetchAll(PDO::FETCH_OBJ);
                                                         } catch (Exception $e) {
-                                                            header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
+                                                            header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?". PHP_AES_Cipher::encrypt("msg=" . $e->getCode()));
                                                         }
                                                         ?>
                                                         <?php
@@ -157,7 +157,7 @@ require_once "assets/_partials/idioma.php";
                                     $query = $conn->query($sql);
                                     $results = $query->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC);
                                 } catch (Exception $e) {
-                                    header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
+                                    header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?". PHP_AES_Cipher::encrypt("msg=" . $e->getCode()));
                                 }
                                 ?>
 
@@ -236,7 +236,7 @@ require_once "assets/_partials/idioma.php";
                                                                 $query = $conn->query($sql);
                                                                 $r_lista = $query->fetchAll(PDO::FETCH_OBJ);
                                                             } catch (Exception $e) {
-                                                                header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?msg=" . $e->getCode());
+                                                                header("location: " . buscarTextoConReturn('WEB', 'paginas', 'error', '', $_SESSION['idioma']) . "?". PHP_AES_Cipher::encrypt("msg=" . $e->getCode()));
                                                             }
                                                             ?>
                                                             <?php

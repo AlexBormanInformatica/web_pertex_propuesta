@@ -1,7 +1,6 @@
 <?php
 $cadena = "";
 $idioma = "";
-
 if (!empty($_SERVER['QUERY_STRING'])) {
   $cadena = $_SERVER['QUERY_STRING'];
 

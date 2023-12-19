@@ -1,33 +1,39 @@
 <?php
 require_once('../includes/config.php');
-include("functions.php");
+require_once "functions.php";
+include('../classes/AES.php');
 
-$_SESSION['resultadoTraduccionPertex'] = llamadoInicial($_GET['idioma']);
-$_SESSION['idioma'] = $_GET['idioma'];
+$cadena = "";
+if (!empty($_SERVER['QUERY_STRING'])) {
+    $cadena = $_SERVER['QUERY_STRING'];
 
-$pagina = "";
+    //Desencripto la URL
+    $cadena = PHP_AES_Cipher::decrypt($cadena);
 
-if (
-    $_GET["name"] == "Proyecto-personalizar" ||
-    $_GET["name"] == "index" ||
-    $_GET["name"] == "" ||
-    !isset($_GET["name"])
-) {
-    $pagina = "../";
-    $paginaTraducida = $pagina;
-} else {
-    $pagina = $_GET['name'];
+    // Obtengo el string desencriptado del objeto
+    $cadena = strval($cadena);
 
-    $sql = "SELECT * FROM traducciones WHERE identificador='paginas' AND texto='" . $pagina . "'";
+    // Inicializo un array para almacenar los parámetros
+    $parametros = array();
+
+    // Utilizo parse_str para analizar la cadena y almacenar los resultados en $parametros
+    parse_str($cadena, $parametros);
+
+    $idioma = $parametros['idioma'];
+    $enlace_redireccion = $parametros['pag'];
+
+    $_SESSION['resultadoTraduccionPertex'] = llamadoInicial($idioma, $conn);
+    $_SESSION['idioma'] = $idioma;
+
+    $sql = "SELECT * FROM traducciones WHERE identificador='paginas' AND texto='" . $enlace_redireccion . "'";
     $query = $conn->prepare($sql);
     $query->execute();
     $results = $query->fetchAll(PDO::FETCH_OBJ);
-
+    
     $tipo = "";
     $identificador = "";
     $subidentificador1 = "";
     $subidentificador2 = "";
-
     foreach ($results as $result) {
         $tipo = $result->tipo;
         $identificador = $result->identificador;
@@ -38,10 +44,11 @@ if (
     $query = $conn->prepare($sql);
     $query->execute();
     $paginaTraducida = $query->fetchColumn();
+    if ($paginaTraducida == "") {
+        header('Location: ../index');
+    } else {
+        header('Location: ../' . $paginaTraducida);
+    }
+} else {
+    header('Location: ../404');
 }
-
-if ($_GET["name"] == "login") {
-    $paginaTraducida = "login";
-}
-
-header('Location: ' . $paginaTraducida);

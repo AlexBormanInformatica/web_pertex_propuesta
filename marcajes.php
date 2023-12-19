@@ -178,9 +178,9 @@ include("assets/_partials/codigo-idiomas.php");
                                         </div>
                                     </div>
 
-                                    <div>
+                                    <!-- <div>
                                         <a href="<?= buscarTexto("WEB", "paginas", "ptp", "", $_SESSION['idioma']); ?>?prd=<?= $result->id_producto ?>" id="<?= $result->id_producto ?>" class="btnRedirigir genric-btn primary-border circle"><?= buscarTexto("WEB", "general", "btn-personalizar", "", $_SESSION['idioma']); ?> <?= buscarTexto("PRG", "productos", $result->id_producto, "nombre", $_SESSION['idioma']); ?></a>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>

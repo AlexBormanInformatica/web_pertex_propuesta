@@ -42,13 +42,6 @@ var cantidadTopes = false;
 
 // Listener de los campos y dinamismo del formulario
 (function ($) {
-  //Si vienen del producto, por ejemplo el botón "Comprar mobtrans"->Cargar formulario automaticamente con el mobtrans elegido
-  // Obtén el parámetro "prd" de la URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const productoSeleccionado = urlParams.get('prd');
-  //Marcar elección de técnica
-  selectProducto.value = productoSeleccionado;
-
   // PASO 1: elegir la técnica + cantidad --------------------------------------------------------------------//
   // Detecta el cambio en el elemento <select> de la técnica
   selectProducto.addEventListener('change', function () {

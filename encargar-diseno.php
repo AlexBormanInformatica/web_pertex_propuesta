@@ -416,12 +416,18 @@ include("assets/_partials/codigo-idiomas.php");
 
           <div class="nav  nav-pills" id="h-pills-tab" role="tablist" style="float:right">
             <!--ORDENADOR-->
-            <button class="btn mb-5" id="v-pills-next-tab" type="button" disabled>FALTAN CAMPOS POR COMPLETAR</button>
-            <button style="display:none" id="encargarDiseno" type="button" data-toggle="modal" data-target="#encargarModal" class="btn mt-5" disabled>FALTAN CAMPOS POR COMPLETAR</button>
+            <?php if ($user->is_logged_in()) { ?>
+              <button class="btn mb-5" id="v-pills-next-tab" type="button" disabled>FALTAN CAMPOS POR COMPLETAR</button>
+              <button style="display:none" id="encargarDiseno" type="button" data-toggle="modal" data-target="#encargarModal" class="btn mt-5" disabled>FALTAN CAMPOS POR COMPLETAR</button>
+            <?php } else { ?>
+            <?php } ?>
 
             <!--MOVIL-->
-            <button class="btn mb-5" id="v-pills-next-tabmv" type="button" disabled>FALTAN CAMPOS POR COMPLETAR</button>
-            <button class="btn mb-5" style="display:none" id="encargarDisenoMV" type="button" data-toggle="modal" data-target="#encargarModal"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_confirma-añadir", "", $_SESSION['idioma']); ?></button>
+            <?php if ($user->is_logged_in()) { ?>
+              <button class="btn mb-5" id="v-pills-next-tabmv" type="button" disabled>FALTAN CAMPOS POR COMPLETAR</button>
+              <button class="btn mb-5" style="display:none" id="encargarDisenoMV" type="button" data-toggle="modal" data-target="#encargarModal"><?= buscarTexto("WEB", "personaliza-tu-producto", "ptp_confirma-añadir", "", $_SESSION['idioma']); ?></button>
+            <?php } else { ?>
+            <?php } ?>
           </div>
       </div>
 
